@@ -120,6 +120,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def button_mapping(self):
+
         self.buttons = {
             "btn_0"             : "0",
             "btn_1"             : "1",
@@ -131,22 +132,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_7"             : "7",
             "btn_8"             : "8",
             "btn_9"             : "9",
-            "btn_plus"          : "+",
-            "btn_minus"         : "-",
-            "btn_multiply"      : "*",
-            "btn_divide"        : "/",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
-            "btn_equal"         : "=",
             "btn_clear"         : "C",
-            "btn_sin"           : "sin",
             "btn_cos"           : "cos",
-            "btn_tan"           : "tan",
-            "btn_sqrt"          : "sqrt",
-            "btn_log"           : "log",
+            "btn_divide"        : "/",
+            "btn_e"             : "e",
+            "btn_equal"         : "=",
             "btn_exp"           : "exp",
+            "btn_log"           : "log",
+            "btn_max"           : "max",
+            "btn_min"           : "min",
+            "btn_minus"         : "-",
+            "btn_multiply"      : "*",
             "btn_pi"            : "pi",
-            "btn_e"             : "e"
+            "btn_plus"          : "+",
+            "btn_sin"           : "sin",
+            "btn_sqrt"          : "sqrt",
+            "btn_tan"           : "tan"
         }
 
     #
