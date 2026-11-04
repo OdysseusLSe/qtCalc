@@ -97,7 +97,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="5" column="0">
-         <widget class="QPushButton" name="pushButton_10">
+         <widget class="QPushButton" name="btn_max">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -107,6 +107,7 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
@@ -116,7 +117,7 @@ border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>max</string>
           </property>
          </widget>
         </item>
@@ -245,7 +246,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QPushButton" name="pushButton_42">
+         <widget class="QPushButton" name="btn_pi">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -264,7 +265,7 @@ border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>π</string>
           </property>
          </widget>
         </item>
@@ -319,7 +320,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="3" column="0">
-         <widget class="QPushButton" name="pushButton_21">
+         <widget class="QPushButton" name="btn__MC">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -329,21 +330,22 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: lightgrey;
-color: black;
+           <string notr="true">background-color: blue;
+color: white;
 border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>MC</string>
           </property>
          </widget>
         </item>
         <item row="1" column="3">
-         <widget class="QPushButton" name="btn_e">
+         <widget class="QPushButton" name="btn_ln">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -353,6 +355,7 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
@@ -362,7 +365,7 @@ border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>e</string>
+           <string>ln</string>
           </property>
          </widget>
         </item>
@@ -380,7 +383,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="4" column="4">
-         <widget class="QPushButton" name="pushButton_15">
+         <widget class="QPushButton" name="btn_square">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -643,7 +646,7 @@ padding: 5px;</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(128, 128, 128);
+           <string notr="true">background-color: red;
 color: white;
 border: 1px solid;
 padding: 5px;</string>
@@ -678,7 +681,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="2" column="4">
-         <widget class="QPushButton" name="pushButton_35">
+         <widget class="QPushButton" name="btn_XpowerY">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -753,7 +756,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="2" column="0">
-         <widget class="QPushButton" name="pushButton_31">
+         <widget class="QPushButton" name="btn_MR">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -763,21 +766,22 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: lightgrey;
-color: black;
+           <string notr="true">background-color: blue;
+color: white;
 border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>MR</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QPushButton" name="pushButton_41">
+         <widget class="QPushButton" name="btn_Mplus">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -787,16 +791,17 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: lightgrey;
-color: black;
+           <string notr="true">background-color: blue;
+color: white;
 border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>M+</string>
           </property>
          </widget>
         </item>
@@ -826,7 +831,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QPushButton" name="btn_pi">
+         <widget class="QPushButton" name="btn_e">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -836,6 +841,7 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
@@ -845,7 +851,7 @@ border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>π</string>
+           <string>e</string>
           </property>
          </widget>
         </item>
@@ -974,7 +980,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="4" column="0">
-         <widget class="QPushButton" name="pushButton_11">
+         <widget class="QPushButton" name="btn_min">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -984,6 +990,7 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
@@ -993,7 +1000,7 @@ border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>min</string>
           </property>
          </widget>
         </item>
@@ -1048,7 +1055,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="3" column="3">
-         <widget class="QPushButton" name="pushButton_24">
+         <widget class="QPushButton" name="btn_cbrt">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -1073,7 +1080,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="3" column="4">
-         <widget class="QPushButton" name="pushButton_25">
+         <widget class="QPushButton" name="btn_cube">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -1148,7 +1155,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="1" column="4">
-         <widget class="QPushButton" name="btn_exp">
+         <widget class="QPushButton" name="btn_lg2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -1158,6 +1165,7 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
@@ -1167,7 +1175,7 @@ border: 1px solid;
 padding: 5px;</string>
           </property>
           <property name="text">
-           <string>exp</string>
+           <string>lg2</string>
           </property>
          </widget>
         </item>

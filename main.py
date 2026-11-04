@@ -101,12 +101,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Functions with their corresponding implementations
         self.functions = {
-            'sin'  : math.sin,
-            'cos'  : math.cos,
-            'tan'  : math.tan,
-            'sqrt' : math.sqrt,
-            'log'  : math.log,
-            'exp'  : math.exp
+            'cos'   : math.cos,
+            'exp'   : math.exp,
+            'ln'    : math.log1p,
+            'lg2'   : math.log2,
+            'log'   : math.log,
+            'sin'   : math.sin,
+            'sqrt'  : math.sqrt,
+            'sqrt3' : math.cbrt,
+            'tan'   : math.tan
         }
 
         # Predefined constants
@@ -134,22 +137,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_9"             : "9",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
+            "btn_cbrt"          : "sqrt3(",
             "btn_clear"         : "C",
-            "btn_cos"           : "cos",
+            "btn_cos"           : "cos(",
+            "btn_cube"          : "^3",
             "btn_divide"        : "/",
             "btn_e"             : "e",
             "btn_equal"         : "=",
-            "btn_exp"           : "exp",
-            "btn_log"           : "log",
-            "btn_max"           : "max",
-            "btn_min"           : "min",
+            "btn_lg2"           : "lg2(",
+            "btn_ln"            : "ln(",
+            "btn_log"           : "log(",
+            "btn_max"           : "max(",
+            "btn_min"           : "min( ",
             "btn_minus"         : "-",
             "btn_multiply"      : "*",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
-            "btn_sin"           : "sin",
-            "btn_sqrt"          : "sqrt",
-            "btn_tan"           : "tan"
+            "btn_sin"           : "sin(",
+            "btn_sqrt"          : "sqrt(",
+            "btn_square"        : "^2",
+            "btn_tan"           : "tan(",
+            "btn_XpowerY"       : "^"
         }
 
     #
@@ -164,6 +172,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if isinstance(token, (int, float)):
                 stack.append(token)
             elif token in self.operators:
+                if len(stack) < 2:
+                    raise IndexError("To few operands for operator!")
                 b = stack.pop()
                 a = stack.pop()
                 if token == '+':
@@ -177,6 +187,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif token == '^':
                     stack.append(a ** b)
             elif token in self.functions:
+                if len(stack) < 1:
+                    raise IndexError("To few operands for function")
                 a = stack.pop()
                 stack.append(self.functions[token](a))
 
@@ -206,18 +218,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if button.objectName() == "btn_equal":
 
-            token_spec = r'\d+(?:\.\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
-            tokens = re.findall(token_spec, self.text[:-1])
-            self.log.write(f"tokens={tokens}", True)
-            shunting_yard_output = self.shunting_yard(tokens)
-            self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
-            result = self.evaluate_rpn(shunting_yard_output)
+            try:
 
-            self.text += f"<br>{result}"
-            self.log.write(f"self.text={self.text}", True)
+                token_spec = r'\d+(?:\.\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
+                tokens = re.findall(token_spec, self.text[:-1])
+                self.log.write(f"tokens={tokens}", True)
 
-            self.textBrowser.setHtml(self.text)
-            self.text = str(result)
+                shunting_yard_output = self.shunting_yard(tokens)
+                self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
+
+                result = self.evaluate_rpn(shunting_yard_output)
+
+                self.text += f"<br>{result}"
+                self.log.write(f"self.text={self.text}", True)
+                self.textBrowser.setHtml(self.text)
+                self.text = str(result)
+
+            except ZeroDivisionError:
+                self.log.error("Division by zero!", True)
+                self.textBrowser.setHtml(
+                    f"{self.text}<br><span style='color:red;'>Error: Division by zero!</span>"
+                )
+                self.text = ""
+
+            except IndexError:
+                self.log.error("Index error: Insufficient operands or parentheses error", True)
+                self.textBrowser.setHtml(
+                    f"{self.text}<br><span style='color:red;'>Error: Insufficient operands or parentheses error</span>"
+                )
+                self.text = ""
+
+            except Exception as e:
+                self.log.error(f"General error: {str(e)}", True)
+                self.textBrowser.setHtml(
+                    f"{self.text}<br><span style='color:red;'>Error: Calculation not possible!</span>"
+                )
+                self.text = ""
 
         self.log.exit("on_button_clicked", True)
 
