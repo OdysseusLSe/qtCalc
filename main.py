@@ -19,6 +19,8 @@
 
 import copy
 import pprint
+import math
+import re
 import sys
 import time
 
@@ -61,12 +63,223 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.log = Logging("MainWindow", True)
+
+        self.setWindowTitle(f"{APP_NAME} {APP_VERSION}")
+
+        self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
+        self.log.entry("__init__", True)
+
+        all_buttons = self.findChildren(QPushButton)
+        for button in all_buttons:
+            button.clicked.connect(self.on_button_clicked)
+
+        self.advanced_operator()
+        self.button_mapping()
+
+        self.textBrowser.clear()
+        self.text = ""
+
+        self.tokens = []
+
+        self.log.exit("__init__", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def advanced_operator(self):
+
+        # Operators with their precedence and associativity
+        self.operators = {
+            '+': (1, True),
+            '-': (1, True),
+            '*': (2, True),
+            '/': (2, True),
+            '^': (3, False)
+        }
+
+        # Functions with their corresponding implementations
+        self.functions = {
+            'sin'  : math.sin,
+            'cos'  : math.cos,
+            'tan'  : math.tan,
+            'sqrt' : math.sqrt,
+            'log'  : math.log,
+            'exp'  : math.exp
+        }
+
+        # Predefined constants
+        self.variables = {
+            'pi' : math.pi,
+            'e'  : math.e
+        }
+
+    #
+    # -----------------------------------------------
+    #
+
+    def button_mapping(self):
+        self.buttons = {
+            "btn_0"             : "0",
+            "btn_1"             : "1",
+            "btn_2"             : "2",
+            "btn_3"             : "3",
+            "btn_4"             : "4",
+            "btn_5"             : "5",
+            "btn_6"             : "6",
+            "btn_7"             : "7",
+            "btn_8"             : "8",
+            "btn_9"             : "9",
+            "btn_plus"          : "+",
+            "btn_minus"         : "-",
+            "btn_multiply"      : "*",
+            "btn_divide"        : "/",
+            "btn_bracket_left"  : "(",
+            "btn_bracket_right" : ")",
+            "btn_equal"         : "=",
+            "btn_clear"         : "C",
+            "btn_sin"           : "sin",
+            "btn_cos"           : "cos",
+            "btn_tan"           : "tan",
+            "btn_sqrt"          : "sqrt",
+            "btn_log"           : "log",
+            "btn_exp"           : "exp",
+            "btn_pi"            : "pi",
+            "btn_e"             : "e"
+        }
+
+    #
+    # -----------------------------------------------
+    #
+
+    def evaluate_rpn(self, postfix_tokens):
+
+        stack = []
+
+        for token in postfix_tokens:
+            if isinstance(token, (int, float)):
+                stack.append(token)
+            elif token in self.operators:
+                b = stack.pop()
+                a = stack.pop()
+                if token == '+':
+                    stack.append(a + b)
+                elif token == '-':
+                    stack.append(a - b)
+                elif token == '*':
+                    stack.append(a * b)
+                elif token == '/':
+                    stack.append(a / b)
+                elif token == '^':
+                    stack.append(a ** b)
+            elif token in self.functions:
+                a = stack.pop()
+                stack.append(self.functions[token](a))
+
+        return stack[0]
+
+    #
+    # -----------------------------------------------
+    #
+
+    def on_button_clicked(self):
+        self.log.entry("on_button_clicked", True)
+
+        button = self.sender()
+
+        if button.objectName() == "btn_clear":
+            self.text = ""
+            self.textBrowser.clear()
+            self.log.write("clear", True)
+            return
+
+        self.text += self.buttons[button.objectName()]
+        self.log.write(f"{self.buttons[button.objectName()]}", True)
+
+        self.textBrowser.clear()
+        self.textBrowser.setPlainText(self.text)
+        self.log.write(f"self.text={self.text}", True)
+
+        if button.objectName() == "btn_equal":
+
+            token_spec = r'\d+(?:\.\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
+            tokens = re.findall(token_spec, self.text[:-1])
+            self.log.write(f"tokens={tokens}", True)
+            shunting_yard_output = self.shunting_yard(tokens)
+            self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
+            result = self.evaluate_rpn(shunting_yard_output)
+
+            self.text += f"<br>{result}"
+            self.log.write(f"self.text={self.text}", True)
+
+            self.textBrowser.setHtml(self.text)
+            self.text = str(result)
+
+        self.log.exit("on_button_clicked", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def shunting_yard(self, tokens):
+
+        output = []
+        operator = []
+
+        for token in tokens:
+            if re.match(r'^\d+(?:\.\d+)?$', token):
+                # Token is a number, convert it to float
+                output.append(float(token))
+
+            elif token in self.variables:
+                # Token is a predefined constant or variable
+                output.append(self.variables[token])
+
+            elif token in self.functions:
+                # Token is a function, push it onto the operator stack
+                operator.append(token)
+
+            elif token == ',':
+                # Token is a comma, used to separate arguments in functions
+                while operator and operator[-1] != '(':
+                    output.append(operator.pop())
+
+            elif token in self.operators:
+                # Token is an operator
+                p1, a1 = self.operators[token]
+                while operator and operator[-1] in self.operators:
+                    p2, _ = self.operators[operator[-1]]
+                    if (a1 and p1 <= p2) or (not a1 and p1 < p2):
+                        output.append(operator.pop())
+                    else:
+                        break
+                operator.append(token)
+
+            elif token == '(':
+                # Token is an opening parenthesis
+                operator.append(token)
+
+            elif token == ')':
+                # Token is a closing parenthesis
+                while operator and operator[-1] != '(':
+                    output.append(operator.pop())
+                if operator and operator[-1] == '(':
+                    operator.pop()  # Entferne '('
+                if operator and operator[-1] in self.functions:
+                    output.append(operator.pop())
+
+        while operator:
+            output.append(operator.pop())
+
+        return output
+
 
 #
 # -----------------------------------------------
-#
-
 # The application runs until the window will be closed
+# -----------------------------------------------
+#
 
 app = QtWidgets.QApplication([])
 
