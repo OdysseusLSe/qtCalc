@@ -22,11 +22,9 @@ import sys
 
 import logging as pylog
 
+from PySide6.QtCore import Qt
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import (
-    QMainWindow,
-    QPushButton,
-)
+from PySide6.QtWidgets import QLabel, QMainWindow, QPushButton
 
 from MainWindow_ui import Ui_MainWindow
 
@@ -35,7 +33,7 @@ from Logging import Logging
 #import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.1"
+APP_VERSION = "0.2"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -61,6 +59,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.tokens = []
 
+        self.status_lbl = QLabel("Ready")
+        # "#deb887" = burlywood
+        self.status_lbl.setStyleSheet(
+            "font-weight: bold; background-color: #deb887; color: black"
+        )
+        self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.status_bar.addWidget(self.status_lbl, 1)
+
         self.log.exit("__init__", True)
 
     #
@@ -82,9 +88,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.functions = {
             'cos'   : (math.cos, 1),
             'exp'   : (math.exp, 1),
-            'ln'    : (math.log1p, 1),
+            'ln'    : (math.log, 1),
             'lg2'   : (math.log2, 1),
-            'log'   : (math.log, 1),
+            'log'   : (math.log10, 1),
             'max'   : (math.fmax, 2),
             'min'   : (math.fmin, 2),
             'sin'   : (math.sin, 1),
@@ -136,10 +142,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_multiply"      : "*",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
+            "btn_unary_minus"   : "-",
             "btn_sin"           : "sin(",
             "btn_sqrt"          : "sqrt(",
             "btn_square"        : "^2",
             "btn_tan"           : "tan(",
+            "btn_unary_minus"   : "-",
             "btn_XpowerY"       : "^"
         }
 
@@ -199,24 +207,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_button_clicked(self):
         self.log.entry("on_button_clicked", True)
 
-        button = self.sender()
+        button      = self.sender()
+        button_name = button.objectName()
 
-        if button.objectName() == "btn_clear":
+        self.status_lbl.setText("Validating input...")
+
+        #
+        # First, handle special buttons like clear, memory functions, etc.
+        #
+
+        if button_name == "btn_clear":
             # Clear the current expression and reset the display
             self.text = ""
             self.textBrowser.clear()
             self.log.write("clear", True)
             return
-        elif button.objectName() == "btn_Mplus":
+        elif button_name == "btn_Mplus":
             # Store the current result in memory
             if hasattr(self, 'result') and self.result is not None:
                 self.memory_lbl.setText(f"Mem: {self.result}")
             return
-        elif button.objectName() == "btn_MC":
+        elif button_name == "btn_MC":
             # Clear the memory
             self.memory_lbl.setText("Mem: <empty>")
             return
-        elif button.objectName() == "btn_MR":
+        elif button_name == "btn_MR":
             # Recall the value from memory and
             # append it to the current expression
             if self.memory_lbl.text() != "Mem: <empty>":
@@ -227,47 +242,161 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.result = None
 
-        self.text += self.buttons[button.objectName()]
-        self.log.write(f"{self.buttons[button.objectName()]}", True)
+        #
+        # Second, handle the input validation
+        #
+
+        new_char = self.buttons[button_name]
+
+        last_char = self.text[-1] if self.text else ""
+        operators_list = list(self.operators.keys())
+
+        if new_char != "=":
+
+            log_string = f"Validation is blocking: "
+
+            if not self.text and new_char in operators_list and new_char != '-':
+                log_string += f"Operator at start: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                self.log.exit("on_button_clicked", True)
+                return
+
+            if last_char in operators_list and new_char in operators_list:
+                log_string += f"Double operator: {last_char}{new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                self.log.exit("on_button_clicked", True)
+                return
+
+            if last_char == "(" and new_char in operators_list and new_char != '-':
+                log_string += f"Operator after opening parenthesis: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                self.log.exit("on_button_clicked", True)
+                return
+
+            if last_char in operators_list and new_char == ")":
+                log_string += f"Parenthesis after operator: {last_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                self.log.exit("on_button_clicked", True)
+                return
+
+            if new_char == ")":
+                number_of_opening = self.text.count("(")
+                number_of_closing = self.text.count(")")
+                if number_of_closing >= number_of_opening:
+                    log_string += "Too many closing parentheses!"
+                    self.status_lbl.setText(log_string)
+                    self.log.warning(log_string, True)
+                    self.log.exit("on_button_clicked", True)
+                    return
+
+        #
+        # Third, if the input is valid, update the text and display it
+        #
+
+        self.text += new_char
+        self.log.write(f"{new_char}", True)
 
         self.textBrowser.clear()
         self.textBrowser.setPlainText(self.text)
         self.log.write(f"self.text={self.text}", True)
 
-        if button.objectName() == "btn_equal":
+        #
+        # Forth, handle the calculation when the "=" button is pressed
+        #
+
+        if button_name == "btn_equal":
+
+            number_of_opening = self.text.count("(")
+            number_of_closing = self.text.count(")")
+            if number_of_closing < number_of_opening:
+                # Remove the "=" (the last character)
+                self.text = self.text[:-1]
+                self.textBrowser.clear()
+                self.textBrowser.setPlainText(self.text)
+                self.status_lbl.setText("Too few closing parentheses!")
+                self.log.warning("Too few closing parentheses!", True)
+                self.log.exit("on_button_clicked", True)
+                return
 
             try:
 
-                token_spec = r'\d+(?:\.\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
-                tokens = re.findall(token_spec, self.text[:-1])
-                self.log.write(f"tokens={tokens}", True)
+                token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
+                raw_tokens = re.findall(token_spec, self.text[:-1])
+                self.log.write(f"raw_tokens={raw_tokens}", True)
 
-                shunting_yard_output = self.shunting_yard(tokens)
+                #
+                # Implement implicit multiplication
+                #
+
+                num_regex = re.compile(r'^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$')
+
+                def is_value_end(tok):
+                    return bool(num_regex.match(tok)) or tok in self.variables or tok == ')'
+
+                def is_value_start(tok):
+                    return (
+                        bool(num_regex.match(tok))
+                        or tok in self.variables
+                        or tok in self.functions
+                        or tok == '('
+                    )
+
+                tokens = []
+                for i, tok in enumerate(raw_tokens):
+                    if i > 0 and is_value_end(raw_tokens[i - 1]) and is_value_start(tok):
+                        tokens.append('*')
+                    tokens.append(tok)
+
+                # Implement unary minus
+                processed_tokens = []
+                for i, tok in enumerate(tokens):
+                    if tok == '-' and (i == 0 or tokens[i-1] in self.operators or tokens[i-1] in ('(', ',')):
+                        processed_tokens.append('0')
+                    processed_tokens.append(tok)
+
+                shunting_yard_output = self.shunting_yard(processed_tokens)
                 self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
 
-                self.result = self.evaluate_rpn(shunting_yard_output)
+                raw_result = self.evaluate_rpn(shunting_yard_output)
+
+                cleaned = float(f"{raw_result:.12g}")
+                if cleaned.is_integer() and abs(cleaned) < 1e15:
+                    self.result = int(cleaned)
+                else:
+                    self.result = cleaned
 
                 self.text += f"<br>{self.result}"
-                self.log.write(f"self.text={self.text}", True)
                 self.textBrowser.setHtml(self.text)
+                self.status_lbl.setText("Ready")
                 self.text = str(self.result)
+                self.log.write(f"self.text={self.text}", True)
 
             except ZeroDivisionError:
-                self.log.error("Division by zero!", True)
+                error = "Error: Division by zero!"
+                self.status_lbl.setText(error)
+                self.log.error(error, True)
                 self.textBrowser.setHtml(
                     f"{self.text}<br><span style='color:red;'>Error: Division by zero!</span>"
                 )
                 self.text = ""
 
             except IndexError:
-                self.log.error("Index error: Insufficient operands or parentheses error", True)
+                error = "Error: Insufficient operands or parentheses error!"
+                self.status_lbl.setText(error)
+                self.log.error(error, True)
                 self.textBrowser.setHtml(
                     f"{self.text}<br><span style='color:red;'>Error: Insufficient operands or parentheses error</span>"
                 )
                 self.text = ""
 
             except Exception as e:
-                self.log.error(f"General error: {str(e)}", True)
+                error = f"Error: General error: {str(e)}"
+                self.status_lbl.setText(error)
+                self.log.error(error, True)
                 self.textBrowser.setHtml(
                     f"{self.text}<br><span style='color:red;'>Error: Calculation not possible!</span>"
                 )
@@ -286,7 +415,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         operator = []
 
         for token in tokens:
-            if re.match(r'^\d+(?:\.\d+)?$', token):
+            if re.match(r'^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$', token):
                 # Token is a number, convert it to float
                 output.append(float(token))
 

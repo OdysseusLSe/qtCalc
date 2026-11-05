@@ -297,17 +297,17 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_sqrt, 4, 3, 1, 1)
 
-        self.btn_plus_minus = QPushButton(self.centralwidget)
-        self.btn_plus_minus.setObjectName(u"btn_plus_minus")
-        sizePolicy.setHeightForWidth(self.btn_plus_minus.sizePolicy().hasHeightForWidth())
-        self.btn_plus_minus.setSizePolicy(sizePolicy)
-        self.btn_plus_minus.setFont(font)
-        self.btn_plus_minus.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
+        self.btn_unary_minus = QPushButton(self.centralwidget)
+        self.btn_unary_minus.setObjectName(u"btn_unary_minus")
+        sizePolicy.setHeightForWidth(self.btn_unary_minus.sizePolicy().hasHeightForWidth())
+        self.btn_unary_minus.setSizePolicy(sizePolicy)
+        self.btn_unary_minus.setFont(font)
+        self.btn_unary_minus.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.btn_plus_minus, 5, 7, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_unary_minus, 5, 7, 1, 1)
 
         self.pushButton_22 = QPushButton(self.centralwidget)
         self.pushButton_22.setObjectName(u"pushButton_22")
@@ -678,7 +678,7 @@ class Ui_MainWindow(object):
         self.memory_lbl.setTextFormat(Qt.TextFormat.PlainText)
         self.memory_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout_3.addWidget(self.memory_lbl, 0, 0, 1, 3)
+        self.gridLayout_3.addWidget(self.memory_lbl, 0, 0, 1, 4)
 
         self.gridLayout_3.setColumnStretch(0, 1)
         self.gridLayout_3.setColumnStretch(1, 1)
@@ -699,13 +699,13 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addLayout(self.verticalLayout)
 
         MainWindow.setCentralWidget(self.centralwidget)
-        self.menubar = QMenuBar(MainWindow)
-        self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 750, 30))
-        MainWindow.setMenuBar(self.menubar)
-        self.statusbar = QStatusBar(MainWindow)
-        self.statusbar.setObjectName(u"statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        self.menu_bar = QMenuBar(MainWindow)
+        self.menu_bar.setObjectName(u"menu_bar")
+        self.menu_bar.setGeometry(QRect(0, 0, 750, 30))
+        MainWindow.setMenuBar(self.menu_bar)
+        self.status_bar = QStatusBar(MainWindow)
+        self.status_bar.setObjectName(u"status_bar")
+        MainWindow.setStatusBar(self.status_bar)
 
         self.retranslateUi(MainWindow)
 
@@ -733,7 +733,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"10\u02e3", None))
         self.btn_divide.setText(QCoreApplication.translate("MainWindow", u"\u00f7", None))
         self.btn_sqrt.setText(QCoreApplication.translate("MainWindow", u"\u221a", None))
-        self.btn_plus_minus.setText(QCoreApplication.translate("MainWindow", u"\u00b1", None))
+        self.btn_unary_minus.setText(QCoreApplication.translate("MainWindow", u"\u00b1", None))
         self.pushButton_22.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.btn_5.setText(QCoreApplication.translate("MainWindow", u"5", None))
         self.btn_multiply.setText(QCoreApplication.translate("MainWindow", u"\u2716\ufe0f", None))
