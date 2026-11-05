@@ -16,37 +16,16 @@
 # If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
 #
 
-
-import copy
-import pprint
 import math
 import re
 import sys
-import time
 
 import logging as pylog
 
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import (
-    QComboBox,
-    QColorDialog,
-    QDialog,
-    QDialogButtonBox,
-    QDoubleSpinBox,
-    QFileDialog,
-    QFrame,
-    QGridLayout,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
     QMainWindow,
-    QMenu,
-    QMessageBox,
     QPushButton,
-    QSizePolicy,
-    QStatusBar,
-    QVBoxLayout,
-    QWidget
 )
 
 from MainWindow_ui import Ui_MainWindow
@@ -101,15 +80,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Functions with their corresponding implementations
         self.functions = {
-            'cos'   : math.cos,
-            'exp'   : math.exp,
-            'ln'    : math.log1p,
-            'lg2'   : math.log2,
-            'log'   : math.log,
-            'sin'   : math.sin,
-            'sqrt'  : math.sqrt,
-            'sqrt3' : math.cbrt,
-            'tan'   : math.tan
+            'cos'   : (math.cos, 1),
+            'exp'   : (math.exp, 1),
+            'ln'    : (math.log1p, 1),
+            'lg2'   : (math.log2, 1),
+            'log'   : (math.log, 1),
+            'max'   : (math.fmax, 2),
+            'min'   : (math.fmin, 2),
+            'sin'   : (math.sin, 1),
+            'sqrt'  : (math.sqrt, 1),
+            'sqrt3' : (math.cbrt, 1),
+            'tan'   : (math.tan, 1)
         }
 
         # Predefined constants
@@ -139,16 +120,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_bracket_right" : ")",
             "btn_cbrt"          : "sqrt3(",
             "btn_clear"         : "C",
+            "btn_comma"        : ",",
             "btn_cos"           : "cos(",
             "btn_cube"          : "^3",
             "btn_divide"        : "/",
+            "btn_dot"        : ".",
             "btn_e"             : "e",
             "btn_equal"         : "=",
             "btn_lg2"           : "lg2(",
             "btn_ln"            : "ln(",
             "btn_log"           : "log(",
             "btn_max"           : "max(",
-            "btn_min"           : "min( ",
+            "btn_min"           : "min(",
             "btn_minus"         : "-",
             "btn_multiply"      : "*",
             "btn_pi"            : "pi",
@@ -165,13 +148,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_rpn(self, postfix_tokens):
+        self.log.entry("evaluate_rpn(self, postfix_tokens)", True)
 
         stack = []
 
         for token in postfix_tokens:
             if isinstance(token, (int, float)):
+
                 stack.append(token)
+
             elif token in self.operators:
+
                 if len(stack) < 2:
                     raise IndexError("To few operands for operator!")
                 b = stack.pop()
@@ -186,12 +173,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     stack.append(a / b)
                 elif token == '^':
                     stack.append(a ** b)
-            elif token in self.functions:
-                if len(stack) < 1:
-                    raise IndexError("To few operands for function")
-                a = stack.pop()
-                stack.append(self.functions[token](a))
 
+            elif token in self.functions:
+
+                func, num_args = self.functions[token]
+
+                if len(stack) < num_args:
+                    raise IndexError(f"Too few operands for function {token}!")
+
+                if num_args == 1:
+                    a = stack.pop()
+                    stack.append(func(a))
+                elif num_args == 2:
+                    b = stack.pop()
+                    a = stack.pop()
+                    stack.append(func(a, b))
+
+        self.log.entry("evaluate_rpn", True)
         return stack[0]
 
     #
@@ -204,10 +202,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         button = self.sender()
 
         if button.objectName() == "btn_clear":
+            # Clear the current expression and reset the display
             self.text = ""
             self.textBrowser.clear()
             self.log.write("clear", True)
             return
+        elif button.objectName() == "btn_Mplus":
+            # Store the current result in memory
+            if hasattr(self, 'result') and self.result is not None:
+                self.memory_lbl.setText(f"Mem: {self.result}")
+            return
+        elif button.objectName() == "btn_MC":
+            # Clear the memory
+            self.memory_lbl.setText("Mem: <empty>")
+            return
+        elif button.objectName() == "btn_MR":
+            # Recall the value from memory and
+            # append it to the current expression
+            if self.memory_lbl.text() != "Mem: <empty>":
+                mem_value = self.memory_lbl.text().split(": ")[1]
+                self.text += mem_value
+                self.textBrowser.setPlainText(self.text)
+            return
+
+        self.result = None
 
         self.text += self.buttons[button.objectName()]
         self.log.write(f"{self.buttons[button.objectName()]}", True)
@@ -227,12 +245,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 shunting_yard_output = self.shunting_yard(tokens)
                 self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
 
-                result = self.evaluate_rpn(shunting_yard_output)
+                self.result = self.evaluate_rpn(shunting_yard_output)
 
-                self.text += f"<br>{result}"
+                self.text += f"<br>{self.result}"
                 self.log.write(f"self.text={self.text}", True)
                 self.textBrowser.setHtml(self.text)
-                self.text = str(result)
+                self.text = str(self.result)
 
             except ZeroDivisionError:
                 self.log.error("Division by zero!", True)
@@ -262,6 +280,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def shunting_yard(self, tokens):
+        self.log.entry("shunting_yard(self, tokens)", True)
 
         output = []
         operator = []
@@ -311,6 +330,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while operator:
             output.append(operator.pop())
 
+        self.log.exit("shunting_yard", True)
         return output
 
 
@@ -321,6 +341,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 #
 
 app = QtWidgets.QApplication([])
+
+app.setStyle('Fusion')
 
 pylog.basicConfig(
     filename=f"{APP_NAME}.log",
