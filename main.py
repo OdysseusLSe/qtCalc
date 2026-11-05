@@ -33,7 +33,7 @@ from Logging import Logging
 #import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.2"
+APP_VERSION = "0.3"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -74,6 +74,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def advanced_operator(self):
+        self.log.entry("advanced_operator()", True)
 
         # Operators with their precedence and associativity
         self.operators = {
@@ -105,11 +106,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'e'  : math.e
         }
 
+        self.log.exit("advanced_operator", True)
+
     #
     # -----------------------------------------------
     #
 
     def button_mapping(self):
+        self.log.entry("button_mapping()", True)
 
         self.buttons = {
             "btn_0"             : "0",
@@ -151,12 +155,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_XpowerY"       : "^"
         }
 
+        self.log.entry("button_mapping()", True)
+
     #
     # -----------------------------------------------
     #
 
     def evaluate_rpn(self, postfix_tokens):
-        self.log.entry("evaluate_rpn(self, postfix_tokens)", True)
+        self.log.entry("evaluate_rpn(postfix_tokens)", True)
 
         stack = []
 
@@ -197,15 +203,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     a = stack.pop()
                     stack.append(func(a, b))
 
-        self.log.entry("evaluate_rpn", True)
+        self.log.entry("evaluate_rpn()", True)
         return stack[0]
 
     #
     # -----------------------------------------------
     #
 
+    def keyPressEvent(self, event):
+        self.log.entry("keyPressEvent(event)", True)
+
+        self.log.write(f"Key pressed: {event.text()}", True)
+
+        self.log.exit("keyPressEvent(event)", True)
+
+    #
+    # -----------------------------------------------
+    #
+
     def on_button_clicked(self):
-        self.log.entry("on_button_clicked", True)
+        self.log.entry("on_button_clicked()", True)
 
         button      = self.sender()
         button_name = button.objectName()
