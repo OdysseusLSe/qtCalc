@@ -24,9 +24,14 @@ import logging as pylog
 
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QTextCharFormat, QTextCursor
+from PySide6.QtGui import QBrush, QColor
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import QLabel, QMainWindow, QPushButton
+from PySide6.QtWidgets import (
+    QLabel,
+    QListWidgetItem,
+    QMainWindow,
+    QPushButton
+)
 
 from MainWindow_ui import Ui_MainWindow
 
@@ -49,6 +54,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
         self.log.entry("__init__", True)
 
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
         all_buttons = self.findChildren(QPushButton)
         for button in all_buttons:
             button.clicked.connect(self.on_button_clicked)
@@ -60,12 +67,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.expression_line.setReadOnly(True)
         self.expression_history = ""
 
-        self.history_browser.clear()
-        self.history_item = 0
-        self.history_browser.textChanged.connect(self.scroll_to_bottom)
-        self.bg_color_lightorange = False
-        self.bg_color_lightyellow = True
+        self.history_list.model().rowsInserted.connect(
+            self.history_list.scrollToBottom
+        )
 
+        self.history_item = 0
         self.tokens = []
 
         self.status_lbl = QLabel("Ready")
@@ -235,7 +241,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         matched_btn_name = None
 
-
         if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
             matched_btn_name = "btn_equal"
         elif key_text:
@@ -247,7 +252,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if matched_btn_name:
             button_object = getattr(self, matched_btn_name, None)
             if button_object:
-                button_object.animateClick()
+                button_object.click()
                 self.log.write(f"matched_btn_name={matched_btn_name}", True)
                 event.accept()
                 self.log.exit("keyPressEvent(event)", True)
@@ -264,7 +269,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_button_clicked(self):
         self.log.entry("on_button_clicked()", True)
 
-        button      = self.sender()
+        button = self.sender()
         button_name = button.objectName()
 
         #
@@ -439,10 +444,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     self.result = cleaned
 
-                self.expression_history = f"{self.text}{self.result}"
-                self.history_browser.append(self.expression_history)
+                # Add current expression to history list
+                expression = f"{self.text}{self.result}"
+                self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
+                item = QListWidgetItem(self.expression_history)
+                self.log.write(f"self.expression_history={self.expression_history}", True)
 
-                # Show reuslt of expression
+                if self.history_item % 2 == 0:
+                    color = QColor(255, 193, 182)
+                    item.setBackground(QBrush(color))
+                else:
+                    color = QColor(235, 254, 193)
+                    item.setBackground(QBrush(color))
+                self.history_list.addItem(item)
+                self.history_item += 1
+
+                # Show result of expression
                 self.text = f"{self.result}"
                 self.status_lbl.setText("Ready")
                 self.expression_line.setText(self.text)
@@ -452,9 +469,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = "Error: Division by zero!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_browser.append(
-                    f"{self.text}<br><span style='color:red;'>Error: Division by zero!</span>"
-                )
+                self.history_list.addItem(f"{self.text} --> {error}")
                 self.text = ""
                 self.expression_line.setText(self.text)
 
@@ -462,9 +477,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = "Error: Insufficient operands or parentheses error!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_browser.append(
-                    f"{self.text}<br><span style='color:red;'>Error: Insufficient operands or parentheses error</span>"
-                )
+                self.history_list.addItem(f"{self.text} --> {error}")
                 self.text = ""
                 self.expression_line.setText(self.text)
 
@@ -472,9 +485,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = f"Error: General error: {str(e)}"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_browser.append(
-                    f"{self.text}<br><span style='color:red;'>Error: Calculation not possible!</span>"
-                )
+                self.history_list.addItem(f"{self.text} --> {error}")
                 self.text = ""
                 self.expression_line.setText(self.text)
 
@@ -485,7 +496,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def scroll_to_bottom(self):
-        scrollbar = self.history_browser.verticalScrollBar()
+        scrollbar = self.history_list.verticalScrollBar()
         scrollbar.setValue(scrollbar.maximum())
 
     #
@@ -569,5 +580,7 @@ pylog.basicConfig(
 
 win = MainWindow()
 win.show()
+
+win.setFocus()
 
 sys.exit(app.exec())

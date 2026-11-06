@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QFrame, QGridLayout,
-    QLabel, QLayout, QLineEdit, QMainWindow,
+from PySide6.QtWidgets import (QApplication, QGridLayout, QLabel, QLayout,
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
     QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
+    QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -34,25 +34,23 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.history_browser = QTextBrowser(self.centralwidget)
-        self.history_browser.setObjectName(u"history_browser")
+        self.history_list = QListWidget(self.centralwidget)
+        self.history_list.setObjectName(u"history_list")
         font = QFont()
         font.setFamilies([u"Courier New"])
         font.setPointSize(15)
         font.setWeight(QFont.DemiBold)
-        self.history_browser.setFont(font)
-        self.history_browser.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
-        self.history_browser.setStyleSheet(u"background-color: rgb(214, 214, 214);\n"
+        self.history_list.setFont(font)
+        self.history_list.setStyleSheet(u"background-color: rgb(214, 214, 214);\n"
 "color: black;\n"
 "border: 5px solid;\n"
 "border-radius: 7px;")
-        self.history_browser.setFrameShadow(QFrame.Shadow.Sunken)
-        self.history_browser.setLineWidth(1)
-        self.history_browser.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.history_browser.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.history_browser.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
+        self.history_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.history_list.setAlternatingRowColors(True)
+        self.history_list.setTextElideMode(Qt.TextElideMode.ElideNone)
+        self.history_list.setWordWrap(True)
 
-        self.verticalLayout.addWidget(self.history_browser)
+        self.verticalLayout.addWidget(self.history_list)
 
         self.expression_line = QLineEdit(self.centralwidget)
         self.expression_line.setObjectName(u"expression_line")
@@ -86,6 +84,7 @@ class Ui_MainWindow(object):
         font2.setPointSize(25)
         font2.setWeight(QFont.ExtraBold)
         self.btn_comma.setFont(font2)
+        self.btn_comma.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_comma.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -102,6 +101,7 @@ class Ui_MainWindow(object):
         font3.setPointSize(20)
         font3.setBold(True)
         self.btn_max.setFont(font3)
+        self.btn_max.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_max.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -115,6 +115,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_cos.sizePolicy().hasHeightForWidth())
         self.btn_cos.setSizePolicy(sizePolicy)
         self.btn_cos.setFont(font3)
+        self.btn_cos.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cos.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -128,6 +129,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_3.sizePolicy().hasHeightForWidth())
         self.btn_3.setSizePolicy(sizePolicy)
         self.btn_3.setFont(font2)
+        self.btn_3.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_3.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -141,6 +143,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_32.sizePolicy().hasHeightForWidth())
         self.pushButton_32.setSizePolicy(sizePolicy)
         self.pushButton_32.setFont(font3)
+        self.pushButton_32.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.pushButton_32.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -154,6 +157,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_8.sizePolicy().hasHeightForWidth())
         self.btn_8.setSizePolicy(sizePolicy)
         self.btn_8.setFont(font2)
+        self.btn_8.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_8.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -167,6 +171,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_0.sizePolicy().hasHeightForWidth())
         self.btn_0.setSizePolicy(sizePolicy)
         self.btn_0.setFont(font2)
+        self.btn_0.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_0.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -180,6 +185,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_pi.sizePolicy().hasHeightForWidth())
         self.btn_pi.setSizePolicy(sizePolicy)
         self.btn_pi.setFont(font3)
+        self.btn_pi.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_pi.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -193,6 +199,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_4.sizePolicy().hasHeightForWidth())
         self.btn_4.setSizePolicy(sizePolicy)
         self.btn_4.setFont(font2)
+        self.btn_4.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_4.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -206,6 +213,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_log.sizePolicy().hasHeightForWidth())
         self.btn_log.setSizePolicy(sizePolicy)
         self.btn_log.setFont(font3)
+        self.btn_log.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_log.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -222,6 +230,7 @@ class Ui_MainWindow(object):
         font4.setPointSize(25)
         font4.setWeight(QFont.DemiBold)
         self.btn_MC.setFont(font4)
+        self.btn_MC.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_MC.setStyleSheet(u"background-color: blue;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -235,6 +244,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_ln.sizePolicy().hasHeightForWidth())
         self.btn_ln.setSizePolicy(sizePolicy)
         self.btn_ln.setFont(font3)
+        self.btn_ln.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_ln.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -254,6 +264,7 @@ class Ui_MainWindow(object):
         font5.setPointSize(15)
         font5.setWeight(QFont.ExtraBold)
         self.btn__2nd.setFont(font5)
+        self.btn__2nd.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn__2nd.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
 "color : white;\n"
 "border: 1px solid;\n"
@@ -267,6 +278,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_square.sizePolicy().hasHeightForWidth())
         self.btn_square.setSizePolicy(sizePolicy)
         self.btn_square.setFont(font3)
+        self.btn_square.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_square.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -280,6 +292,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_tan.sizePolicy().hasHeightForWidth())
         self.btn_tan.setSizePolicy(sizePolicy)
         self.btn_tan.setFont(font3)
+        self.btn_tan.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_tan.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -293,6 +306,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_6.sizePolicy().hasHeightForWidth())
         self.btn_6.setSizePolicy(sizePolicy)
         self.btn_6.setFont(font2)
+        self.btn_6.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_6.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -306,6 +320,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_10powerX.sizePolicy().hasHeightForWidth())
         self.btn_10powerX.setSizePolicy(sizePolicy)
         self.btn_10powerX.setFont(font3)
+        self.btn_10powerX.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_10powerX.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -322,6 +337,7 @@ class Ui_MainWindow(object):
         font6.setPointSize(25)
         font6.setBold(True)
         self.btn_divide.setFont(font6)
+        self.btn_divide.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_divide.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -335,6 +351,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_sqrt.sizePolicy().hasHeightForWidth())
         self.btn_sqrt.setSizePolicy(sizePolicy)
         self.btn_sqrt.setFont(font3)
+        self.btn_sqrt.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_sqrt.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -348,6 +365,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_unary_minus.sizePolicy().hasHeightForWidth())
         self.btn_unary_minus.setSizePolicy(sizePolicy)
         self.btn_unary_minus.setFont(font6)
+        self.btn_unary_minus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_unary_minus.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -361,6 +379,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_tanh.sizePolicy().hasHeightForWidth())
         self.btn_tanh.setSizePolicy(sizePolicy)
         self.btn_tanh.setFont(font3)
+        self.btn_tanh.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_tanh.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -374,6 +393,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_5.sizePolicy().hasHeightForWidth())
         self.btn_5.setSizePolicy(sizePolicy)
         self.btn_5.setFont(font2)
+        self.btn_5.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_5.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -387,6 +407,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_multiply.sizePolicy().hasHeightForWidth())
         self.btn_multiply.setSizePolicy(sizePolicy)
         self.btn_multiply.setFont(font6)
+        self.btn_multiply.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_multiply.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -400,6 +421,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_clear.sizePolicy().hasHeightForWidth())
         self.btn_clear.setSizePolicy(sizePolicy)
         self.btn_clear.setFont(font2)
+        self.btn_clear.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_clear.setStyleSheet(u"background-color: red;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -413,6 +435,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_33.sizePolicy().hasHeightForWidth())
         self.pushButton_33.setSizePolicy(sizePolicy)
         self.pushButton_33.setFont(font3)
+        self.pushButton_33.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.pushButton_33.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -426,6 +449,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_XpowerY.sizePolicy().hasHeightForWidth())
         self.btn_XpowerY.setSizePolicy(sizePolicy)
         self.btn_XpowerY.setFont(font3)
+        self.btn_XpowerY.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_XpowerY.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -439,6 +463,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_plus.sizePolicy().hasHeightForWidth())
         self.btn_plus.setSizePolicy(sizePolicy)
         self.btn_plus.setFont(font2)
+        self.btn_plus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_plus.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -452,6 +477,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_7.sizePolicy().hasHeightForWidth())
         self.btn_7.setSizePolicy(sizePolicy)
         self.btn_7.setFont(font2)
+        self.btn_7.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_7.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -465,6 +491,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_MR.sizePolicy().hasHeightForWidth())
         self.btn_MR.setSizePolicy(sizePolicy)
         self.btn_MR.setFont(font4)
+        self.btn_MR.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_MR.setStyleSheet(u"background-color: blue;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -478,6 +505,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_Mplus.sizePolicy().hasHeightForWidth())
         self.btn_Mplus.setSizePolicy(sizePolicy)
         self.btn_Mplus.setFont(font4)
+        self.btn_Mplus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_Mplus.setStyleSheet(u"background-color: blue;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -491,6 +519,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_minus.sizePolicy().hasHeightForWidth())
         self.btn_minus.setSizePolicy(sizePolicy)
         self.btn_minus.setFont(font2)
+        self.btn_minus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_minus.setStyleSheet(u"background-color: orange;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -504,6 +533,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_e.sizePolicy().hasHeightForWidth())
         self.btn_e.setSizePolicy(sizePolicy)
         self.btn_e.setFont(font3)
+        self.btn_e.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_e.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -517,6 +547,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_sin.sizePolicy().hasHeightForWidth())
         self.btn_sin.setSizePolicy(sizePolicy)
         self.btn_sin.setFont(font3)
+        self.btn_sin.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_sin.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -530,6 +561,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_9.sizePolicy().hasHeightForWidth())
         self.btn_9.setSizePolicy(sizePolicy)
         self.btn_9.setFont(font2)
+        self.btn_9.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_9.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -543,6 +575,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_sinh.sizePolicy().hasHeightForWidth())
         self.btn_sinh.setSizePolicy(sizePolicy)
         self.btn_sinh.setFont(font3)
+        self.btn_sinh.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_sinh.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -556,6 +589,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_2.sizePolicy().hasHeightForWidth())
         self.btn_2.setSizePolicy(sizePolicy)
         self.btn_2.setFont(font2)
+        self.btn_2.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_2.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -569,6 +603,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_bracket_right.sizePolicy().hasHeightForWidth())
         self.btn_bracket_right.setSizePolicy(sizePolicy)
         self.btn_bracket_right.setFont(font2)
+        self.btn_bracket_right.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_bracket_right.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -582,6 +617,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_min.sizePolicy().hasHeightForWidth())
         self.btn_min.setSizePolicy(sizePolicy)
         self.btn_min.setFont(font3)
+        self.btn_min.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_min.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -595,6 +631,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_1.sizePolicy().hasHeightForWidth())
         self.btn_1.setSizePolicy(sizePolicy)
         self.btn_1.setFont(font2)
+        self.btn_1.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_1.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -608,6 +645,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_dot.sizePolicy().hasHeightForWidth())
         self.btn_dot.setSizePolicy(sizePolicy)
         self.btn_dot.setFont(font2)
+        self.btn_dot.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_dot.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -621,6 +659,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_cbrt.sizePolicy().hasHeightForWidth())
         self.btn_cbrt.setSizePolicy(sizePolicy)
         self.btn_cbrt.setFont(font3)
+        self.btn_cbrt.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cbrt.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -634,6 +673,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_cube.sizePolicy().hasHeightForWidth())
         self.btn_cube.setSizePolicy(sizePolicy)
         self.btn_cube.setFont(font3)
+        self.btn_cube.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cube.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -647,6 +687,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.pushButton_34.sizePolicy().hasHeightForWidth())
         self.pushButton_34.setSizePolicy(sizePolicy)
         self.pushButton_34.setFont(font3)
+        self.pushButton_34.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.pushButton_34.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -660,6 +701,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_bracket_left.sizePolicy().hasHeightForWidth())
         self.btn_bracket_left.setSizePolicy(sizePolicy)
         self.btn_bracket_left.setFont(font2)
+        self.btn_bracket_left.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_bracket_left.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -686,6 +728,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_equal.sizePolicy().hasHeightForWidth())
         self.btn_equal.setSizePolicy(sizePolicy)
         self.btn_equal.setFont(font2)
+        self.btn_equal.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_equal.setStyleSheet(u"background-color: green;\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -699,6 +742,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_cosh.sizePolicy().hasHeightForWidth())
         self.btn_cosh.setSizePolicy(sizePolicy)
         self.btn_cosh.setFont(font3)
+        self.btn_cosh.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cosh.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
@@ -716,6 +760,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_forward.sizePolicy().hasHeightForWidth())
         self.btn_forward.setSizePolicy(sizePolicy)
         self.btn_forward.setFont(font2)
+        self.btn_forward.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_forward.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -729,6 +774,7 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.btn_backward.sizePolicy().hasHeightForWidth())
         self.btn_backward.setSizePolicy(sizePolicy)
         self.btn_backward.setFont(font2)
+        self.btn_backward.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_backward.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
@@ -771,7 +817,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.gridLayout_3)
 
-        self.verticalLayout.setStretch(0, 1)
         self.verticalLayout.setStretch(2, 3)
 
         self.verticalLayout_2.addLayout(self.verticalLayout)
