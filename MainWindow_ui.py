@@ -37,6 +37,7 @@ class Ui_MainWindow(object):
         self.history_browser = QTextBrowser(self.centralwidget)
         self.history_browser.setObjectName(u"history_browser")
         font = QFont()
+        font.setFamilies([u"Courier New"])
         font.setPointSize(15)
         font.setWeight(QFont.DemiBold)
         self.history_browser.setFont(font)
@@ -47,6 +48,7 @@ class Ui_MainWindow(object):
 "border-radius: 7px;")
         self.history_browser.setFrameShadow(QFrame.Shadow.Sunken)
         self.history_browser.setLineWidth(1)
+        self.history_browser.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.history_browser.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.history_browser.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
 

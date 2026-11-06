@@ -36,6 +36,7 @@
        <widget class="QTextBrowser" name="history_browser">
         <property name="font">
          <font>
+          <family>Courier New</family>
           <pointsize>15</pointsize>
           <fontweight>DemiBold</fontweight>
          </font>
@@ -54,6 +55,9 @@ border-radius: 7px;</string>
         </property>
         <property name="lineWidth">
          <number>1</number>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
         </property>
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>

@@ -22,7 +22,9 @@ import sys
 
 import logging as pylog
 
+
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor, QTextCharFormat, QTextCursor
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLabel, QMainWindow, QPushButton
 
@@ -59,13 +61,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.expression_history = ""
 
         self.history_browser.clear()
+        self.history_item = 0
+        self.history_browser.textChanged.connect(self.scroll_to_bottom)
         self.bg_color_lightorange = False
         self.bg_color_lightyellow = True
 
         self.tokens = []
 
         self.status_lbl = QLabel("Ready")
-        # "#deb887" = burlywood
         self.status_lbl.setStyleSheet(
             "font-weight: bold; background-color: rgb(94, 94, 94); color: white; border: 1 solid; border-radius: 7;"
         )
@@ -436,18 +439,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     self.result = cleaned
 
-                # Store current expression as new history item
-                if self.bg_color_lightyellow:
-                    bg_color = "<span style='background-color: lightyellow;'>"
-                    self.bg_color_lightorange = True
-                    self.bg_color_lightyellow = False
-                else:
-                    bg_color = "<span style='background-color: rgb(255, 212, 121);'>"
-                    self.bg_color_lightorange = False
-                    self.bg_color_lightyellow = True
-                self.expression_history += bg_color
-                self.expression_history += f"{self.text}{self.result}</span><br>"
-                self.history_browser.setHtml(self.expression_history)
+                self.expression_history = f"{self.text}{self.result}"
+                self.history_browser.append(self.expression_history)
 
                 # Show reuslt of expression
                 self.text = f"{self.result}"
@@ -459,7 +452,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = "Error: Division by zero!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_browser.setHtml(
+                self.history_browser.append(
                     f"{self.text}<br><span style='color:red;'>Error: Division by zero!</span>"
                 )
                 self.text = ""
@@ -469,7 +462,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = "Error: Insufficient operands or parentheses error!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_browser.setHtml(
+                self.history_browser.append(
                     f"{self.text}<br><span style='color:red;'>Error: Insufficient operands or parentheses error</span>"
                 )
                 self.text = ""
@@ -479,13 +472,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = f"Error: General error: {str(e)}"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_browser.setHtml(
+                self.history_browser.append(
                     f"{self.text}<br><span style='color:red;'>Error: Calculation not possible!</span>"
                 )
                 self.text = ""
                 self.expression_line.setText(self.text)
 
         self.log.exit("on_button_clicked", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def scroll_to_bottom(self):
+        scrollbar = self.history_browser.verticalScrollBar()
+        scrollbar.setValue(scrollbar.maximum())
 
     #
     # -----------------------------------------------
