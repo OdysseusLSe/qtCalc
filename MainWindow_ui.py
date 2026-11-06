@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QLabel,
-    QLayout, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QTextBrowser,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractScrollArea, QApplication, QFrame, QGridLayout,
+    QLabel, QLayout, QLineEdit, QMainWindow,
+    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
+    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -27,26 +27,45 @@ class Ui_MainWindow(object):
         MainWindow.resize(750, 500)
         MainWindow.setMinimumSize(QSize(750, 500))
         MainWindow.setMaximumSize(QSize(750, 500))
-        MainWindow.setStyleSheet(u"background-color : rgb(148, 82, 0);")
+        MainWindow.setStyleSheet(u"background-color : rgb(169, 169, 169);")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.textBrowser = QTextBrowser(self.centralwidget)
-        self.textBrowser.setObjectName(u"textBrowser")
+        self.history_browser = QTextBrowser(self.centralwidget)
+        self.history_browser.setObjectName(u"history_browser")
         font = QFont()
-        font.setPointSize(25)
-        font.setBold(True)
-        self.textBrowser.setFont(font)
-        self.textBrowser.setStyleSheet(u"background-color: palegoldenrod;\n"
+        font.setPointSize(15)
+        font.setWeight(QFont.DemiBold)
+        self.history_browser.setFont(font)
+        self.history_browser.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        self.history_browser.setStyleSheet(u"background-color: rgb(214, 214, 214);\n"
 "color: black;\n"
-"border: 5px solid;")
-        self.textBrowser.setFrameShadow(QFrame.Shadow.Sunken)
-        self.textBrowser.setLineWidth(1)
+"border: 5px solid;\n"
+"border-radius: 7px;")
+        self.history_browser.setFrameShadow(QFrame.Shadow.Sunken)
+        self.history_browser.setLineWidth(1)
+        self.history_browser.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.history_browser.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
 
-        self.verticalLayout.addWidget(self.textBrowser)
+        self.verticalLayout.addWidget(self.history_browser)
+
+        self.expression_line = QLineEdit(self.centralwidget)
+        self.expression_line.setObjectName(u"expression_line")
+        font1 = QFont()
+        font1.setPointSize(20)
+        font1.setWeight(QFont.DemiBold)
+        self.expression_line.setFont(font1)
+        self.expression_line.setStyleSheet(u"background-color : rgb(214, 214, 214);\n"
+"color: black;\n"
+"border: 3px solid;\n"
+"border-radius: 7px;\n"
+"padding: 5px;")
+        self.expression_line.setReadOnly(True)
+
+        self.verticalLayout.addWidget(self.expression_line)
 
         self.gridLayout_3 = QGridLayout()
 #ifndef Q_OS_MACOS
@@ -61,13 +80,14 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_comma.sizePolicy().hasHeightForWidth())
         self.btn_comma.setSizePolicy(sizePolicy)
-        font1 = QFont()
-        font1.setPointSize(25)
-        font1.setWeight(QFont.ExtraBold)
-        self.btn_comma.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(25)
+        font2.setWeight(QFont.ExtraBold)
+        self.btn_comma.setFont(font2)
         self.btn_comma.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_comma, 1, 7, 1, 1)
@@ -76,13 +96,14 @@ class Ui_MainWindow(object):
         self.btn_max.setObjectName(u"btn_max")
         sizePolicy.setHeightForWidth(self.btn_max.sizePolicy().hasHeightForWidth())
         self.btn_max.setSizePolicy(sizePolicy)
-        font2 = QFont()
-        font2.setPointSize(25)
-        font2.setWeight(QFont.DemiBold)
-        self.btn_max.setFont(font2)
+        font3 = QFont()
+        font3.setPointSize(20)
+        font3.setBold(True)
+        self.btn_max.setFont(font3)
         self.btn_max.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_max, 5, 0, 1, 1)
@@ -91,10 +112,11 @@ class Ui_MainWindow(object):
         self.btn_cos.setObjectName(u"btn_cos")
         sizePolicy.setHeightForWidth(self.btn_cos.sizePolicy().hasHeightForWidth())
         self.btn_cos.setSizePolicy(sizePolicy)
-        self.btn_cos.setFont(font2)
+        self.btn_cos.setFont(font3)
         self.btn_cos.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_cos, 4, 2, 1, 1)
@@ -103,10 +125,11 @@ class Ui_MainWindow(object):
         self.btn_3.setObjectName(u"btn_3")
         sizePolicy.setHeightForWidth(self.btn_3.sizePolicy().hasHeightForWidth())
         self.btn_3.setSizePolicy(sizePolicy)
-        self.btn_3.setFont(font1)
+        self.btn_3.setFont(font2)
         self.btn_3.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_3, 4, 8, 1, 1)
@@ -115,12 +138,11 @@ class Ui_MainWindow(object):
         self.pushButton_32.setObjectName(u"pushButton_32")
         sizePolicy.setHeightForWidth(self.pushButton_32.sizePolicy().hasHeightForWidth())
         self.pushButton_32.setSizePolicy(sizePolicy)
-        font3 = QFont()
-        font3.setPointSize(25)
         self.pushButton_32.setFont(font3)
         self.pushButton_32.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.pushButton_32, 2, 1, 1, 1)
@@ -129,10 +151,11 @@ class Ui_MainWindow(object):
         self.btn_8.setObjectName(u"btn_8")
         sizePolicy.setHeightForWidth(self.btn_8.sizePolicy().hasHeightForWidth())
         self.btn_8.setSizePolicy(sizePolicy)
-        self.btn_8.setFont(font1)
+        self.btn_8.setFont(font2)
         self.btn_8.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_8, 2, 7, 1, 1)
@@ -141,10 +164,11 @@ class Ui_MainWindow(object):
         self.btn_0.setObjectName(u"btn_0")
         sizePolicy.setHeightForWidth(self.btn_0.sizePolicy().hasHeightForWidth())
         self.btn_0.setSizePolicy(sizePolicy)
-        self.btn_0.setFont(font1)
+        self.btn_0.setFont(font2)
         self.btn_0.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_0, 5, 6, 1, 1)
@@ -157,6 +181,7 @@ class Ui_MainWindow(object):
         self.btn_pi.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_pi, 1, 1, 1, 1)
@@ -165,10 +190,11 @@ class Ui_MainWindow(object):
         self.btn_4.setObjectName(u"btn_4")
         sizePolicy.setHeightForWidth(self.btn_4.sizePolicy().hasHeightForWidth())
         self.btn_4.setSizePolicy(sizePolicy)
-        self.btn_4.setFont(font1)
+        self.btn_4.setFont(font2)
         self.btn_4.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_4, 3, 6, 1, 1)
@@ -177,10 +203,11 @@ class Ui_MainWindow(object):
         self.btn_log.setObjectName(u"btn_log")
         sizePolicy.setHeightForWidth(self.btn_log.sizePolicy().hasHeightForWidth())
         self.btn_log.setSizePolicy(sizePolicy)
-        self.btn_log.setFont(font2)
+        self.btn_log.setFont(font3)
         self.btn_log.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_log, 5, 3, 1, 1)
@@ -189,10 +216,14 @@ class Ui_MainWindow(object):
         self.btn_MC.setObjectName(u"btn_MC")
         sizePolicy.setHeightForWidth(self.btn_MC.sizePolicy().hasHeightForWidth())
         self.btn_MC.setSizePolicy(sizePolicy)
-        self.btn_MC.setFont(font2)
+        font4 = QFont()
+        font4.setPointSize(25)
+        font4.setWeight(QFont.DemiBold)
+        self.btn_MC.setFont(font4)
         self.btn_MC.setStyleSheet(u"background-color: blue;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_MC, 3, 0, 1, 1)
@@ -201,10 +232,11 @@ class Ui_MainWindow(object):
         self.btn_ln.setObjectName(u"btn_ln")
         sizePolicy.setHeightForWidth(self.btn_ln.sizePolicy().hasHeightForWidth())
         self.btn_ln.setSizePolicy(sizePolicy)
-        self.btn_ln.setFont(font2)
+        self.btn_ln.setFont(font3)
         self.btn_ln.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_ln, 1, 3, 1, 1)
@@ -216,12 +248,15 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.btn__2nd.sizePolicy().hasHeightForWidth())
         self.btn__2nd.setSizePolicy(sizePolicy1)
-        font4 = QFont()
-        font4.setPointSize(15)
-        font4.setWeight(QFont.ExtraBold)
-        self.btn__2nd.setFont(font4)
+        font5 = QFont()
+        font5.setPointSize(15)
+        font5.setWeight(QFont.ExtraBold)
+        self.btn__2nd.setFont(font5)
         self.btn__2nd.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
-"color : white;")
+"color : white;\n"
+"border: 1px solid;\n"
+"border-radius: 7px;\n"
+"padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn__2nd, 0, 10, 1, 1)
 
@@ -229,10 +264,11 @@ class Ui_MainWindow(object):
         self.btn_square.setObjectName(u"btn_square")
         sizePolicy.setHeightForWidth(self.btn_square.sizePolicy().hasHeightForWidth())
         self.btn_square.setSizePolicy(sizePolicy)
-        self.btn_square.setFont(font2)
+        self.btn_square.setFont(font3)
         self.btn_square.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_square, 4, 4, 1, 1)
@@ -241,10 +277,11 @@ class Ui_MainWindow(object):
         self.btn_tan.setObjectName(u"btn_tan")
         sizePolicy.setHeightForWidth(self.btn_tan.sizePolicy().hasHeightForWidth())
         self.btn_tan.setSizePolicy(sizePolicy)
-        self.btn_tan.setFont(font2)
+        self.btn_tan.setFont(font3)
         self.btn_tan.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_tan, 3, 2, 1, 1)
@@ -253,34 +290,40 @@ class Ui_MainWindow(object):
         self.btn_6.setObjectName(u"btn_6")
         sizePolicy.setHeightForWidth(self.btn_6.sizePolicy().hasHeightForWidth())
         self.btn_6.setSizePolicy(sizePolicy)
-        self.btn_6.setFont(font1)
+        self.btn_6.setFont(font2)
         self.btn_6.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_6, 3, 8, 1, 1)
 
-        self.pushButton_6 = QPushButton(self.centralwidget)
-        self.pushButton_6.setObjectName(u"pushButton_6")
-        sizePolicy.setHeightForWidth(self.pushButton_6.sizePolicy().hasHeightForWidth())
-        self.pushButton_6.setSizePolicy(sizePolicy)
-        self.pushButton_6.setFont(font2)
-        self.pushButton_6.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_10powerX = QPushButton(self.centralwidget)
+        self.btn_10powerX.setObjectName(u"btn_10powerX")
+        sizePolicy.setHeightForWidth(self.btn_10powerX.sizePolicy().hasHeightForWidth())
+        self.btn_10powerX.setSizePolicy(sizePolicy)
+        self.btn_10powerX.setFont(font3)
+        self.btn_10powerX.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.pushButton_6, 5, 4, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_10powerX, 5, 4, 1, 1)
 
         self.btn_divide = QPushButton(self.centralwidget)
         self.btn_divide.setObjectName(u"btn_divide")
         sizePolicy.setHeightForWidth(self.btn_divide.sizePolicy().hasHeightForWidth())
         self.btn_divide.setSizePolicy(sizePolicy)
-        self.btn_divide.setFont(font)
+        font6 = QFont()
+        font6.setPointSize(25)
+        font6.setBold(True)
+        self.btn_divide.setFont(font6)
         self.btn_divide.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_divide, 2, 9, 1, 1)
@@ -289,10 +332,11 @@ class Ui_MainWindow(object):
         self.btn_sqrt.setObjectName(u"btn_sqrt")
         sizePolicy.setHeightForWidth(self.btn_sqrt.sizePolicy().hasHeightForWidth())
         self.btn_sqrt.setSizePolicy(sizePolicy)
-        self.btn_sqrt.setFont(font2)
+        self.btn_sqrt.setFont(font3)
         self.btn_sqrt.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_sqrt, 4, 3, 1, 1)
@@ -301,34 +345,37 @@ class Ui_MainWindow(object):
         self.btn_unary_minus.setObjectName(u"btn_unary_minus")
         sizePolicy.setHeightForWidth(self.btn_unary_minus.sizePolicy().hasHeightForWidth())
         self.btn_unary_minus.setSizePolicy(sizePolicy)
-        self.btn_unary_minus.setFont(font)
+        self.btn_unary_minus.setFont(font6)
         self.btn_unary_minus.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_unary_minus, 5, 7, 1, 1)
 
-        self.pushButton_22 = QPushButton(self.centralwidget)
-        self.pushButton_22.setObjectName(u"pushButton_22")
-        sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
-        self.pushButton_22.setSizePolicy(sizePolicy)
-        self.pushButton_22.setFont(font3)
-        self.pushButton_22.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_tanh = QPushButton(self.centralwidget)
+        self.btn_tanh.setObjectName(u"btn_tanh")
+        sizePolicy.setHeightForWidth(self.btn_tanh.sizePolicy().hasHeightForWidth())
+        self.btn_tanh.setSizePolicy(sizePolicy)
+        self.btn_tanh.setFont(font3)
+        self.btn_tanh.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.pushButton_22, 3, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_tanh, 3, 1, 1, 1)
 
         self.btn_5 = QPushButton(self.centralwidget)
         self.btn_5.setObjectName(u"btn_5")
         sizePolicy.setHeightForWidth(self.btn_5.sizePolicy().hasHeightForWidth())
         self.btn_5.setSizePolicy(sizePolicy)
-        self.btn_5.setFont(font1)
+        self.btn_5.setFont(font2)
         self.btn_5.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_5, 3, 7, 1, 1)
@@ -337,10 +384,11 @@ class Ui_MainWindow(object):
         self.btn_multiply.setObjectName(u"btn_multiply")
         sizePolicy.setHeightForWidth(self.btn_multiply.sizePolicy().hasHeightForWidth())
         self.btn_multiply.setSizePolicy(sizePolicy)
-        self.btn_multiply.setFont(font)
+        self.btn_multiply.setFont(font6)
         self.btn_multiply.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_multiply, 3, 9, 1, 1)
@@ -349,10 +397,11 @@ class Ui_MainWindow(object):
         self.btn_clear.setObjectName(u"btn_clear")
         sizePolicy.setHeightForWidth(self.btn_clear.sizePolicy().hasHeightForWidth())
         self.btn_clear.setSizePolicy(sizePolicy)
-        self.btn_clear.setFont(font1)
+        self.btn_clear.setFont(font2)
         self.btn_clear.setStyleSheet(u"background-color: red;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_clear, 2, 10, 1, 1)
@@ -365,6 +414,7 @@ class Ui_MainWindow(object):
         self.pushButton_33.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.pushButton_33, 2, 2, 1, 1)
@@ -373,10 +423,11 @@ class Ui_MainWindow(object):
         self.btn_XpowerY.setObjectName(u"btn_XpowerY")
         sizePolicy.setHeightForWidth(self.btn_XpowerY.sizePolicy().hasHeightForWidth())
         self.btn_XpowerY.setSizePolicy(sizePolicy)
-        self.btn_XpowerY.setFont(font2)
+        self.btn_XpowerY.setFont(font3)
         self.btn_XpowerY.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_XpowerY, 2, 4, 1, 1)
@@ -385,10 +436,11 @@ class Ui_MainWindow(object):
         self.btn_plus.setObjectName(u"btn_plus")
         sizePolicy.setHeightForWidth(self.btn_plus.sizePolicy().hasHeightForWidth())
         self.btn_plus.setSizePolicy(sizePolicy)
-        self.btn_plus.setFont(font1)
+        self.btn_plus.setFont(font2)
         self.btn_plus.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_plus, 5, 9, 1, 1)
@@ -397,10 +449,11 @@ class Ui_MainWindow(object):
         self.btn_7.setObjectName(u"btn_7")
         sizePolicy.setHeightForWidth(self.btn_7.sizePolicy().hasHeightForWidth())
         self.btn_7.setSizePolicy(sizePolicy)
-        self.btn_7.setFont(font1)
+        self.btn_7.setFont(font2)
         self.btn_7.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_7, 2, 6, 1, 1)
@@ -409,10 +462,11 @@ class Ui_MainWindow(object):
         self.btn_MR.setObjectName(u"btn_MR")
         sizePolicy.setHeightForWidth(self.btn_MR.sizePolicy().hasHeightForWidth())
         self.btn_MR.setSizePolicy(sizePolicy)
-        self.btn_MR.setFont(font2)
+        self.btn_MR.setFont(font4)
         self.btn_MR.setStyleSheet(u"background-color: blue;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_MR, 2, 0, 1, 1)
@@ -421,10 +475,11 @@ class Ui_MainWindow(object):
         self.btn_Mplus.setObjectName(u"btn_Mplus")
         sizePolicy.setHeightForWidth(self.btn_Mplus.sizePolicy().hasHeightForWidth())
         self.btn_Mplus.setSizePolicy(sizePolicy)
-        self.btn_Mplus.setFont(font2)
+        self.btn_Mplus.setFont(font4)
         self.btn_Mplus.setStyleSheet(u"background-color: blue;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_Mplus, 1, 0, 1, 1)
@@ -433,10 +488,11 @@ class Ui_MainWindow(object):
         self.btn_minus.setObjectName(u"btn_minus")
         sizePolicy.setHeightForWidth(self.btn_minus.sizePolicy().hasHeightForWidth())
         self.btn_minus.setSizePolicy(sizePolicy)
-        self.btn_minus.setFont(font1)
+        self.btn_minus.setFont(font2)
         self.btn_minus.setStyleSheet(u"background-color: orange;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_minus, 4, 9, 1, 1)
@@ -445,10 +501,11 @@ class Ui_MainWindow(object):
         self.btn_e.setObjectName(u"btn_e")
         sizePolicy.setHeightForWidth(self.btn_e.sizePolicy().hasHeightForWidth())
         self.btn_e.setSizePolicy(sizePolicy)
-        self.btn_e.setFont(font2)
+        self.btn_e.setFont(font3)
         self.btn_e.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_e, 1, 2, 1, 1)
@@ -457,10 +514,11 @@ class Ui_MainWindow(object):
         self.btn_sin.setObjectName(u"btn_sin")
         sizePolicy.setHeightForWidth(self.btn_sin.sizePolicy().hasHeightForWidth())
         self.btn_sin.setSizePolicy(sizePolicy)
-        self.btn_sin.setFont(font2)
+        self.btn_sin.setFont(font3)
         self.btn_sin.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_sin, 5, 2, 1, 1)
@@ -469,34 +527,37 @@ class Ui_MainWindow(object):
         self.btn_9.setObjectName(u"btn_9")
         sizePolicy.setHeightForWidth(self.btn_9.sizePolicy().hasHeightForWidth())
         self.btn_9.setSizePolicy(sizePolicy)
-        self.btn_9.setFont(font1)
+        self.btn_9.setFont(font2)
         self.btn_9.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_9, 2, 8, 1, 1)
 
-        self.pushButton_9 = QPushButton(self.centralwidget)
-        self.pushButton_9.setObjectName(u"pushButton_9")
-        sizePolicy.setHeightForWidth(self.pushButton_9.sizePolicy().hasHeightForWidth())
-        self.pushButton_9.setSizePolicy(sizePolicy)
-        self.pushButton_9.setFont(font3)
-        self.pushButton_9.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_sinh = QPushButton(self.centralwidget)
+        self.btn_sinh.setObjectName(u"btn_sinh")
+        sizePolicy.setHeightForWidth(self.btn_sinh.sizePolicy().hasHeightForWidth())
+        self.btn_sinh.setSizePolicy(sizePolicy)
+        self.btn_sinh.setFont(font3)
+        self.btn_sinh.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.pushButton_9, 5, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_sinh, 5, 1, 1, 1)
 
         self.btn_2 = QPushButton(self.centralwidget)
         self.btn_2.setObjectName(u"btn_2")
         sizePolicy.setHeightForWidth(self.btn_2.sizePolicy().hasHeightForWidth())
         self.btn_2.setSizePolicy(sizePolicy)
-        self.btn_2.setFont(font1)
+        self.btn_2.setFont(font2)
         self.btn_2.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_2, 4, 7, 1, 1)
@@ -505,10 +566,11 @@ class Ui_MainWindow(object):
         self.btn_bracket_right.setObjectName(u"btn_bracket_right")
         sizePolicy.setHeightForWidth(self.btn_bracket_right.sizePolicy().hasHeightForWidth())
         self.btn_bracket_right.setSizePolicy(sizePolicy)
-        self.btn_bracket_right.setFont(font1)
+        self.btn_bracket_right.setFont(font2)
         self.btn_bracket_right.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_bracket_right, 1, 8, 1, 1)
@@ -517,10 +579,11 @@ class Ui_MainWindow(object):
         self.btn_min.setObjectName(u"btn_min")
         sizePolicy.setHeightForWidth(self.btn_min.sizePolicy().hasHeightForWidth())
         self.btn_min.setSizePolicy(sizePolicy)
-        self.btn_min.setFont(font2)
+        self.btn_min.setFont(font3)
         self.btn_min.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_min, 4, 0, 1, 1)
@@ -529,10 +592,11 @@ class Ui_MainWindow(object):
         self.btn_1.setObjectName(u"btn_1")
         sizePolicy.setHeightForWidth(self.btn_1.sizePolicy().hasHeightForWidth())
         self.btn_1.setSizePolicy(sizePolicy)
-        self.btn_1.setFont(font1)
+        self.btn_1.setFont(font2)
         self.btn_1.setStyleSheet(u"background-color: black;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_1, 4, 6, 1, 1)
@@ -541,10 +605,11 @@ class Ui_MainWindow(object):
         self.btn_dot.setObjectName(u"btn_dot")
         sizePolicy.setHeightForWidth(self.btn_dot.sizePolicy().hasHeightForWidth())
         self.btn_dot.setSizePolicy(sizePolicy)
-        self.btn_dot.setFont(font1)
+        self.btn_dot.setFont(font2)
         self.btn_dot.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_dot, 5, 8, 1, 1)
@@ -553,10 +618,11 @@ class Ui_MainWindow(object):
         self.btn_cbrt.setObjectName(u"btn_cbrt")
         sizePolicy.setHeightForWidth(self.btn_cbrt.sizePolicy().hasHeightForWidth())
         self.btn_cbrt.setSizePolicy(sizePolicy)
-        self.btn_cbrt.setFont(font2)
+        self.btn_cbrt.setFont(font3)
         self.btn_cbrt.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_cbrt, 3, 3, 1, 1)
@@ -565,10 +631,11 @@ class Ui_MainWindow(object):
         self.btn_cube.setObjectName(u"btn_cube")
         sizePolicy.setHeightForWidth(self.btn_cube.sizePolicy().hasHeightForWidth())
         self.btn_cube.setSizePolicy(sizePolicy)
-        self.btn_cube.setFont(font2)
+        self.btn_cube.setFont(font3)
         self.btn_cube.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_cube, 3, 4, 1, 1)
@@ -577,10 +644,11 @@ class Ui_MainWindow(object):
         self.pushButton_34.setObjectName(u"pushButton_34")
         sizePolicy.setHeightForWidth(self.pushButton_34.sizePolicy().hasHeightForWidth())
         self.pushButton_34.setSizePolicy(sizePolicy)
-        self.pushButton_34.setFont(font2)
+        self.pushButton_34.setFont(font3)
         self.pushButton_34.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.pushButton_34, 2, 3, 1, 1)
@@ -589,10 +657,11 @@ class Ui_MainWindow(object):
         self.btn_bracket_left.setObjectName(u"btn_bracket_left")
         sizePolicy.setHeightForWidth(self.btn_bracket_left.sizePolicy().hasHeightForWidth())
         self.btn_bracket_left.setSizePolicy(sizePolicy)
-        self.btn_bracket_left.setFont(font1)
+        self.btn_bracket_left.setFont(font2)
         self.btn_bracket_left.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_bracket_left, 1, 6, 1, 1)
@@ -601,10 +670,11 @@ class Ui_MainWindow(object):
         self.btn_lg2.setObjectName(u"btn_lg2")
         sizePolicy.setHeightForWidth(self.btn_lg2.sizePolicy().hasHeightForWidth())
         self.btn_lg2.setSizePolicy(sizePolicy)
-        self.btn_lg2.setFont(font2)
+        self.btn_lg2.setFont(font3)
         self.btn_lg2.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_lg2, 1, 4, 1, 1)
@@ -613,25 +683,27 @@ class Ui_MainWindow(object):
         self.btn_equal.setObjectName(u"btn_equal")
         sizePolicy.setHeightForWidth(self.btn_equal.sizePolicy().hasHeightForWidth())
         self.btn_equal.setSizePolicy(sizePolicy)
-        self.btn_equal.setFont(font1)
+        self.btn_equal.setFont(font2)
         self.btn_equal.setStyleSheet(u"background-color: green;\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_equal, 3, 10, 3, 1)
 
-        self.pushButton_12 = QPushButton(self.centralwidget)
-        self.pushButton_12.setObjectName(u"pushButton_12")
-        sizePolicy.setHeightForWidth(self.pushButton_12.sizePolicy().hasHeightForWidth())
-        self.pushButton_12.setSizePolicy(sizePolicy)
-        self.pushButton_12.setFont(font3)
-        self.pushButton_12.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_cosh = QPushButton(self.centralwidget)
+        self.btn_cosh.setObjectName(u"btn_cosh")
+        sizePolicy.setHeightForWidth(self.btn_cosh.sizePolicy().hasHeightForWidth())
+        self.btn_cosh.setSizePolicy(sizePolicy)
+        self.btn_cosh.setFont(font3)
+        self.btn_cosh.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.pushButton_12, 4, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_cosh, 4, 1, 1, 1)
 
         self.horizontalSpacer = QSpacerItem(5, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
@@ -641,10 +713,11 @@ class Ui_MainWindow(object):
         self.btn_forward.setObjectName(u"btn_forward")
         sizePolicy.setHeightForWidth(self.btn_forward.sizePolicy().hasHeightForWidth())
         self.btn_forward.setSizePolicy(sizePolicy)
-        self.btn_forward.setFont(font1)
+        self.btn_forward.setFont(font2)
         self.btn_forward.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_forward, 1, 9, 1, 1)
@@ -653,10 +726,11 @@ class Ui_MainWindow(object):
         self.btn_backward.setObjectName(u"btn_backward")
         sizePolicy.setHeightForWidth(self.btn_backward.sizePolicy().hasHeightForWidth())
         self.btn_backward.setSizePolicy(sizePolicy)
-        self.btn_backward.setFont(font1)
+        self.btn_backward.setFont(font2)
         self.btn_backward.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
+"border-radius: 7px;\n"
 "padding: 5px;")
 
         self.gridLayout_3.addWidget(self.btn_backward, 1, 10, 1, 1)
@@ -668,13 +742,15 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.memory_lbl.sizePolicy().hasHeightForWidth())
         self.memory_lbl.setSizePolicy(sizePolicy2)
-        font5 = QFont()
-        font5.setPointSize(15)
-        font5.setBold(True)
-        self.memory_lbl.setFont(font5)
+        font7 = QFont()
+        font7.setPointSize(15)
+        font7.setBold(True)
+        self.memory_lbl.setFont(font7)
         self.memory_lbl.setStyleSheet(u"background-color : rgb(192, 192, 192);\n"
 "color: black;\n"
-"border: 2px solid;")
+"border: 2px solid;\n"
+"border-radius: 7px;\n"
+"padding: 5px;")
         self.memory_lbl.setTextFormat(Qt.TextFormat.PlainText)
         self.memory_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -694,7 +770,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.gridLayout_3)
 
         self.verticalLayout.setStretch(0, 1)
-        self.verticalLayout.setStretch(1, 3)
+        self.verticalLayout.setStretch(2, 3)
 
         self.verticalLayout_2.addLayout(self.verticalLayout)
 
@@ -730,11 +806,11 @@ class Ui_MainWindow(object):
         self.btn_square.setText(QCoreApplication.translate("MainWindow", u"x\u00b2", None))
         self.btn_tan.setText(QCoreApplication.translate("MainWindow", u"tan", None))
         self.btn_6.setText(QCoreApplication.translate("MainWindow", u"6", None))
-        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"10\u02e3", None))
+        self.btn_10powerX.setText(QCoreApplication.translate("MainWindow", u"10\u02e3", None))
         self.btn_divide.setText(QCoreApplication.translate("MainWindow", u"\u00f7", None))
         self.btn_sqrt.setText(QCoreApplication.translate("MainWindow", u"\u221a", None))
         self.btn_unary_minus.setText(QCoreApplication.translate("MainWindow", u"\u00b1", None))
-        self.pushButton_22.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_tanh.setText(QCoreApplication.translate("MainWindow", u"tanh", None))
         self.btn_5.setText(QCoreApplication.translate("MainWindow", u"5", None))
         self.btn_multiply.setText(QCoreApplication.translate("MainWindow", u"\u2716\ufe0f", None))
         self.btn_clear.setText(QCoreApplication.translate("MainWindow", u"C", None))
@@ -748,7 +824,7 @@ class Ui_MainWindow(object):
         self.btn_e.setText(QCoreApplication.translate("MainWindow", u"e", None))
         self.btn_sin.setText(QCoreApplication.translate("MainWindow", u"sin", None))
         self.btn_9.setText(QCoreApplication.translate("MainWindow", u"9", None))
-        self.pushButton_9.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_sinh.setText(QCoreApplication.translate("MainWindow", u"sinh", None))
         self.btn_2.setText(QCoreApplication.translate("MainWindow", u"2", None))
         self.btn_bracket_right.setText(QCoreApplication.translate("MainWindow", u")", None))
         self.btn_min.setText(QCoreApplication.translate("MainWindow", u"min", None))
@@ -760,7 +836,7 @@ class Ui_MainWindow(object):
         self.btn_bracket_left.setText(QCoreApplication.translate("MainWindow", u"(", None))
         self.btn_lg2.setText(QCoreApplication.translate("MainWindow", u"lg2", None))
         self.btn_equal.setText(QCoreApplication.translate("MainWindow", u"=", None))
-        self.pushButton_12.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_cosh.setText(QCoreApplication.translate("MainWindow", u"cosh", None))
         self.btn_forward.setText(QCoreApplication.translate("MainWindow", u"\u2190", None))
         self.btn_backward.setText(QCoreApplication.translate("MainWindow", u"\u2192", None))
         self.memory_lbl.setText(QCoreApplication.translate("MainWindow", u"Mem: <empty>", None))

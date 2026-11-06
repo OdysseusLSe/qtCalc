@@ -54,15 +54,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.advanced_operator()
         self.button_mapping()
 
-        self.textBrowser.clear()
         self.text = ""
+        self.expression_line.setReadOnly(True)
+        self.expression_history = ""
+
+        self.history_browser.clear()
+        self.bg_color_lightorange = False
+        self.bg_color_lightyellow = True
 
         self.tokens = []
 
         self.status_lbl = QLabel("Ready")
         # "#deb887" = burlywood
         self.status_lbl.setStyleSheet(
-            "font-weight: bold; background-color: #deb887; color: black"
+            "font-weight: bold; background-color: rgb(94, 94, 94); color: white; border: 1 solid; border-radius: 7;"
         )
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_bar.addWidget(self.status_lbl, 1)
@@ -88,16 +93,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Functions with their corresponding implementations
         self.functions = {
             'cos'   : (math.cos, 1),
+            'cosh'  : (math.cosh, 1),
             'exp'   : (math.exp, 1),
-            'ln'    : (math.log, 1),
             'lg2'   : (math.log2, 1),
+            'ln'    : (math.log, 1),
             'log'   : (math.log10, 1),
             'max'   : (math.fmax, 2),
             'min'   : (math.fmin, 2),
             'sin'   : (math.sin, 1),
+            'sinh'  : (math.sinh, 1),
             'sqrt'  : (math.sqrt, 1),
             'sqrt3' : (math.cbrt, 1),
-            'tan'   : (math.tan, 1)
+            'tan'   : (math.tan, 1),
+            'tanh'  : (math.tanh, 1)
         }
 
         # Predefined constants
@@ -126,15 +134,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_7"             : "7",
             "btn_8"             : "8",
             "btn_9"             : "9",
+            "btn_10powerX"      : "10^(",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
             "btn_cbrt"          : "sqrt3(",
             "btn_clear"         : "C",
-            "btn_comma"        : ",",
+            "btn_comma"         : ",",
             "btn_cos"           : "cos(",
+            "btn_cosh"          : "cosh(",
             "btn_cube"          : "^3",
             "btn_divide"        : "/",
-            "btn_dot"        : ".",
+            "btn_dot"           : ".",
             "btn_e"             : "e",
             "btn_equal"         : "=",
             "btn_lg2"           : "lg2(",
@@ -148,9 +158,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_plus"          : "+",
             "btn_unary_minus"   : "-",
             "btn_sin"           : "sin(",
+            "btn_sinh"          : "sinh(",
             "btn_sqrt"          : "sqrt(",
             "btn_square"        : "^2",
             "btn_tan"           : "tan(",
+            "btn_tanh"          : "tanh(",
             "btn_unary_minus"   : "-",
             "btn_XpowerY"       : "^"
         }
@@ -213,7 +225,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def keyPressEvent(self, event):
         self.log.entry("keyPressEvent(event)", True)
 
-        self.log.write(f"Key pressed: {event.text()}", True)
+        key_text = event.text()
+        self.log.write(f"event.text()='{event.text()}'", True)
+        self.log.write(f"event.key()='{event.key()}'", True)
+        self.log.write(f"Native='{event.nativeVirtualKey()}'", True)
+
+        matched_btn_name = None
+
+
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            matched_btn_name = "btn_equal"
+        elif key_text:
+            for button_name, character in self.buttons.items():
+                if key_text == character:
+                    matched_btn_name = button_name
+                    break
+
+        if matched_btn_name:
+            button_object = getattr(self, matched_btn_name, None)
+            if button_object:
+                button_object.animateClick()
+                self.log.write(f"matched_btn_name={matched_btn_name}", True)
+                event.accept()
+                self.log.exit("keyPressEvent(event)", True)
+                return
+
+        super().keyPressEvent(event)
 
         self.log.exit("keyPressEvent(event)", True)
 
@@ -227,8 +264,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         button      = self.sender()
         button_name = button.objectName()
 
-        self.status_lbl.setText("Validating input...")
-
         #
         # First, handle special buttons like clear, memory functions, etc.
         #
@@ -236,7 +271,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if button_name == "btn_clear":
             # Clear the current expression and reset the display
             self.text = ""
-            self.textBrowser.clear()
+            self.expression_line.setText(self.text)
             self.log.write("clear", True)
             return
         elif button_name == "btn_Mplus":
@@ -254,7 +289,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.memory_lbl.text() != "Mem: <empty>":
                 mem_value = self.memory_lbl.text().split(": ")[1]
                 self.text += mem_value
-                self.textBrowser.setPlainText(self.text)
+                self.expression_line.setText(self.text)
             return
 
         self.result = None
@@ -263,7 +298,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Second, handle the input validation
         #
 
+        self.status_lbl.setText("Validating input...")
+
         new_char = self.buttons[button_name]
+        self.log.write(f"new_char={new_char}", True)
 
         last_char = self.text[-1] if self.text else ""
         operators_list = list(self.operators.keys())
@@ -271,6 +309,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_char != "=":
 
             log_string = f"Validation is blocking: "
+
+            if not self.text and (new_char == "^2" or new_char == "^3"):
+                log_string += f"Operator at start: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                self.log.exit("on_button_clicked", True)
+                return
 
             if not self.text and new_char in operators_list and new_char != '-':
                 log_string += f"Operator at start: {new_char}!"
@@ -281,6 +326,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             if last_char in operators_list and new_char in operators_list:
                 log_string += f"Double operator: {last_char}{new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                self.log.exit("on_button_clicked", True)
+                return
+
+            if last_char == "(" and (new_char == "^2" or new_char == "^3"):
+                log_string += f"Operator after opening parenthesis: {new_char}!"
                 self.status_lbl.setText(log_string)
                 self.log.warning(log_string, True)
                 self.log.exit("on_button_clicked", True)
@@ -311,29 +363,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     return
 
         #
-        # Third, if the input is valid, update the text and display it
+        # Third, if the input is valid, update the expression and display it
         #
 
         self.text += new_char
         self.log.write(f"{new_char}", True)
 
-        self.textBrowser.clear()
-        self.textBrowser.setPlainText(self.text)
+        self.expression_line.setText(self.text)
         self.log.write(f"self.text={self.text}", True)
 
         #
         # Forth, handle the calculation when the "=" button is pressed
         #
 
-        if button_name == "btn_equal":
+        if new_char == "=":
 
             number_of_opening = self.text.count("(")
             number_of_closing = self.text.count(")")
             if number_of_closing < number_of_opening:
                 # Remove the "=" (the last character)
                 self.text = self.text[:-1]
-                self.textBrowser.clear()
-                self.textBrowser.setPlainText(self.text)
+                self.expression_line.setText(self.text)
                 self.status_lbl.setText("Too few closing parentheses!")
                 self.log.warning("Too few closing parentheses!", True)
                 self.log.exit("on_button_clicked", True)
@@ -386,38 +436,54 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     self.result = cleaned
 
-                self.text += f"<br>{self.result}"
-                self.textBrowser.setHtml(self.text)
+                # Store current expression as new history item
+                if self.bg_color_lightyellow:
+                    bg_color = "<span style='background-color: lightyellow;'>"
+                    self.bg_color_lightorange = True
+                    self.bg_color_lightyellow = False
+                else:
+                    bg_color = "<span style='background-color: rgb(255, 212, 121);'>"
+                    self.bg_color_lightorange = False
+                    self.bg_color_lightyellow = True
+                self.expression_history += bg_color
+                self.expression_history += f"{self.text}{self.result}</span><br>"
+                self.history_browser.setHtml(self.expression_history)
+
+                # Show reuslt of expression
+                self.text = f"{self.result}"
                 self.status_lbl.setText("Ready")
-                self.text = str(self.result)
+                self.expression_line.setText(self.text)
                 self.log.write(f"self.text={self.text}", True)
 
             except ZeroDivisionError:
                 error = "Error: Division by zero!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.textBrowser.setHtml(
+                self.history_browser.setHtml(
                     f"{self.text}<br><span style='color:red;'>Error: Division by zero!</span>"
                 )
                 self.text = ""
+                self.expression_line.setText(self.text)
 
             except IndexError:
                 error = "Error: Insufficient operands or parentheses error!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.textBrowser.setHtml(
+                self.history_browser.setHtml(
                     f"{self.text}<br><span style='color:red;'>Error: Insufficient operands or parentheses error</span>"
                 )
                 self.text = ""
+                self.expression_line.setText(self.text)
 
             except Exception as e:
                 error = f"Error: General error: {str(e)}"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.textBrowser.setHtml(
+                self.history_browser.setHtml(
                     f"{self.text}<br><span style='color:red;'>Error: Calculation not possible!</span>"
                 )
                 self.text = ""
+                self.expression_line.setText(self.text)
 
         self.log.exit("on_button_clicked", True)
 
