@@ -40,7 +40,7 @@ from Logging import Logging
 #import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.3"
+APP_VERSION = "0.4"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -64,12 +64,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_mapping()
 
         self.text = ""
-        self.expression_line.setReadOnly(True)
         self.expression_history = ""
 
         self.history_list.model().rowsInserted.connect(
             self.history_list.scrollToBottom
         )
+        self.history_list.itemDoubleClicked.connect(self.on_item_double_clicked)
 
         self.history_item = 0
         self.tokens = []
@@ -299,6 +299,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.text += mem_value
                 self.expression_line.setText(self.text)
             return
+        elif button_name == "btn_left":
+            self.expression_line.cursorBackward(False)
+            return
+        elif button_name == "btn_right":
+            self.expression_line.cursorForward(False)
+            return
 
         self.result = None
 
@@ -448,14 +454,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 expression = f"{self.text}{self.result}"
                 self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
                 item = QListWidgetItem(self.expression_history)
-                self.log.write(f"self.expression_history={self.expression_history}", True)
+                self.log.write(
+                    f"self.expression_history={self.expression_history}",
+                    True
+                )
 
                 if self.history_item % 2 == 0:
-                    color = QColor(255, 193, 182)
-                    item.setBackground(QBrush(color))
-                else:
-                    color = QColor(235, 254, 193)
-                    item.setBackground(QBrush(color))
+                    item.setBackground(QBrush(QColor("lightgrey")))
                 self.history_list.addItem(item)
                 self.history_item += 1
 
@@ -469,7 +474,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = "Error: Division by zero!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_list.addItem(f"{self.text} --> {error}")
+                item = QListWidgetItem(f"{self.text} --> {error}")
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
                 self.text = ""
                 self.expression_line.setText(self.text)
 
@@ -477,15 +486,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 error = "Error: Insufficient operands or parentheses error!"
                 self.status_lbl.setText(error)
                 self.log.error(error, True)
-                self.history_list.addItem(f"{self.text} --> {error}")
+                item = QListWidgetItem(f"{self.text} --> {error}")
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
                 self.text = ""
                 self.expression_line.setText(self.text)
 
             except Exception as e:
                 error = f"Error: General error: {str(e)}"
                 self.status_lbl.setText(error)
-                self.log.error(error, True)
-                self.history_list.addItem(f"{self.text} --> {error}")
+                item = QListWidgetItem(f"{self.text} --> {error}")
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
                 self.text = ""
                 self.expression_line.setText(self.text)
 
@@ -495,9 +511,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
+    def on_item_double_clicked(self, item):
+        self.log.entry("on_item_double_clicked(self, item)", True)
+
+        self.log.write(f"item.text()={item.text()}", True)
+
+        # Copy text just before "=" and attach it to the current expression
+        self.text += item.text().split("=", 1)[0]
+        self.expression_line.setText(self.text)
+        self.log.write(f"self.text={self.text}", True)
+
+        self.log.exit("on_item_double_clicked", True)
+
+    #
+    # -----------------------------------------------
+    #
+
     def scroll_to_bottom(self):
+        self.log.entry("scroll_to_bottom(self)", True)
+
         scrollbar = self.history_list.verticalScrollBar()
         scrollbar.setValue(scrollbar.maximum())
+
+        self.log.exit("scroll_to_bottom", True)
 
     #
     # -----------------------------------------------

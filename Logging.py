@@ -47,7 +47,7 @@ class Logging():
     def exit(self, info, local_debug=False):
         if self.global_debug and local_debug:
             self.build_output()
-            logging.debug(self.output_string.ljust(self.n) + "-<-" + info)
+            logging.debug(f"{self.output_string.ljust(self.n)}-<-{info}()")
 
     def warning(self, info, local_debug=False):
         if self.global_debug and local_debug:

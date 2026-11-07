@@ -42,7 +42,7 @@ class Ui_MainWindow(object):
         font.setWeight(QFont.DemiBold)
         self.history_list.setFont(font)
         self.history_list.setStyleSheet(u"background-color: rgb(214, 214, 214);\n"
-"color: black;\n"
+"color: rgb(94, 94, 94);\n"
 "border: 5px solid;\n"
 "border-radius: 7px;")
         self.history_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
@@ -55,15 +55,17 @@ class Ui_MainWindow(object):
         self.expression_line = QLineEdit(self.centralwidget)
         self.expression_line.setObjectName(u"expression_line")
         font1 = QFont()
+        font1.setFamilies([u"Courier New"])
         font1.setPointSize(20)
-        font1.setWeight(QFont.DemiBold)
+        font1.setWeight(QFont.ExtraBold)
         self.expression_line.setFont(font1)
+        self.expression_line.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.expression_line.setStyleSheet(u"background-color : rgb(214, 214, 214);\n"
 "color: black;\n"
 "border: 3px solid;\n"
 "border-radius: 7px;\n"
 "padding: 5px;")
-        self.expression_line.setReadOnly(True)
+        self.expression_line.setReadOnly(False)
 
         self.verticalLayout.addWidget(self.expression_line)
 
@@ -755,33 +757,33 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addItem(self.horizontalSpacer, 3, 5, 1, 1)
 
-        self.btn_forward = QPushButton(self.centralwidget)
-        self.btn_forward.setObjectName(u"btn_forward")
-        sizePolicy.setHeightForWidth(self.btn_forward.sizePolicy().hasHeightForWidth())
-        self.btn_forward.setSizePolicy(sizePolicy)
-        self.btn_forward.setFont(font2)
-        self.btn_forward.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_forward.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
+        self.btn_left = QPushButton(self.centralwidget)
+        self.btn_left.setObjectName(u"btn_left")
+        sizePolicy.setHeightForWidth(self.btn_left.sizePolicy().hasHeightForWidth())
+        self.btn_left.setSizePolicy(sizePolicy)
+        self.btn_left.setFont(font2)
+        self.btn_left.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_left.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
 "border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.btn_forward, 1, 9, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_left, 1, 9, 1, 1)
 
-        self.btn_backward = QPushButton(self.centralwidget)
-        self.btn_backward.setObjectName(u"btn_backward")
-        sizePolicy.setHeightForWidth(self.btn_backward.sizePolicy().hasHeightForWidth())
-        self.btn_backward.setSizePolicy(sizePolicy)
-        self.btn_backward.setFont(font2)
-        self.btn_backward.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_backward.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
+        self.btn_right = QPushButton(self.centralwidget)
+        self.btn_right.setObjectName(u"btn_right")
+        sizePolicy.setHeightForWidth(self.btn_right.sizePolicy().hasHeightForWidth())
+        self.btn_right.setSizePolicy(sizePolicy)
+        self.btn_right.setFont(font2)
+        self.btn_right.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_right.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
 "border: 1px solid;\n"
 "border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.btn_backward, 1, 10, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_right, 1, 10, 1, 1)
 
         self.memory_lbl = QLabel(self.centralwidget)
         self.memory_lbl.setObjectName(u"memory_lbl")
@@ -817,6 +819,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.gridLayout_3)
 
+        self.verticalLayout.setStretch(0, 1)
+        self.verticalLayout.setStretch(1, 1)
         self.verticalLayout.setStretch(2, 3)
 
         self.verticalLayout_2.addLayout(self.verticalLayout)
@@ -884,8 +888,8 @@ class Ui_MainWindow(object):
         self.btn_lg2.setText(QCoreApplication.translate("MainWindow", u"lg2", None))
         self.btn_equal.setText(QCoreApplication.translate("MainWindow", u"=", None))
         self.btn_cosh.setText(QCoreApplication.translate("MainWindow", u"cosh", None))
-        self.btn_forward.setText(QCoreApplication.translate("MainWindow", u"\u2190", None))
-        self.btn_backward.setText(QCoreApplication.translate("MainWindow", u"\u2192", None))
+        self.btn_left.setText(QCoreApplication.translate("MainWindow", u"\u2190", None))
+        self.btn_right.setText(QCoreApplication.translate("MainWindow", u"\u2192", None))
         self.memory_lbl.setText(QCoreApplication.translate("MainWindow", u"Mem: <empty>", None))
     # retranslateUi
 
