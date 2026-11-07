@@ -66,7 +66,7 @@ border-radius: 7px;</string>
         <property name="font">
          <font>
           <family>Courier New</family>
-          <pointsize>20</pointsize>
+          <pointsize>25</pointsize>
           <fontweight>ExtraBold</fontweight>
          </font>
         </property>
@@ -442,7 +442,7 @@ padding: 5px;</string>
          </widget>
         </item>
         <item row="0" column="10">
-         <widget class="QPushButton" name="btn__2nd">
+         <widget class="QPushButton" name="btn_2nd">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -451,7 +451,7 @@ padding: 5px;</string>
           </property>
           <property name="font">
            <font>
-            <pointsize>15</pointsize>
+            <pointsize>25</pointsize>
             <fontweight>ExtraBold</fontweight>
            </font>
           </property>
@@ -1537,7 +1537,7 @@ padding: 5px;</string>
           </property>
           <property name="font">
            <font>
-            <pointsize>15</pointsize>
+            <pointsize>20</pointsize>
             <bold>true</bold>
            </font>
           </property>
@@ -1556,6 +1556,35 @@ padding: 5px;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="9">
+         <widget class="QPushButton" name="btn_del">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>25</pointsize>
+            <fontweight>ExtraBold</fontweight>
+           </font>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: red;
+color: white;
+border: 1px solid;
+border-radius: 7px;
+padding: 5px;</string>
+          </property>
+          <property name="text">
+           <string>⌫</string>
           </property>
          </widget>
         </item>

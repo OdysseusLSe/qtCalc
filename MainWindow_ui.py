@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
         self.expression_line.setObjectName(u"expression_line")
         font1 = QFont()
         font1.setFamilies([u"Courier New"])
-        font1.setPointSize(20)
+        font1.setPointSize(25)
         font1.setWeight(QFont.ExtraBold)
         self.expression_line.setFont(font1)
         self.expression_line.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
@@ -255,25 +255,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_ln, 1, 3, 1, 1)
 
-        self.btn__2nd = QPushButton(self.centralwidget)
-        self.btn__2nd.setObjectName(u"btn__2nd")
+        self.btn_2nd = QPushButton(self.centralwidget)
+        self.btn_2nd.setObjectName(u"btn_2nd")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.btn__2nd.sizePolicy().hasHeightForWidth())
-        self.btn__2nd.setSizePolicy(sizePolicy1)
-        font5 = QFont()
-        font5.setPointSize(15)
-        font5.setWeight(QFont.ExtraBold)
-        self.btn__2nd.setFont(font5)
-        self.btn__2nd.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn__2nd.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
+        sizePolicy1.setHeightForWidth(self.btn_2nd.sizePolicy().hasHeightForWidth())
+        self.btn_2nd.setSizePolicy(sizePolicy1)
+        self.btn_2nd.setFont(font2)
+        self.btn_2nd.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_2nd.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
 "color : white;\n"
 "border: 1px solid;\n"
 "border-radius: 7px;\n"
 "padding: 5px;")
 
-        self.gridLayout_3.addWidget(self.btn__2nd, 0, 10, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_2nd, 0, 10, 1, 1)
 
         self.btn_square = QPushButton(self.centralwidget)
         self.btn_square.setObjectName(u"btn_square")
@@ -335,10 +332,10 @@ class Ui_MainWindow(object):
         self.btn_divide.setObjectName(u"btn_divide")
         sizePolicy.setHeightForWidth(self.btn_divide.sizePolicy().hasHeightForWidth())
         self.btn_divide.setSizePolicy(sizePolicy)
-        font6 = QFont()
-        font6.setPointSize(25)
-        font6.setBold(True)
-        self.btn_divide.setFont(font6)
+        font5 = QFont()
+        font5.setPointSize(25)
+        font5.setBold(True)
+        self.btn_divide.setFont(font5)
         self.btn_divide.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_divide.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
@@ -366,7 +363,7 @@ class Ui_MainWindow(object):
         self.btn_unary_minus.setObjectName(u"btn_unary_minus")
         sizePolicy.setHeightForWidth(self.btn_unary_minus.sizePolicy().hasHeightForWidth())
         self.btn_unary_minus.setSizePolicy(sizePolicy)
-        self.btn_unary_minus.setFont(font6)
+        self.btn_unary_minus.setFont(font5)
         self.btn_unary_minus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_unary_minus.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
 "color: white;\n"
@@ -408,7 +405,7 @@ class Ui_MainWindow(object):
         self.btn_multiply.setObjectName(u"btn_multiply")
         sizePolicy.setHeightForWidth(self.btn_multiply.sizePolicy().hasHeightForWidth())
         self.btn_multiply.setSizePolicy(sizePolicy)
-        self.btn_multiply.setFont(font6)
+        self.btn_multiply.setFont(font5)
         self.btn_multiply.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_multiply.setStyleSheet(u"background-color: orange;\n"
 "color: black;\n"
@@ -792,10 +789,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.memory_lbl.sizePolicy().hasHeightForWidth())
         self.memory_lbl.setSizePolicy(sizePolicy2)
-        font7 = QFont()
-        font7.setPointSize(15)
-        font7.setBold(True)
-        self.memory_lbl.setFont(font7)
+        self.memory_lbl.setFont(font3)
         self.memory_lbl.setStyleSheet(u"background-color : rgb(192, 192, 192);\n"
 "color: black;\n"
 "border: 2px solid;\n"
@@ -805,6 +799,20 @@ class Ui_MainWindow(object):
         self.memory_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_3.addWidget(self.memory_lbl, 0, 0, 1, 4)
+
+        self.btn_del = QPushButton(self.centralwidget)
+        self.btn_del.setObjectName(u"btn_del")
+        sizePolicy1.setHeightForWidth(self.btn_del.sizePolicy().hasHeightForWidth())
+        self.btn_del.setSizePolicy(sizePolicy1)
+        self.btn_del.setFont(font2)
+        self.btn_del.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_del.setStyleSheet(u"background-color: red;\n"
+"color: white;\n"
+"border: 1px solid;\n"
+"border-radius: 7px;\n"
+"padding: 5px;")
+
+        self.gridLayout_3.addWidget(self.btn_del, 0, 9, 1, 1)
 
         self.gridLayout_3.setColumnStretch(0, 1)
         self.gridLayout_3.setColumnStretch(1, 1)
@@ -853,7 +861,7 @@ class Ui_MainWindow(object):
         self.btn_log.setText(QCoreApplication.translate("MainWindow", u"log", None))
         self.btn_MC.setText(QCoreApplication.translate("MainWindow", u"MC", None))
         self.btn_ln.setText(QCoreApplication.translate("MainWindow", u"ln", None))
-        self.btn__2nd.setText(QCoreApplication.translate("MainWindow", u"2nd", None))
+        self.btn_2nd.setText(QCoreApplication.translate("MainWindow", u"2nd", None))
         self.btn_square.setText(QCoreApplication.translate("MainWindow", u"x\u00b2", None))
         self.btn_tan.setText(QCoreApplication.translate("MainWindow", u"tan", None))
         self.btn_6.setText(QCoreApplication.translate("MainWindow", u"6", None))
@@ -891,5 +899,6 @@ class Ui_MainWindow(object):
         self.btn_left.setText(QCoreApplication.translate("MainWindow", u"\u2190", None))
         self.btn_right.setText(QCoreApplication.translate("MainWindow", u"\u2192", None))
         self.memory_lbl.setText(QCoreApplication.translate("MainWindow", u"Mem: <empty>", None))
+        self.btn_del.setText(QCoreApplication.translate("MainWindow", u"\u232b", None))
     # retranslateUi
 

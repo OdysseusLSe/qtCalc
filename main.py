@@ -531,12 +531,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"item.text()={item.text()}", True)
 
         self.text = self.expression_line.text()
-        #item_text = f"item.text()"
 
         if "=" in item.text():
             # Copy text just before "=" and attach it to the current expression
             self.text += item.text().split("=", 1)[0]
         else:
+            # Check for errorneous expression
             self.text += item.text().split(" --> ", 1)[0]
         self.expression_line.setText(self.text)
         self.log.write(f"self.text={self.text}", True)
