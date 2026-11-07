@@ -64,6 +64,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_mapping()
 
         self.text = ""
+
+        self.expression_line.setFocus()
+
         self.expression_history = ""
 
         self.history_list.model().rowsInserted.connect(
@@ -224,7 +227,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     a = stack.pop()
                     stack.append(func(a, b))
 
-        self.log.entry("evaluate_rpn()", True)
+        self.log.exit("evaluate_rpn", True)
         return stack[0]
 
     #
@@ -272,6 +275,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         button = self.sender()
         button_name = button.objectName()
 
+        self.expression_line.setFocus()
+
         #
         # First, handle special buttons like clear, memory functions, etc.
         #
@@ -300,9 +305,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.expression_line.setText(self.text)
             return
         elif button_name == "btn_left":
+            self.expression_line.setFocus()
             self.expression_line.cursorBackward(False)
             return
         elif button_name == "btn_right":
+            self.expression_line.setFocus()
             self.expression_line.cursorForward(False)
             return
 
@@ -380,11 +387,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Third, if the input is valid, update the expression and display it
         #
 
-        self.text += new_char
-        self.log.write(f"{new_char}", True)
-
-        self.expression_line.setText(self.text)
+        cursor_pos = self.expression_line.cursorPosition()
+        self.log.write(f"cursor_pos={cursor_pos}", True)
+        if new_char != "=":
+            old_text = self.expression_line.text()
+            new_text = old_text[:cursor_pos] + new_char + old_text[cursor_pos:]
+            self.text = new_text
+            self.expression_line.setText(self.text)
+            self.expression_line.setCursorPosition(cursor_pos + len(new_char))
+        else:
+            self.text = self.expression_line.text()
+        cursor_pos = self.expression_line.cursorPosition()
+        self.log.write(f"cursor_pos={cursor_pos}", True)
         self.log.write(f"self.text={self.text}", True)
+        self.log.write(f"new_char={new_char}", True)
 
         #
         # Forth, handle the calculation when the "=" button is pressed
@@ -395,8 +411,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             number_of_opening = self.text.count("(")
             number_of_closing = self.text.count(")")
             if number_of_closing < number_of_opening:
-                # Remove the "=" (the last character)
-                self.text = self.text[:-1]
                 self.expression_line.setText(self.text)
                 self.status_lbl.setText("Too few closing parentheses!")
                 self.log.warning("Too few closing parentheses!", True)
@@ -406,7 +420,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             try:
 
                 token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
-                raw_tokens = re.findall(token_spec, self.text[:-1])
+                raw_tokens = re.findall(token_spec, self.text)
                 self.log.write(f"raw_tokens={raw_tokens}", True)
 
                 #
@@ -444,14 +458,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                 raw_result = self.evaluate_rpn(shunting_yard_output)
 
-                cleaned = float(f"{raw_result:.12g}")
+                cleaned = float(f"{raw_result:.16g}")
                 if cleaned.is_integer() and abs(cleaned) < 1e15:
                     self.result = int(cleaned)
                 else:
                     self.result = cleaned
 
                 # Add current expression to history list
-                expression = f"{self.text}{self.result}"
+                expression = f"{self.text}={self.result}"
                 self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
                 item = QListWidgetItem(self.expression_history)
                 self.log.write(
@@ -516,10 +530,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.log.write(f"item.text()={item.text()}", True)
 
-        # Copy text just before "=" and attach it to the current expression
-        self.text += item.text().split("=", 1)[0]
+        self.text = self.expression_line.text()
+        #item_text = f"item.text()"
+
+        if "=" in item.text():
+            # Copy text just before "=" and attach it to the current expression
+            self.text += item.text().split("=", 1)[0]
+        else:
+            self.text += item.text().split(" --> ", 1)[0]
         self.expression_line.setText(self.text)
         self.log.write(f"self.text={self.text}", True)
+
+        self.expression_line.setFocus()
 
         self.log.exit("on_item_double_clicked", True)
 
