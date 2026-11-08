@@ -24,7 +24,7 @@ import logging as pylog
 
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QBrush, QColor, QIcon
+from PySide6.QtGui import QBrush, QColor
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import (
     QLabel,
@@ -40,7 +40,7 @@ from Logging import Logging
 #import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.4"
+APP_VERSION = "0.5"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -75,6 +75,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_list.itemDoubleClicked.connect(self.on_item_double_clicked)
 
         self.history_item = 0
+        self.memory_index = -1
         self.tokens = []
 
         self.status_lbl = QLabel("Ready")
@@ -288,21 +289,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.log.write("clear", True)
             return
         elif button_name == "btn_Mplus":
-            # Store the current result in memory
+            # Add the current result to memory
             if hasattr(self, 'result') and self.result is not None:
-                self.memory_lbl.setText(f"Mem: {self.result}")
+                self.memory_list.addItem(f"{self.result}")
+                self.memory_index += 1
+                self.memory_list.setCurrentIndex(self.memory_index)
             return
         elif button_name == "btn_MC":
             # Clear the memory
-            self.memory_lbl.setText("Mem: <empty>")
+            self.memory_list.clear()
+            self.memory_index = -1
             return
         elif button_name == "btn_MR":
             # Recall the value from memory and
             # append it to the current expression
-            if self.memory_lbl.text() != "Mem: <empty>":
-                mem_value = self.memory_lbl.text().split(": ")[1]
+            if self.memory_list.currentText() != "":
+                mem_value = self.memory_list.currentText()
+                cursor_pos = self.expression_line.cursorPosition()
+                old_text = self.expression_line.text()
+                new_text = old_text[:cursor_pos] + mem_value + old_text[cursor_pos:]
+                self.text = new_text
+                self.expression_line.setText(self.text)
                 self.text += mem_value
                 self.expression_line.setText(self.text)
+                self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
+                self.expression_line.setFocus()
             return
         elif button_name == "btn_left":
             self.expression_line.setFocus()
@@ -532,14 +543,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.text = self.expression_line.text()
 
+        cursor_pos = self.expression_line.cursorPosition()
+        old_text = self.expression_line.text()
+
         if "=" in item.text():
             # Copy text just before "=" and attach it to the current expression
-            self.text += item.text().split("=", 1)[0]
+            insert_text = item.text().split("=", 1)[0]
         else:
             # Check for errorneous expression
-            self.text += item.text().split(" --> ", 1)[0]
-        self.expression_line.setText(self.text)
-        self.log.write(f"self.text={self.text}", True)
+            insert_text = item.text().split(" --> ", 1)[0]
+
+        new_text = old_text[:cursor_pos] + insert_text + old_text[cursor_pos:]
+        self.expression_line.setText(new_text)
+        self.expression_line.setCursorPosition(cursor_pos + len(insert_text))
+        self.log.write(f"new_text={new_text}", True)
 
         self.expression_line.setFocus()
 
