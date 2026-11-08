@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLayout,
     QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
-    QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QStatusBar, QVBoxLayout, QWidget)
+    QMenuBar, QPushButton, QRadioButton, QSizePolicy,
+    QSpacerItem, QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -354,7 +354,7 @@ class Ui_MainWindow(object):
         self.btn_clear.setSizePolicy(sizePolicy)
         self.btn_clear.setFont(font3)
         self.btn_clear.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_clear.setStyleSheet(u"background-color: red;\n"
+        self.btn_clear.setStyleSheet(u"background-color: salmon;\n"
 "color: white;")
 
         self.gridLayout_3.addWidget(self.btn_clear, 2, 10, 1, 1)
@@ -643,7 +643,7 @@ class Ui_MainWindow(object):
         self.btn_del.setSizePolicy(sizePolicy1)
         self.btn_del.setFont(font3)
         self.btn_del.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_del.setStyleSheet(u"background-color : red;\n"
+        self.btn_del.setStyleSheet(u"background-color : salmon;\n"
 "color : white;")
 
         self.gridLayout_3.addWidget(self.btn_del, 0, 9, 1, 1)
@@ -662,6 +662,32 @@ class Ui_MainWindow(object):
         self.memory_list.setMaxVisibleItems(3)
 
         self.gridLayout_3.addWidget(self.memory_list, 0, 0, 1, 3)
+
+        self.btn_DEG = QRadioButton(self.centralwidget)
+        self.btn_DEG.setObjectName(u"btn_DEG")
+        sizePolicy1.setHeightForWidth(self.btn_DEG.sizePolicy().hasHeightForWidth())
+        self.btn_DEG.setSizePolicy(sizePolicy1)
+        font8 = QFont()
+        font8.setPointSize(18)
+        font8.setBold(True)
+        self.btn_DEG.setFont(font8)
+        self.btn_DEG.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_DEG.setStyleSheet(u"color: green;\n"
+"border: 1px;")
+        self.btn_DEG.setChecked(True)
+
+        self.gridLayout_3.addWidget(self.btn_DEG, 0, 3, 1, 1)
+
+        self.btn_RAD = QRadioButton(self.centralwidget)
+        self.btn_RAD.setObjectName(u"btn_RAD")
+        sizePolicy1.setHeightForWidth(self.btn_RAD.sizePolicy().hasHeightForWidth())
+        self.btn_RAD.setSizePolicy(sizePolicy1)
+        self.btn_RAD.setFont(font8)
+        self.btn_RAD.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_RAD.setStyleSheet(u"color: salmon;\n"
+"border: 1px;")
+
+        self.gridLayout_3.addWidget(self.btn_RAD, 0, 4, 1, 1)
 
         self.gridLayout_3.setColumnStretch(0, 1)
         self.gridLayout_3.setColumnStretch(1, 1)
@@ -748,5 +774,7 @@ class Ui_MainWindow(object):
         self.btn_left.setText(QCoreApplication.translate("MainWindow", u"\u2190", None))
         self.btn_right.setText(QCoreApplication.translate("MainWindow", u"\u2192", None))
         self.btn_del.setText(QCoreApplication.translate("MainWindow", u"\u232b", None))
+        self.btn_DEG.setText(QCoreApplication.translate("MainWindow", u"DEG", None))
+        self.btn_RAD.setText(QCoreApplication.translate("MainWindow", u"RAD", None))
     # retranslateUi
 

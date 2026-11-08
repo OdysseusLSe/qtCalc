@@ -23,7 +23,7 @@ import sys
 import logging as pylog
 
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QBrush, QColor
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import (
@@ -64,9 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_mapping()
 
         self.text = ""
-
         self.expression_line.setFocus()
-
         self.expression_history = ""
 
         self.history_list.model().rowsInserted.connect(
@@ -78,12 +76,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.memory_index = -1
         self.tokens = []
 
+        self.DEG = True
+        self.btn_DEG.setChecked(self.DEG)
+        self.btn_DEG.setStyleSheet("color: green; border: 1 solid; padding: 3")
+        self.btn_DEG.toggled.connect(self.deg_rad_toggle)
+        self.RAD = False
+        self.btn_RAD.setChecked(self.RAD)
+        self.btn_RAD.setStyleSheet("color: salmon; border: 1 solid; padding: 3")
+        self.btn_RAD.toggled.connect(self.deg_rad_toggle)
+
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setStyleSheet(
             "font-weight: bold; background-color: rgb(94, 94, 94); color: white; border: 1 solid; border-radius: 7;"
         )
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_bar.addWidget(self.status_lbl, 1)
+
+        self.expression_line.setFocus()
 
         self.log.exit("__init__", True)
 
@@ -185,6 +194,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self.log.entry("button_mapping()", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    @Slot()
+    def deg_rad_toggle(self, checked):
+        self.log.entry("deg_rad_toggle(checked)", True)
+
+        if self.btn_DEG.isChecked():
+            self.DEG = True
+            self.btn_DEG.setStyleSheet("color: green; border: 1 solid; padding: 3")
+            self.RAD = False
+            self.btn_RAD.setStyleSheet("color: salmon; border: 1 solid; padding: 3")
+        else:
+            self.DEG = False
+            self.btn_DEG.setStyleSheet("color: salmon; border: 1 solid; padding: 3")
+            self.RAD = True
+            self.btn_RAD.setStyleSheet("color: green; border: 1 solid; padding: 3")
+
+        self.expression_line.setFocus()
+        self.log.exit("deg_rad_toggle", True)
 
     #
     # -----------------------------------------------
@@ -292,6 +323,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.text = ""
             self.expression_line.setText(self.text)
             self.log.write("clear", True)
+            self.expression_line.setFocus()
             return
 
         elif button_name == "btn_del":
@@ -312,6 +344,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.memory_list.addItem(f"{self.result}")
                 self.memory_index += 1
                 self.memory_list.setCurrentIndex(self.memory_index)
+            self.expression_line.setFocus()
             return
 
         elif button_name == "btn_MC":
@@ -319,6 +352,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Clear the memory
             self.memory_list.clear()
             self.memory_index = -1
+            self.expression_line.setFocus()
             return
 
         elif button_name == "btn_MR":
@@ -342,12 +376,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.expression_line.setFocus()
             self.expression_line.cursorBackward(False)
+            self.expression_line.setFocus()
             return
 
         elif button_name == "btn_right":
 
             self.expression_line.setFocus()
             self.expression_line.cursorForward(False)
+            self.expression_line.setFocus()
             return
 
         self.result = None
