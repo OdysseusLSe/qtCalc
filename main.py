@@ -105,6 +105,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Functions with their corresponding implementations
         self.functions = {
+            'abs'   : (math.fabs, 1),
             'cos'   : (math.cos, 1),
             'cosh'  : (math.cosh, 1),
             'exp'   : (math.exp, 1),
@@ -113,6 +114,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'log'   : (math.log10, 1),
             'max'   : (math.fmax, 2),
             'min'   : (math.fmin, 2),
+            'mod'   : (math.fmod, 2),
             'sin'   : (math.sin, 1),
             'sinh'  : (math.sinh, 1),
             'sqrt'  : (math.sqrt, 1),
@@ -148,6 +150,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_8"             : "8",
             "btn_9"             : "9",
             "btn_10powerX"      : "10^(",
+            "btn_abs"           : "abs(",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
             "btn_cbrt"          : "sqrt3(",
@@ -166,6 +169,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_max"           : "max(",
             "btn_min"           : "min(",
             "btn_minus"         : "-",
+            "btn_mod"           : "mod(",
             "btn_multiply"      : "*",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
@@ -283,24 +287,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #
 
         if button_name == "btn_clear":
+
             # Clear the current expression and reset the display
             self.text = ""
             self.expression_line.setText(self.text)
             self.log.write("clear", True)
             return
+
+        elif button_name == "btn_del":
+
+            cursor_pos = self.expression_line.cursorPosition()
+            old_text = self.expression_line.text()
+            new_text = old_text[:cursor_pos-1] + old_text[cursor_pos:]
+            self.text = new_text
+            self.expression_line.setText(self.text)
+            self.expression_line.setCursorPosition(cursor_pos-1)
+            self.expression_line.setFocus()
+            return
+
         elif button_name == "btn_Mplus":
+
             # Add the current result to memory
             if hasattr(self, 'result') and self.result is not None:
                 self.memory_list.addItem(f"{self.result}")
                 self.memory_index += 1
                 self.memory_list.setCurrentIndex(self.memory_index)
             return
+
         elif button_name == "btn_MC":
+
             # Clear the memory
             self.memory_list.clear()
             self.memory_index = -1
             return
+
         elif button_name == "btn_MR":
+
             # Recall the value from memory and
             # append it to the current expression
             if self.memory_list.currentText() != "":
@@ -315,11 +337,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
                 self.expression_line.setFocus()
             return
+
         elif button_name == "btn_left":
+
             self.expression_line.setFocus()
             self.expression_line.cursorBackward(False)
             return
+
         elif button_name == "btn_right":
+
             self.expression_line.setFocus()
             self.expression_line.cursorForward(False)
             return

@@ -129,16 +129,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_3, 4, 8, 1, 1)
 
-        self.pushButton_32 = QPushButton(self.centralwidget)
-        self.pushButton_32.setObjectName(u"pushButton_32")
-        sizePolicy.setHeightForWidth(self.pushButton_32.sizePolicy().hasHeightForWidth())
-        self.pushButton_32.setSizePolicy(sizePolicy)
-        self.pushButton_32.setFont(font4)
-        self.pushButton_32.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.pushButton_32.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_abs = QPushButton(self.centralwidget)
+        self.btn_abs.setObjectName(u"btn_abs")
+        sizePolicy.setHeightForWidth(self.btn_abs.sizePolicy().hasHeightForWidth())
+        self.btn_abs.setSizePolicy(sizePolicy)
+        self.btn_abs.setFont(font4)
+        self.btn_abs.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_abs.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;")
 
-        self.gridLayout_3.addWidget(self.pushButton_32, 2, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_abs, 2, 1, 1, 1)
 
         self.btn_8 = QPushButton(self.centralwidget)
         self.btn_8.setObjectName(u"btn_8")
@@ -359,16 +359,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_clear, 2, 10, 1, 1)
 
-        self.pushButton_33 = QPushButton(self.centralwidget)
-        self.pushButton_33.setObjectName(u"pushButton_33")
-        sizePolicy.setHeightForWidth(self.pushButton_33.sizePolicy().hasHeightForWidth())
-        self.pushButton_33.setSizePolicy(sizePolicy)
-        self.pushButton_33.setFont(font4)
-        self.pushButton_33.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.pushButton_33.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_mod = QPushButton(self.centralwidget)
+        self.btn_mod.setObjectName(u"btn_mod")
+        sizePolicy.setHeightForWidth(self.btn_mod.sizePolicy().hasHeightForWidth())
+        self.btn_mod.setSizePolicy(sizePolicy)
+        self.btn_mod.setFont(font4)
+        self.btn_mod.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.btn_mod.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;")
 
-        self.gridLayout_3.addWidget(self.pushButton_33, 2, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_mod, 2, 2, 1, 1)
 
         self.btn_XpowerY = QPushButton(self.centralwidget)
         self.btn_XpowerY.setObjectName(u"btn_XpowerY")
@@ -702,7 +702,7 @@ class Ui_MainWindow(object):
         self.btn_max.setText(QCoreApplication.translate("MainWindow", u"max", None))
         self.btn_cos.setText(QCoreApplication.translate("MainWindow", u"cos", None))
         self.btn_3.setText(QCoreApplication.translate("MainWindow", u"3", None))
-        self.pushButton_32.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_abs.setText(QCoreApplication.translate("MainWindow", u"abs", None))
         self.btn_8.setText(QCoreApplication.translate("MainWindow", u"8", None))
         self.btn_0.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.btn_pi.setText(QCoreApplication.translate("MainWindow", u"\u03c0", None))
@@ -722,7 +722,7 @@ class Ui_MainWindow(object):
         self.btn_5.setText(QCoreApplication.translate("MainWindow", u"5", None))
         self.btn_multiply.setText(QCoreApplication.translate("MainWindow", u"\u2716\ufe0f", None))
         self.btn_clear.setText(QCoreApplication.translate("MainWindow", u"C", None))
-        self.pushButton_33.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.btn_mod.setText(QCoreApplication.translate("MainWindow", u"mod", None))
         self.btn_XpowerY.setText(QCoreApplication.translate("MainWindow", u"x\u02b8", None))
         self.btn_plus.setText(QCoreApplication.translate("MainWindow", u"\u271a", None))
         self.btn_7.setText(QCoreApplication.translate("MainWindow", u"7", None))
