@@ -24,7 +24,7 @@ import logging as pylog
 
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QBrush, QColor
+from PySide6.QtGui import QBrush, QColor, QIcon
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import (
     QLabel,
@@ -76,6 +76,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.history_item = 0
         self.tokens = []
+
+        icon = QIcon(":/ui/delete_white.png")
+        self.btn_del.setIcon(icon)
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setStyleSheet(

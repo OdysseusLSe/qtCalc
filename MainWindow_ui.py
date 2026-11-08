@@ -43,8 +43,7 @@ class Ui_MainWindow(object):
         self.history_list.setFont(font)
         self.history_list.setStyleSheet(u"background-color: rgb(214, 214, 214);\n"
 "color: rgb(94, 94, 94);\n"
-"border: 5px solid;\n"
-"border-radius: 7px;")
+"border: 3px solid;")
         self.history_list.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
         self.history_list.setAlternatingRowColors(True)
         self.history_list.setTextElideMode(Qt.TextElideMode.ElideNone)
@@ -62,9 +61,7 @@ class Ui_MainWindow(object):
         self.expression_line.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
         self.expression_line.setStyleSheet(u"background-color : rgb(214, 214, 214);\n"
 "color: black;\n"
-"border: 3px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"border: 3px solid;")
         self.expression_line.setReadOnly(False)
 
         self.verticalLayout.addWidget(self.expression_line)
@@ -88,10 +85,7 @@ class Ui_MainWindow(object):
         self.btn_comma.setFont(font2)
         self.btn_comma.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_comma.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_comma, 1, 7, 1, 1)
 
@@ -105,10 +99,7 @@ class Ui_MainWindow(object):
         self.btn_max.setFont(font3)
         self.btn_max.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_max.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_max, 5, 0, 1, 1)
 
@@ -119,10 +110,7 @@ class Ui_MainWindow(object):
         self.btn_cos.setFont(font3)
         self.btn_cos.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cos.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_cos, 4, 2, 1, 1)
 
@@ -133,10 +121,7 @@ class Ui_MainWindow(object):
         self.btn_3.setFont(font2)
         self.btn_3.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_3.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_3, 4, 8, 1, 1)
 
@@ -147,10 +132,7 @@ class Ui_MainWindow(object):
         self.pushButton_32.setFont(font3)
         self.pushButton_32.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.pushButton_32.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.pushButton_32, 2, 1, 1, 1)
 
@@ -161,10 +143,7 @@ class Ui_MainWindow(object):
         self.btn_8.setFont(font2)
         self.btn_8.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_8.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_8, 2, 7, 1, 1)
 
@@ -175,10 +154,7 @@ class Ui_MainWindow(object):
         self.btn_0.setFont(font2)
         self.btn_0.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_0.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_0, 5, 6, 1, 1)
 
@@ -189,10 +165,7 @@ class Ui_MainWindow(object):
         self.btn_pi.setFont(font3)
         self.btn_pi.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_pi.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_pi, 1, 1, 1, 1)
 
@@ -203,10 +176,7 @@ class Ui_MainWindow(object):
         self.btn_4.setFont(font2)
         self.btn_4.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_4.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_4, 3, 6, 1, 1)
 
@@ -217,10 +187,7 @@ class Ui_MainWindow(object):
         self.btn_log.setFont(font3)
         self.btn_log.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_log.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_log, 5, 3, 1, 1)
 
@@ -234,10 +201,7 @@ class Ui_MainWindow(object):
         self.btn_MC.setFont(font4)
         self.btn_MC.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_MC.setStyleSheet(u"background-color: blue;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_MC, 3, 0, 1, 1)
 
@@ -248,10 +212,7 @@ class Ui_MainWindow(object):
         self.btn_ln.setFont(font3)
         self.btn_ln.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_ln.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_ln, 1, 3, 1, 1)
 
@@ -265,10 +226,7 @@ class Ui_MainWindow(object):
         self.btn_2nd.setFont(font2)
         self.btn_2nd.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_2nd.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
-"color : white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color : white;")
 
         self.gridLayout_3.addWidget(self.btn_2nd, 0, 10, 1, 1)
 
@@ -280,9 +238,7 @@ class Ui_MainWindow(object):
         self.btn_square.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_square.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"")
 
         self.gridLayout_3.addWidget(self.btn_square, 4, 4, 1, 1)
 
@@ -293,10 +249,7 @@ class Ui_MainWindow(object):
         self.btn_tan.setFont(font3)
         self.btn_tan.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_tan.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_tan, 3, 2, 1, 1)
 
@@ -307,10 +260,7 @@ class Ui_MainWindow(object):
         self.btn_6.setFont(font2)
         self.btn_6.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_6.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_6, 3, 8, 1, 1)
 
@@ -321,10 +271,7 @@ class Ui_MainWindow(object):
         self.btn_10powerX.setFont(font3)
         self.btn_10powerX.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_10powerX.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_10powerX, 5, 4, 1, 1)
 
@@ -338,10 +285,7 @@ class Ui_MainWindow(object):
         self.btn_divide.setFont(font5)
         self.btn_divide.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_divide.setStyleSheet(u"background-color: orange;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_divide, 2, 9, 1, 1)
 
@@ -352,10 +296,7 @@ class Ui_MainWindow(object):
         self.btn_sqrt.setFont(font3)
         self.btn_sqrt.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_sqrt.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_sqrt, 4, 3, 1, 1)
 
@@ -366,10 +307,7 @@ class Ui_MainWindow(object):
         self.btn_unary_minus.setFont(font5)
         self.btn_unary_minus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_unary_minus.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_unary_minus, 5, 7, 1, 1)
 
@@ -380,10 +318,7 @@ class Ui_MainWindow(object):
         self.btn_tanh.setFont(font3)
         self.btn_tanh.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_tanh.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_tanh, 3, 1, 1, 1)
 
@@ -394,10 +329,7 @@ class Ui_MainWindow(object):
         self.btn_5.setFont(font2)
         self.btn_5.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_5.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_5, 3, 7, 1, 1)
 
@@ -408,10 +340,7 @@ class Ui_MainWindow(object):
         self.btn_multiply.setFont(font5)
         self.btn_multiply.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_multiply.setStyleSheet(u"background-color: orange;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_multiply, 3, 9, 1, 1)
 
@@ -422,10 +351,7 @@ class Ui_MainWindow(object):
         self.btn_clear.setFont(font2)
         self.btn_clear.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_clear.setStyleSheet(u"background-color: red;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_clear, 2, 10, 1, 1)
 
@@ -436,10 +362,7 @@ class Ui_MainWindow(object):
         self.pushButton_33.setFont(font3)
         self.pushButton_33.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.pushButton_33.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.pushButton_33, 2, 2, 1, 1)
 
@@ -450,10 +373,7 @@ class Ui_MainWindow(object):
         self.btn_XpowerY.setFont(font3)
         self.btn_XpowerY.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_XpowerY.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_XpowerY, 2, 4, 1, 1)
 
@@ -464,10 +384,7 @@ class Ui_MainWindow(object):
         self.btn_plus.setFont(font2)
         self.btn_plus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_plus.setStyleSheet(u"background-color: orange;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_plus, 5, 9, 1, 1)
 
@@ -478,10 +395,7 @@ class Ui_MainWindow(object):
         self.btn_7.setFont(font2)
         self.btn_7.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_7.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_7, 2, 6, 1, 1)
 
@@ -492,10 +406,7 @@ class Ui_MainWindow(object):
         self.btn_MR.setFont(font4)
         self.btn_MR.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_MR.setStyleSheet(u"background-color: blue;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_MR, 2, 0, 1, 1)
 
@@ -506,10 +417,7 @@ class Ui_MainWindow(object):
         self.btn_Mplus.setFont(font4)
         self.btn_Mplus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_Mplus.setStyleSheet(u"background-color: blue;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_Mplus, 1, 0, 1, 1)
 
@@ -520,10 +428,7 @@ class Ui_MainWindow(object):
         self.btn_minus.setFont(font2)
         self.btn_minus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_minus.setStyleSheet(u"background-color: orange;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_minus, 4, 9, 1, 1)
 
@@ -534,10 +439,7 @@ class Ui_MainWindow(object):
         self.btn_e.setFont(font3)
         self.btn_e.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_e.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_e, 1, 2, 1, 1)
 
@@ -548,10 +450,7 @@ class Ui_MainWindow(object):
         self.btn_sin.setFont(font3)
         self.btn_sin.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_sin.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_sin, 5, 2, 1, 1)
 
@@ -562,10 +461,7 @@ class Ui_MainWindow(object):
         self.btn_9.setFont(font2)
         self.btn_9.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_9.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_9, 2, 8, 1, 1)
 
@@ -576,10 +472,7 @@ class Ui_MainWindow(object):
         self.btn_sinh.setFont(font3)
         self.btn_sinh.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_sinh.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_sinh, 5, 1, 1, 1)
 
@@ -590,10 +483,7 @@ class Ui_MainWindow(object):
         self.btn_2.setFont(font2)
         self.btn_2.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_2.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_2, 4, 7, 1, 1)
 
@@ -604,10 +494,7 @@ class Ui_MainWindow(object):
         self.btn_bracket_right.setFont(font2)
         self.btn_bracket_right.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_bracket_right.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_bracket_right, 1, 8, 1, 1)
 
@@ -618,10 +505,7 @@ class Ui_MainWindow(object):
         self.btn_min.setFont(font3)
         self.btn_min.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_min.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_min, 4, 0, 1, 1)
 
@@ -632,10 +516,7 @@ class Ui_MainWindow(object):
         self.btn_1.setFont(font2)
         self.btn_1.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_1.setStyleSheet(u"background-color: black;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_1, 4, 6, 1, 1)
 
@@ -646,10 +527,7 @@ class Ui_MainWindow(object):
         self.btn_dot.setFont(font2)
         self.btn_dot.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_dot.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_dot, 5, 8, 1, 1)
 
@@ -660,10 +538,7 @@ class Ui_MainWindow(object):
         self.btn_cbrt.setFont(font3)
         self.btn_cbrt.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cbrt.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_cbrt, 3, 3, 1, 1)
 
@@ -674,10 +549,7 @@ class Ui_MainWindow(object):
         self.btn_cube.setFont(font3)
         self.btn_cube.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cube.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_cube, 3, 4, 1, 1)
 
@@ -688,10 +560,7 @@ class Ui_MainWindow(object):
         self.pushButton_34.setFont(font3)
         self.pushButton_34.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.pushButton_34.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.pushButton_34, 2, 3, 1, 1)
 
@@ -702,10 +571,7 @@ class Ui_MainWindow(object):
         self.btn_bracket_left.setFont(font2)
         self.btn_bracket_left.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_bracket_left.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_bracket_left, 1, 6, 1, 1)
 
@@ -715,10 +581,7 @@ class Ui_MainWindow(object):
         self.btn_lg2.setSizePolicy(sizePolicy)
         self.btn_lg2.setFont(font3)
         self.btn_lg2.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_lg2, 1, 4, 1, 1)
 
@@ -729,10 +592,7 @@ class Ui_MainWindow(object):
         self.btn_equal.setFont(font2)
         self.btn_equal.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_equal.setStyleSheet(u"background-color: green;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_equal, 3, 10, 3, 1)
 
@@ -743,10 +603,7 @@ class Ui_MainWindow(object):
         self.btn_cosh.setFont(font3)
         self.btn_cosh.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_cosh.setStyleSheet(u"background-color: lightgrey;\n"
-"color: black;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_cosh, 4, 1, 1, 1)
 
@@ -761,10 +618,7 @@ class Ui_MainWindow(object):
         self.btn_left.setFont(font2)
         self.btn_left.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_left.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_left, 1, 9, 1, 1)
 
@@ -775,10 +629,7 @@ class Ui_MainWindow(object):
         self.btn_right.setFont(font2)
         self.btn_right.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_right.setStyleSheet(u"background-color: rgb(128, 128, 128);\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"color: white;")
 
         self.gridLayout_3.addWidget(self.btn_right, 1, 10, 1, 1)
 
@@ -789,12 +640,13 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.memory_lbl.sizePolicy().hasHeightForWidth())
         self.memory_lbl.setSizePolicy(sizePolicy2)
-        self.memory_lbl.setFont(font3)
+        font6 = QFont()
+        font6.setPointSize(20)
+        font6.setWeight(QFont.DemiBold)
+        self.memory_lbl.setFont(font6)
         self.memory_lbl.setStyleSheet(u"background-color : rgb(192, 192, 192);\n"
 "color: black;\n"
-"border: 2px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+"border: 2px solid;")
         self.memory_lbl.setTextFormat(Qt.TextFormat.PlainText)
         self.memory_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -804,13 +656,13 @@ class Ui_MainWindow(object):
         self.btn_del.setObjectName(u"btn_del")
         sizePolicy1.setHeightForWidth(self.btn_del.sizePolicy().hasHeightForWidth())
         self.btn_del.setSizePolicy(sizePolicy1)
-        self.btn_del.setFont(font2)
+        font7 = QFont()
+        font7.setPointSize(32)
+        font7.setWeight(QFont.ExtraBold)
+        self.btn_del.setFont(font7)
         self.btn_del.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_del.setStyleSheet(u"background-color: red;\n"
-"color: white;\n"
-"border: 1px solid;\n"
-"border-radius: 7px;\n"
-"padding: 5px;")
+        self.btn_del.setStyleSheet(u"background-color : red;\n"
+"color : white;")
 
         self.gridLayout_3.addWidget(self.btn_del, 0, 9, 1, 1)
 

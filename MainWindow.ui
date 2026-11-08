@@ -44,8 +44,7 @@
         <property name="styleSheet">
          <string notr="true">background-color: rgb(214, 214, 214);
 color: rgb(94, 94, 94);
-border: 5px solid;
-border-radius: 7px;</string>
+border: 3px solid;</string>
         </property>
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
@@ -76,9 +75,7 @@ border-radius: 7px;</string>
         <property name="styleSheet">
          <string notr="true">background-color : rgb(214, 214, 214);
 color: black;
-border: 3px solid;
-border-radius: 7px;
-padding: 5px;</string>
+border: 3px solid;</string>
         </property>
         <property name="readOnly">
          <bool>false</bool>
@@ -112,10 +109,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>,</string>
@@ -141,10 +135,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>max</string>
@@ -170,10 +161,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>cos</string>
@@ -199,10 +187,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>3</string>
@@ -228,10 +213,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>PushButton</string>
@@ -257,10 +239,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>8</string>
@@ -286,10 +265,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>0</string>
@@ -315,10 +291,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>π</string>
@@ -344,10 +317,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>4</string>
@@ -373,10 +343,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>log</string>
@@ -402,10 +369,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: blue;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>MC</string>
@@ -431,10 +395,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>ln</string>
@@ -460,10 +421,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color : rgb(66, 66, 66);
-color : white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color : white;</string>
           </property>
           <property name="text">
            <string>2nd</string>
@@ -490,9 +448,7 @@ padding: 5px;</string>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
 color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+</string>
           </property>
           <property name="text">
            <string>x²</string>
@@ -518,10 +474,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>tan</string>
@@ -547,10 +500,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>6</string>
@@ -576,10 +526,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>10ˣ</string>
@@ -605,10 +552,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: orange;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>÷</string>
@@ -634,10 +578,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>√</string>
@@ -663,10 +604,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>±</string>
@@ -692,10 +630,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>tanh</string>
@@ -721,10 +656,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>5</string>
@@ -750,10 +682,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: orange;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>✖️</string>
@@ -779,10 +708,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: red;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>C</string>
@@ -808,10 +734,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>PushButton</string>
@@ -837,10 +760,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>xʸ</string>
@@ -866,10 +786,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: orange;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>✚</string>
@@ -895,10 +812,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>7</string>
@@ -924,10 +838,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: blue;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>MR</string>
@@ -953,10 +864,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: blue;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>M+</string>
@@ -982,10 +890,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: orange;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>➖</string>
@@ -1011,10 +916,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>e</string>
@@ -1040,10 +942,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>sin</string>
@@ -1069,10 +968,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>9</string>
@@ -1098,10 +994,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>sinh</string>
@@ -1127,10 +1020,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>2</string>
@@ -1156,10 +1046,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>)</string>
@@ -1185,10 +1072,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>min</string>
@@ -1214,10 +1098,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: black;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>1</string>
@@ -1243,10 +1124,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>.</string>
@@ -1272,10 +1150,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>∛</string>
@@ -1301,10 +1176,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>x³</string>
@@ -1330,10 +1202,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>ʸ√x</string>
@@ -1359,10 +1228,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>(</string>
@@ -1385,10 +1251,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>lg2</string>
@@ -1414,10 +1277,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: green;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>=</string>
@@ -1443,10 +1303,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
-color: black;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: black;</string>
           </property>
           <property name="text">
            <string>cosh</string>
@@ -1488,10 +1345,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>←</string>
@@ -1517,10 +1371,7 @@ padding: 5px;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(128, 128, 128);
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+color: white;</string>
           </property>
           <property name="text">
            <string>→</string>
@@ -1538,15 +1389,13 @@ padding: 5px;</string>
           <property name="font">
            <font>
             <pointsize>20</pointsize>
-            <bold>true</bold>
+            <fontweight>DemiBold</fontweight>
            </font>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color : rgb(192, 192, 192);
 color: black;
-border: 2px solid;
-border-radius: 7px;
-padding: 5px;</string>
+border: 2px solid;</string>
           </property>
           <property name="text">
            <string>Mem: &lt;empty&gt;</string>
@@ -1569,7 +1418,7 @@ padding: 5px;</string>
           </property>
           <property name="font">
            <font>
-            <pointsize>25</pointsize>
+            <pointsize>32</pointsize>
             <fontweight>ExtraBold</fontweight>
            </font>
           </property>
@@ -1577,11 +1426,8 @@ padding: 5px;</string>
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: red;
-color: white;
-border: 1px solid;
-border-radius: 7px;
-padding: 5px;</string>
+           <string notr="true">background-color : red;
+color : white;</string>
           </property>
           <property name="text">
            <string>⌫</string>
