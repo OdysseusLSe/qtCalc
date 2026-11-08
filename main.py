@@ -549,7 +549,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 )
 
                 if self.history_item % 2 == 0:
-                    item.setBackground(QBrush(QColor("lightgrey")))
+                    item.setBackground(QBrush(QColor("white")))
                 self.history_list.addItem(item)
                 self.history_item += 1
 
