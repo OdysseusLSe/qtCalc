@@ -355,7 +355,7 @@ class Ui_MainWindow(object):
         self.btn_clear.setFont(font3)
         self.btn_clear.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_clear.setStyleSheet(u"background-color: salmon;\n"
-"color: white;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_clear, 2, 10, 1, 1)
 
@@ -644,7 +644,7 @@ class Ui_MainWindow(object):
         self.btn_del.setFont(font3)
         self.btn_del.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_del.setStyleSheet(u"background-color : salmon;\n"
-"color : white;")
+"color : black;")
 
         self.gridLayout_3.addWidget(self.btn_del, 0, 9, 1, 1)
 

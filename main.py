@@ -26,18 +26,13 @@ import logging as pylog
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QBrush, QColor
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import (
-    QLabel,
-    QListWidgetItem,
-    QMainWindow,
-    QPushButton
-)
+from PySide6.QtWidgets import QLabel, QListWidgetItem, QMainWindow, QPushButton
 
 from MainWindow_ui import Ui_MainWindow
 
 from Logging import Logging
 
-#import resources_rc
+import resources_rc
 
 APP_NAME    = "qtCalc"
 APP_VERSION = "0.5"
@@ -131,6 +126,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'tan'   : (math.tan, 1),
             'tanh'  : (math.tanh, 1)
         }
+
+        self.trig_functions = ['cos', 'cosh', 'sin', 'sinh', 'tan', 'tanh']
 
         # Predefined constants
         self.variables = {
@@ -257,6 +254,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                 if num_args == 1:
                     a = stack.pop()
+                    self.log.write(f"token(a)={token}({a})", True)
+                    if token in self.trig_functions and self.DEG:
+                        # Trigonometric functions need radians values
+                        a = math.radians(a)
+                        self.log.write(f"token(a)={token}({a})", True)
                     stack.append(func(a))
                 elif num_args == 2:
                     b = stack.pop()
