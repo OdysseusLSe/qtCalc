@@ -77,9 +77,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_item = 0
         self.tokens = []
 
-        icon = QIcon(":/ui/delete_white.png")
-        self.btn_del.setIcon(icon)
-
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setStyleSheet(
             "font-weight: bold; background-color: rgb(94, 94, 94); color: white; border: 1 solid; border-radius: 7;"
