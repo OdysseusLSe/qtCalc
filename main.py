@@ -448,7 +448,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if last_char == ")" or self.text.endswith(tuple(self.variables.keys())):
                     return reject("Decimal point cannot follow a constant or closing parenthesis!")
 
-                # 2. Aktuelle Zahl am Ende extrahieren und auf vorhandenen Punkt prüfen
                 current_number = re.search(r'[\d.]+$', self.text)
                 if current_number and "." in current_number.group():
                     return reject("Multiple decimal points in one number!")
