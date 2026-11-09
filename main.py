@@ -35,7 +35,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.5.1"
+APP_VERSION = "0.5.2"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -78,7 +78,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             color: green;
             border: 1 solid;
             padding: 3;
-        """)
+            """)
         self.btn_DEG.toggled.connect(self.deg_rad_toggle)
         self.RAD = False
         self.btn_RAD.setChecked(self.RAD)
@@ -87,7 +87,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             color: salmon;
             border: 1 solid;
             padding: 3;
-        """)
+            """)
         self.btn_RAD.toggled.connect(self.deg_rad_toggle)
 
         self.status_lbl = QLabel("Ready")
@@ -98,7 +98,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMainWindow#MainWindow {
                 border-image: url(:/ui/aluminum.jpg) 0 0 0 0 stretch stretch;
             }
-        """)
+            """)
 
         self.expression_line.setFocus()
 
@@ -221,14 +221,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 color: green;
                 border: 1 solid;
                 padding: 3;
-            """)
+                """)
             self.RAD = False
             self.btn_RAD.setStyleSheet("""
                 background-color: lightgrey;
                 color: salmon;
                 border: 1 solid;
                 padding: 3;
-            """)
+                """)
         else:
             self.DEG = False
             self.btn_DEG.setStyleSheet("""
@@ -236,14 +236,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 color: salmon;
                 border: 1 solid;
                 padding: 3;
-            """)
+                """)
             self.RAD = True
             self.btn_RAD.setStyleSheet("""
                 background-color: lightgrey;
                 color: green;
                 border: 1 solid;
                 padding: 3;
-            """)
+                """)
 
         self.expression_line.setFocus()
         self.log.exit("deg_rad_toggle", True)
