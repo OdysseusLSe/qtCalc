@@ -35,7 +35,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.5"
+APP_VERSION = "0.5.1"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -270,11 +270,83 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #
     # -----------------------------------------------
+    # Handle the input validation
+    # -----------------------------------------------
+    #
+
+    def is_input_valid(self, new_char):
+        self.log.entry("is_input_valid(new_char)", True)
+        self.log.write(f"new_char={new_char}", True)
+
+        self.status_lbl.setText("Validating input")
+
+        last_char = self.text[-1] if self.text else ""
+        operators_list = list(self.operators.keys())
+
+        value = True
+
+        if new_char != "=":
+
+            log_string = f"Validation is blocking: "
+
+            if not self.text and (new_char == "^2" or new_char == "^3"):
+                log_string += f"Operator at start: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                value = False
+
+            if not self.text and new_char in operators_list and new_char != '-':
+                log_string += f"Operator at start: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                value = False
+
+            if last_char in operators_list and new_char in operators_list:
+                log_string += f"Double operator: {last_char}{new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                value = False
+
+            if last_char == "(" and (new_char == "^2" or new_char == "^3"):
+                log_string += f"Operator after opening parenthesis: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                value = False
+
+            if last_char == "(" and new_char in operators_list and new_char != '-':
+                log_string += f"Operator after opening parenthesis: {new_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                value = False
+
+            if last_char in operators_list and new_char == ")":
+                log_string += f"Parenthesis after operator: {last_char}!"
+                self.status_lbl.setText(log_string)
+                self.log.warning(log_string, True)
+                value = False
+
+            if new_char == ")":
+                number_of_opening = self.text.count("(")
+                number_of_closing = self.text.count(")")
+                if number_of_closing >= number_of_opening:
+                    log_string += "Too many closing parentheses!"
+                    self.status_lbl.setText(log_string)
+                    self.log.warning(log_string, True)
+                    value = False
+
+        self.log.exit("is_input_valid", True)
+        return value
+
+    #
+    # -----------------------------------------------
     # Handle special buttons like clear, memory functions, cursor, etc.
     # -----------------------------------------------
 
     def is_special_button(self, button_name):
         self.log.entry("is_special_button(button_name)", True)
+        self.log.write(f"button_name={button_name}", True)
+
+        self.status_lbl.setText("Checking for special button")
 
         if button_name == "btn_clear":
             # Clear the current expression and reset the display
@@ -392,102 +464,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_button_clicked(self):
         self.log.entry("on_button_clicked()", True)
 
-        button = self.sender()
-        button_name = button.objectName()
-
         self.expression_line.setFocus()
 
+        button = self.sender()
+        button_name = button.objectName()
         if self.is_special_button(button_name):
+            return
+
+        new_char = self.buttons[button_name]
+        if not self.is_input_valid(new_char):
             return
 
         self.result = None
 
-        #
-        # Second, handle the input validation
-        #
-
-        self.status_lbl.setText("Validating input...")
-
-        new_char = self.buttons[button_name]
-        self.log.write(f"new_char={new_char}", True)
-
-        last_char = self.text[-1] if self.text else ""
-        operators_list = list(self.operators.keys())
-
-        if new_char != "=":
-
-            log_string = f"Validation is blocking: "
-
-            if not self.text and (new_char == "^2" or new_char == "^3"):
-                log_string += f"Operator at start: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            if not self.text and new_char in operators_list and new_char != '-':
-                log_string += f"Operator at start: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            if last_char in operators_list and new_char in operators_list:
-                log_string += f"Double operator: {last_char}{new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            if last_char == "(" and (new_char == "^2" or new_char == "^3"):
-                log_string += f"Operator after opening parenthesis: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            if last_char == "(" and new_char in operators_list and new_char != '-':
-                log_string += f"Operator after opening parenthesis: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            if last_char in operators_list and new_char == ")":
-                log_string += f"Parenthesis after operator: {last_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            if new_char == ")":
-                number_of_opening = self.text.count("(")
-                number_of_closing = self.text.count(")")
-                if number_of_closing >= number_of_opening:
-                    log_string += "Too many closing parentheses!"
-                    self.status_lbl.setText(log_string)
-                    self.log.warning(log_string, True)
-                    self.log.exit("on_button_clicked", True)
-                    return
-
-        #
-        # Third, if the input is valid, update the expression and display it
-        #
-
-        cursor_pos = self.expression_line.cursorPosition()
-        self.log.write(f"cursor_pos={cursor_pos}", True)
-        if new_char != "=":
-            old_text = self.expression_line.text()
-            new_text = old_text[:cursor_pos] + new_char + old_text[cursor_pos:]
-            self.text = new_text
-            self.expression_line.setText(self.text)
-            self.expression_line.setCursorPosition(cursor_pos + len(new_char))
-        else:
-            self.text = self.expression_line.text()
-        cursor_pos = self.expression_line.cursorPosition()
-        self.log.write(f"cursor_pos={cursor_pos}", True)
-        self.log.write(f"self.text={self.text}", True)
-        self.log.write(f"new_char={new_char}", True)
+        self.update_expression(new_char)
 
         #
         # Forth, handle the calculation when the "=" button is pressed
@@ -643,18 +633,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    def scroll_to_bottom(self):
-        self.log.entry("scroll_to_bottom(self)", True)
-
-        scrollbar = self.history_list.verticalScrollBar()
-        scrollbar.setValue(scrollbar.maximum())
-
-        self.log.exit("scroll_to_bottom", True)
-
-    #
-    # -----------------------------------------------
-    #
-
     def shunting_yard(self, tokens):
         self.log.entry("shunting_yard(self, tokens)", True)
 
@@ -709,6 +687,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.exit("shunting_yard", True)
         return output
 
+    #
+    # -----------------------------------------------
+    # Third, if the input is valid, update the expression and display it
+    # -----------------------------------------------
+    #
+
+    def update_expression(self, new_char):
+        self.log.entry("update_expression(new_char)", True)
+        self.log.write(f"new_char={new_char}", True)
+
+        cursor_pos = self.expression_line.cursorPosition()
+        self.log.write(f"cursor_pos={cursor_pos}", True)
+        if new_char != "=":
+            old_text = self.expression_line.text()
+            new_text = old_text[:cursor_pos] + new_char + old_text[cursor_pos:]
+            self.text = new_text
+            self.expression_line.setText(self.text)
+            self.expression_line.setCursorPosition(cursor_pos + len(new_char))
+        else:
+            self.text = self.expression_line.text()
+        cursor_pos = self.expression_line.cursorPosition()
+        self.log.write(f"cursor_pos={cursor_pos}", True)
+        self.log.write(f"self.text={self.text}", True)
+        self.log.write(f"new_char={new_char}", True)
+
+        self.log.exit("update_expression", True)
 
 #
 # -----------------------------------------------
