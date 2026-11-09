@@ -128,6 +128,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self.trig_functions = ['cos', 'cosh', 'sin', 'sinh', 'tan', 'tanh']
+        self.powers         = ['^2', '^3']
 
         # Predefined constants
         self.variables = {
@@ -223,15 +224,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def evaluate_expression(self):
         self.log.entry("evaluate_expression()", True)
 
-        number_of_opening = self.text.count("(")
-        number_of_closing = self.text.count(")")
-        if number_of_closing < number_of_opening:
-            self.expression_line.setText(self.text)
-            self.status_lbl.setText("Too few closing parentheses!")
-            self.log.warning("Too few closing parentheses!", True)
-            self.log.exit("on_button_clicked", True)
-            return
-
         try:
 
             token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
@@ -279,7 +271,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.result = cleaned
 
+            #
             # Add current expression to history list
+            #
+
             expression = f"{self.text}={self.result}"
             self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
             item = QListWidgetItem(self.expression_history)
@@ -289,7 +284,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             )
 
             if self.history_item % 2 == 0:
-                item.setBackground(QBrush(QColor("white")))
+                item.setBackground(QColor("white"))
+                item.setForeground(QColor(94, 94, 94))
+            else:
+                item.setBackground(QColor(94, 94, 94))
+                item.setForeground(QColor("white"))
             self.history_list.addItem(item)
             self.history_item += 1
 
@@ -405,59 +404,57 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         last_char = self.text[-1] if self.text else ""
         operators_list = list(self.operators.keys())
 
-        value = True
+        def reject(reason):
+            msg = f"Validation is blocking: {reason}"
+            self.status_lbl.setText(msg)
+            self.log.warning(msg, True)
+            self.log.exit("is_input_valid", True)
+            return False
 
-        if new_char != "=":
+        if new_char == "=":
 
-            log_string = f"Validation is blocking: "
+            if not self.text:
+                return reject("Empty expression!")
+            if last_char in operators_list or last_char in ("(", ","):
+                return reject(f"Expression cannot end with '{last_char}'!")
+            if self.text.count("(") != self.text.count(")"):
+                return reject("Unclosed parentheses!")
 
-            if not self.text and (new_char == "^2" or new_char == "^3"):
-                log_string += f"Operator at start: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                value = False
+        else:
 
-            if not self.text and new_char in operators_list and new_char != '-':
-                log_string += f"Operator at start: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                value = False
+            if not self.text:
+                if new_char in self.powers or new_char in (",", ")"):
+                    return reject(f"Invalid start token: {new_char}!")
+                if new_char in operators_list and new_char != "-":
+                    return reject(f"Operator at start: {new_char}!")
 
-            if last_char in operators_list and new_char in operators_list:
-                log_string += f"Double operator: {last_char}{new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                value = False
+            elif last_char in operators_list:
+                if new_char in operators_list or new_char in self.powers:
+                    return reject(f"Double operator: {last_char}{new_char}!")
+                if new_char in (")", ","):
+                    return reject(f"'{new_char}' after operator: {last_char}!")
 
-            if last_char == "(" and (new_char == "^2" or new_char == "^3"):
-                log_string += f"Operator after opening parenthesis: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                value = False
-
-            if last_char == "(" and new_char in operators_list and new_char != '-':
-                log_string += f"Operator after opening parenthesis: {new_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                value = False
-
-            if last_char in operators_list and new_char == ")":
-                log_string += f"Parenthesis after operator: {last_char}!"
-                self.status_lbl.setText(log_string)
-                self.log.warning(log_string, True)
-                value = False
+            elif last_char in ("(", ","):
+                if new_char in self.powers or new_char in (")", ","):
+                    return reject(f"Invalid token '{new_char}' after '{last_char}'!")
+                if new_char in operators_list and new_char != "-":
+                    return reject(f"Operator after '{last_char}': {new_char}!")
 
             if new_char == ")":
-                number_of_opening = self.text.count("(")
-                number_of_closing = self.text.count(")")
-                if number_of_closing >= number_of_opening:
-                    log_string += "Too many closing parentheses!"
-                    self.status_lbl.setText(log_string)
-                    self.log.warning(log_string, True)
-                    value = False
+                if self.text.count(")") >= self.text.count("("):
+                    return reject("Too many closing parentheses!")
+
+            if new_char == ".":
+                if last_char == ")" or self.text.endswith(tuple(self.variables.keys())):
+                    return reject("Decimal point cannot follow a constant or closing parenthesis!")
+
+                # 2. Aktuelle Zahl am Ende extrahieren und auf vorhandenen Punkt prüfen
+                current_number = re.search(r'[\d.]+$', self.text)
+                if current_number and "." in current_number.group():
+                    return reject("Multiple decimal points in one number!")
 
         self.log.exit("is_input_valid", True)
-        return value
+        return True
 
     #
     # -----------------------------------------------
@@ -613,22 +610,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @Slot()
     def on_item_double_clicked(self, item):
         self.log.entry("on_item_double_clicked(self, item)", True)
-
         self.log.write(f"item.text()={item.text()}", True)
 
-        self.text = self.expression_line.text()
-
-        cursor_pos = self.expression_line.cursorPosition()
-        old_text = self.expression_line.text()
-
         if "=" in item.text():
-            # Copy text just before "=" and attach it to the current expression
+            # Copy text just before "=" and attach it to the current expression.
             insert_text = item.text().split("=", 1)[0]
         else:
-            # Check for errorneous expression
-            insert_text = item.text().split(" --> ", 1)[0]
+            # Errorneous expression will be ignored.
+            self.status_lbl.setText("Errorneous expression ignored!")
+            self.log.exit("on_item_double_clicked", True)
+            return
 
-        new_text = old_text[:cursor_pos] + insert_text + old_text[cursor_pos:]
+        self.text  = self.expression_line.text()
+        cursor_pos = self.expression_line.cursorPosition()
+        old_text   = self.expression_line.text()
+        new_text   = old_text[:cursor_pos] + insert_text + old_text[cursor_pos:]
+
         self.expression_line.setText(new_text)
         self.expression_line.setCursorPosition(cursor_pos + len(insert_text))
         self.log.write(f"new_text={new_text}", True)
