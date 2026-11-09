@@ -216,6 +216,128 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #
     # -----------------------------------------------
+    # Handle the calculation when the "=" button is pressed
+    # -----------------------------------------------
+    #
+
+    def evaluate_expression(self):
+        self.log.entry("evaluate_expression()", True)
+
+        number_of_opening = self.text.count("(")
+        number_of_closing = self.text.count(")")
+        if number_of_closing < number_of_opening:
+            self.expression_line.setText(self.text)
+            self.status_lbl.setText("Too few closing parentheses!")
+            self.log.warning("Too few closing parentheses!", True)
+            self.log.exit("on_button_clicked", True)
+            return
+
+        try:
+
+            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
+            raw_tokens = re.findall(token_spec, self.text)
+            self.log.write(f"raw_tokens={raw_tokens}", True)
+
+            #
+            # Implement implicit multiplication
+            #
+
+            num_regex = re.compile(r'^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$')
+
+            def is_value_end(tok):
+                return bool(num_regex.match(tok)) or tok in self.variables or tok == ')'
+
+            def is_value_start(tok):
+                return (
+                    bool(num_regex.match(tok))
+                    or tok in self.variables
+                    or tok in self.functions
+                    or tok == '('
+                )
+
+            tokens = []
+            for i, tok in enumerate(raw_tokens):
+                if i > 0 and is_value_end(raw_tokens[i - 1]) and is_value_start(tok):
+                    tokens.append('*')
+                tokens.append(tok)
+
+            # Implement unary minus
+            processed_tokens = []
+            for i, tok in enumerate(tokens):
+                if tok == '-' and (i == 0 or tokens[i-1] in self.operators or tokens[i-1] in ('(', ',')):
+                    processed_tokens.append('0')
+                processed_tokens.append(tok)
+
+            shunting_yard_output = self.shunting_yard(processed_tokens)
+            self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
+
+            raw_result = self.evaluate_rpn(shunting_yard_output)
+
+            cleaned = float(f"{raw_result:.16g}")
+            if cleaned.is_integer() and abs(cleaned) < 1e15:
+                self.result = int(cleaned)
+            else:
+                self.result = cleaned
+
+            # Add current expression to history list
+            expression = f"{self.text}={self.result}"
+            self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
+            item = QListWidgetItem(self.expression_history)
+            self.log.write(
+                f"self.expression_history={self.expression_history}",
+                True
+            )
+
+            if self.history_item % 2 == 0:
+                item.setBackground(QBrush(QColor("white")))
+            self.history_list.addItem(item)
+            self.history_item += 1
+
+            # Show result of expression
+            self.text = f"{self.result}"
+            self.status_lbl.setText("Ready")
+            self.expression_line.setText(self.text)
+            self.log.write(f"self.text={self.text}", True)
+
+        except ZeroDivisionError:
+            error = "Error: Division by zero!"
+            self.status_lbl.setText(error)
+            self.log.error(error, True)
+            item = QListWidgetItem(f"{self.text} --> {error}")
+            item.setBackground(QBrush(QColor("red")))
+            item.setForeground(QColor("white"))
+            self.history_list.addItem(item)
+            self.history_item += 1
+            self.text = ""
+            self.expression_line.setText(self.text)
+
+        except IndexError:
+            error = "Error: Insufficient operands or parentheses error!"
+            self.status_lbl.setText(error)
+            self.log.error(error, True)
+            item = QListWidgetItem(f"{self.text} --> {error}")
+            item.setBackground(QBrush(QColor("red")))
+            item.setForeground(QColor("white"))
+            self.history_list.addItem(item)
+            self.history_item += 1
+            self.text = ""
+            self.expression_line.setText(self.text)
+
+        except Exception as e:
+            error = f"Error: General error: {str(e)}"
+            self.status_lbl.setText(error)
+            item = QListWidgetItem(f"{self.text} --> {error}")
+            item.setBackground(QBrush(QColor("red")))
+            item.setForeground(QColor("white"))
+            self.history_list.addItem(item)
+            self.history_item += 1
+            self.text = ""
+            self.expression_line.setText(self.text)
+
+        self.log.exit("evaluate_expression", True)
+
+    #
+    # -----------------------------------------------
     #
 
     def evaluate_rpn(self, postfix_tokens):
@@ -479,122 +601,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.update_expression(new_char)
 
-        #
-        # Forth, handle the calculation when the "=" button is pressed
-        #
-
         if new_char == "=":
-
-            number_of_opening = self.text.count("(")
-            number_of_closing = self.text.count(")")
-            if number_of_closing < number_of_opening:
-                self.expression_line.setText(self.text)
-                self.status_lbl.setText("Too few closing parentheses!")
-                self.log.warning("Too few closing parentheses!", True)
-                self.log.exit("on_button_clicked", True)
-                return
-
-            try:
-
-                token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
-                raw_tokens = re.findall(token_spec, self.text)
-                self.log.write(f"raw_tokens={raw_tokens}", True)
-
-                #
-                # Implement implicit multiplication
-                #
-
-                num_regex = re.compile(r'^\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$')
-
-                def is_value_end(tok):
-                    return bool(num_regex.match(tok)) or tok in self.variables or tok == ')'
-
-                def is_value_start(tok):
-                    return (
-                        bool(num_regex.match(tok))
-                        or tok in self.variables
-                        or tok in self.functions
-                        or tok == '('
-                    )
-
-                tokens = []
-                for i, tok in enumerate(raw_tokens):
-                    if i > 0 and is_value_end(raw_tokens[i - 1]) and is_value_start(tok):
-                        tokens.append('*')
-                    tokens.append(tok)
-
-                # Implement unary minus
-                processed_tokens = []
-                for i, tok in enumerate(tokens):
-                    if tok == '-' and (i == 0 or tokens[i-1] in self.operators or tokens[i-1] in ('(', ',')):
-                        processed_tokens.append('0')
-                    processed_tokens.append(tok)
-
-                shunting_yard_output = self.shunting_yard(processed_tokens)
-                self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
-
-                raw_result = self.evaluate_rpn(shunting_yard_output)
-
-                cleaned = float(f"{raw_result:.16g}")
-                if cleaned.is_integer() and abs(cleaned) < 1e15:
-                    self.result = int(cleaned)
-                else:
-                    self.result = cleaned
-
-                # Add current expression to history list
-                expression = f"{self.text}={self.result}"
-                self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
-                item = QListWidgetItem(self.expression_history)
-                self.log.write(
-                    f"self.expression_history={self.expression_history}",
-                    True
-                )
-
-                if self.history_item % 2 == 0:
-                    item.setBackground(QBrush(QColor("white")))
-                self.history_list.addItem(item)
-                self.history_item += 1
-
-                # Show result of expression
-                self.text = f"{self.result}"
-                self.status_lbl.setText("Ready")
-                self.expression_line.setText(self.text)
-                self.log.write(f"self.text={self.text}", True)
-
-            except ZeroDivisionError:
-                error = "Error: Division by zero!"
-                self.status_lbl.setText(error)
-                self.log.error(error, True)
-                item = QListWidgetItem(f"{self.text} --> {error}")
-                item.setBackground(QBrush(QColor("red")))
-                item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
-                self.text = ""
-                self.expression_line.setText(self.text)
-
-            except IndexError:
-                error = "Error: Insufficient operands or parentheses error!"
-                self.status_lbl.setText(error)
-                self.log.error(error, True)
-                item = QListWidgetItem(f"{self.text} --> {error}")
-                item.setBackground(QBrush(QColor("red")))
-                item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
-                self.text = ""
-                self.expression_line.setText(self.text)
-
-            except Exception as e:
-                error = f"Error: General error: {str(e)}"
-                self.status_lbl.setText(error)
-                item = QListWidgetItem(f"{self.text} --> {error}")
-                item.setBackground(QBrush(QColor("red")))
-                item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
-                self.text = ""
-                self.expression_line.setText(self.text)
+            self.evaluate_expression()
 
         self.log.exit("on_button_clicked", True)
 
