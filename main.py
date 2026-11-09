@@ -270,8 +270,89 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #
     # -----------------------------------------------
+    # Handle special buttons like clear, memory functions, cursor, etc.
+    # -----------------------------------------------
+
+    def is_special_button(self, button_name):
+        self.log.entry("is_special_button(button_name)", True)
+
+        if button_name == "btn_clear":
+            # Clear the current expression and reset the display
+            self.text = ""
+            self.expression_line.setText(self.text)
+            self.log.write("clear", True)
+            self.expression_line.setFocus()
+            value = True
+
+        elif button_name == "btn_del":
+            cursor_pos = self.expression_line.cursorPosition()
+            old_text   = self.expression_line.text()
+            new_text   = old_text[:cursor_pos-1] + old_text[cursor_pos:]
+            self.text  = new_text
+            self.expression_line.setText(self.text)
+            self.expression_line.setCursorPosition(cursor_pos-1)
+            self.expression_line.setFocus()
+            value = True
+
+        elif button_name == "btn_Mplus":
+            # Add the current result to memory
+            if hasattr(self, 'result') and self.result is not None:
+                self.memory_list.addItem(f"{self.result}")
+                self.memory_index += 1
+                self.memory_list.setCurrentIndex(self.memory_index)
+            self.expression_line.setFocus()
+            value = True
+
+        elif button_name == "btn_MC":
+            # Clear the memory
+            self.memory_list.clear()
+            self.memory_index = -1
+            self.expression_line.setFocus()
+            value = True
+
+        elif button_name == "btn_MR":
+            # Recall the value from memory and
+            # append it to the current expression
+            if self.memory_list.currentText() != "":
+                mem_value = self.memory_list.currentText()
+                cursor_pos = self.expression_line.cursorPosition()
+                old_text = self.expression_line.text()
+                new_text = old_text[:cursor_pos] + mem_value + old_text[cursor_pos:]
+                self.text = new_text
+                self.expression_line.setText(self.text)
+                self.text += mem_value
+                self.expression_line.setText(self.text)
+                self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
+                self.expression_line.setFocus()
+            value = True
+
+        elif button_name == "btn_left":
+
+            self.expression_line.setFocus()
+            self.expression_line.cursorBackward(False)
+            self.expression_line.setFocus()
+            value = True
+
+        elif button_name == "btn_right":
+
+            self.expression_line.setFocus()
+            self.expression_line.cursorForward(False)
+            self.expression_line.setFocus()
+            value = True
+
+        else:
+            value = False
+
+        self.log.write(f"value={value}", True)
+
+        self.log.exit("is_special_button", True)
+        return value
+
+    #
+    # -----------------------------------------------
     #
 
+    @Slot()
     def keyPressEvent(self, event):
         self.log.entry("keyPressEvent(event)", True)
 
@@ -307,6 +388,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
+    @Slot()
     def on_button_clicked(self):
         self.log.entry("on_button_clicked()", True)
 
@@ -315,77 +397,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.expression_line.setFocus()
 
-        #
-        # First, handle special buttons like clear, memory functions, etc.
-        #
-
-        if button_name == "btn_clear":
-
-            # Clear the current expression and reset the display
-            self.text = ""
-            self.expression_line.setText(self.text)
-            self.log.write("clear", True)
-            self.expression_line.setFocus()
-            return
-
-        elif button_name == "btn_del":
-
-            cursor_pos = self.expression_line.cursorPosition()
-            old_text = self.expression_line.text()
-            new_text = old_text[:cursor_pos-1] + old_text[cursor_pos:]
-            self.text = new_text
-            self.expression_line.setText(self.text)
-            self.expression_line.setCursorPosition(cursor_pos-1)
-            self.expression_line.setFocus()
-            return
-
-        elif button_name == "btn_Mplus":
-
-            # Add the current result to memory
-            if hasattr(self, 'result') and self.result is not None:
-                self.memory_list.addItem(f"{self.result}")
-                self.memory_index += 1
-                self.memory_list.setCurrentIndex(self.memory_index)
-            self.expression_line.setFocus()
-            return
-
-        elif button_name == "btn_MC":
-
-            # Clear the memory
-            self.memory_list.clear()
-            self.memory_index = -1
-            self.expression_line.setFocus()
-            return
-
-        elif button_name == "btn_MR":
-
-            # Recall the value from memory and
-            # append it to the current expression
-            if self.memory_list.currentText() != "":
-                mem_value = self.memory_list.currentText()
-                cursor_pos = self.expression_line.cursorPosition()
-                old_text = self.expression_line.text()
-                new_text = old_text[:cursor_pos] + mem_value + old_text[cursor_pos:]
-                self.text = new_text
-                self.expression_line.setText(self.text)
-                self.text += mem_value
-                self.expression_line.setText(self.text)
-                self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
-                self.expression_line.setFocus()
-            return
-
-        elif button_name == "btn_left":
-
-            self.expression_line.setFocus()
-            self.expression_line.cursorBackward(False)
-            self.expression_line.setFocus()
-            return
-
-        elif button_name == "btn_right":
-
-            self.expression_line.setFocus()
-            self.expression_line.cursorForward(False)
-            self.expression_line.setFocus()
+        if self.is_special_button(button_name):
             return
 
         self.result = None
@@ -600,6 +612,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
+    @Slot()
     def on_item_double_clicked(self, item):
         self.log.entry("on_item_double_clicked(self, item)", True)
 
