@@ -691,15 +691,35 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_RAD, 0, 4, 1, 1)
 
-        self.pushButton = QPushButton(self.centralwidget)
-        self.pushButton.setObjectName(u"pushButton")
-        sizePolicy1.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
-        self.pushButton.setSizePolicy(sizePolicy1)
-        self.pushButton.setFont(font6)
-        self.pushButton.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
+        self.btn_plot = QPushButton(self.centralwidget)
+        self.btn_plot.setObjectName(u"btn_plot")
+        sizePolicy1.setHeightForWidth(self.btn_plot.sizePolicy().hasHeightForWidth())
+        self.btn_plot.setSizePolicy(sizePolicy1)
+        self.btn_plot.setFont(font6)
+        self.btn_plot.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
 "color : white;")
 
-        self.gridLayout_3.addWidget(self.pushButton, 0, 6, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_plot, 0, 6, 1, 1)
+
+        self.btn_x = QPushButton(self.centralwidget)
+        self.btn_x.setObjectName(u"btn_x")
+        sizePolicy1.setHeightForWidth(self.btn_x.sizePolicy().hasHeightForWidth())
+        self.btn_x.setSizePolicy(sizePolicy1)
+        self.btn_x.setFont(font5)
+        self.btn_x.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
+"color : white;")
+
+        self.gridLayout_3.addWidget(self.btn_x, 0, 7, 1, 1)
+
+        self.btn_y = QPushButton(self.centralwidget)
+        self.btn_y.setObjectName(u"btn_y")
+        sizePolicy1.setHeightForWidth(self.btn_y.sizePolicy().hasHeightForWidth())
+        self.btn_y.setSizePolicy(sizePolicy1)
+        self.btn_y.setFont(font5)
+        self.btn_y.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
+"color : white;")
+
+        self.gridLayout_3.addWidget(self.btn_y, 0, 8, 1, 1)
 
         self.gridLayout_3.setColumnStretch(0, 1)
         self.gridLayout_3.setColumnStretch(1, 1)
@@ -788,6 +808,8 @@ class Ui_MainWindow(object):
         self.btn_del.setText(QCoreApplication.translate("MainWindow", u"\u232b", None))
         self.btn_DEG.setText(QCoreApplication.translate("MainWindow", u"DEG", None))
         self.btn_RAD.setText(QCoreApplication.translate("MainWindow", u"RAD", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
+        self.btn_plot.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
+        self.btn_x.setText(QCoreApplication.translate("MainWindow", u"x", None))
+        self.btn_y.setText(QCoreApplication.translate("MainWindow", u"y", None))
     # retranslateUi
 

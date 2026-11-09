@@ -21,7 +21,7 @@ import re
 import sys
 
 import logging as pylog
-
+import matplotlib.pyplot as plt
 
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QBrush, QColor
@@ -146,7 +146,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Predefined constants
         self.variables = {
             'pi' : math.pi,
-            'e'  : math.e
+            'e'  : math.e,
+            'x'  : 'x',
+            'y'  : 'y',
         }
 
         self.log.exit("advanced_operator", True)
@@ -201,7 +203,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_tan"           : "tan(",
             "btn_tanh"          : "tanh(",
             "btn_unary_minus"   : "-",
-            "btn_XpowerY"       : "^"
+            "btn_x"             : "x",
+            "btn_XpowerY"       : "^",
+            "btn_y"             : "y"
         }
 
         self.log.entry("button_mapping()", True)
@@ -550,18 +554,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             value = True
 
         elif button_name == "btn_left":
-
             self.expression_line.setFocus()
             self.expression_line.cursorBackward(False)
             self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_right":
-
             self.expression_line.setFocus()
             self.expression_line.cursorForward(False)
             self.expression_line.setFocus()
             value = True
+
+        elif button_name == "btn_plot":
+            plt.plot([-1, -4.5, 16, 23, 15, 59, 45, 21])
+            plt.show()
 
         else:
             value = False

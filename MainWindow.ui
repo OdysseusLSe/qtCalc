@@ -1492,7 +1492,7 @@ border: 1px;</string>
          </widget>
         </item>
         <item row="0" column="6">
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="btn_plot">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -1511,6 +1511,52 @@ color : white;</string>
           </property>
           <property name="text">
            <string>Plot</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="7">
+         <widget class="QPushButton" name="btn_x">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color : rgb(66, 66, 66);
+color : white;</string>
+          </property>
+          <property name="text">
+           <string>x</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="8">
+         <widget class="QPushButton" name="btn_y">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>25</pointsize>
+            <fontweight>DemiBold</fontweight>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color : rgb(66, 66, 66);
+color : white;</string>
+          </property>
+          <property name="text">
+           <string>y</string>
           </property>
          </widget>
         </item>
