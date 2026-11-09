@@ -227,7 +227,10 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.btn_2nd.sizePolicy().hasHeightForWidth())
         self.btn_2nd.setSizePolicy(sizePolicy1)
-        self.btn_2nd.setFont(font3)
+        font6 = QFont()
+        font6.setPointSize(25)
+        font6.setBold(True)
+        self.btn_2nd.setFont(font6)
         self.btn_2nd.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_2nd.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
 "color : white;")
@@ -283,9 +286,6 @@ class Ui_MainWindow(object):
         self.btn_divide.setObjectName(u"btn_divide")
         sizePolicy.setHeightForWidth(self.btn_divide.sizePolicy().hasHeightForWidth())
         self.btn_divide.setSizePolicy(sizePolicy)
-        font6 = QFont()
-        font6.setPointSize(25)
-        font6.setBold(True)
         self.btn_divide.setFont(font6)
         self.btn_divide.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_divide.setStyleSheet(u"background-color: orange;\n"
@@ -672,7 +672,8 @@ class Ui_MainWindow(object):
         font8.setBold(True)
         self.btn_DEG.setFont(font8)
         self.btn_DEG.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_DEG.setStyleSheet(u"color: green;\n"
+        self.btn_DEG.setStyleSheet(u"background-color: lightgrey;\n"
+"color: green;\n"
 "border: 1px;")
         self.btn_DEG.setChecked(True)
 
@@ -684,10 +685,21 @@ class Ui_MainWindow(object):
         self.btn_RAD.setSizePolicy(sizePolicy1)
         self.btn_RAD.setFont(font8)
         self.btn_RAD.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.btn_RAD.setStyleSheet(u"color: salmon;\n"
+        self.btn_RAD.setStyleSheet(u"background-color: lightgrey;\n"
+"color: salmon;\n"
 "border: 1px;")
 
         self.gridLayout_3.addWidget(self.btn_RAD, 0, 4, 1, 1)
+
+        self.pushButton = QPushButton(self.centralwidget)
+        self.pushButton.setObjectName(u"pushButton")
+        sizePolicy1.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
+        self.pushButton.setSizePolicy(sizePolicy1)
+        self.pushButton.setFont(font6)
+        self.pushButton.setStyleSheet(u"background-color : rgb(66, 66, 66);\n"
+"color : white;")
+
+        self.gridLayout_3.addWidget(self.pushButton, 0, 6, 1, 1)
 
         self.gridLayout_3.setColumnStretch(0, 1)
         self.gridLayout_3.setColumnStretch(1, 1)
@@ -776,5 +788,6 @@ class Ui_MainWindow(object):
         self.btn_del.setText(QCoreApplication.translate("MainWindow", u"\u232b", None))
         self.btn_DEG.setText(QCoreApplication.translate("MainWindow", u"DEG", None))
         self.btn_RAD.setText(QCoreApplication.translate("MainWindow", u"RAD", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
     # retranslateUi
 

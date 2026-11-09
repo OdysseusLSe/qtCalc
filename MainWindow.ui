@@ -419,7 +419,7 @@ color: black;</string>
           <property name="font">
            <font>
             <pointsize>25</pointsize>
-            <fontweight>ExtraBold</fontweight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="focusPolicy">
@@ -1488,6 +1488,29 @@ border: 1px;</string>
           </property>
           <property name="text">
            <string>RAD</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QPushButton" name="pushButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>25</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color : rgb(66, 66, 66);
+color : white;</string>
+          </property>
+          <property name="text">
+           <string>Plot</string>
           </property>
          </widget>
         </item>
