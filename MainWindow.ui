@@ -1452,7 +1452,8 @@ color: rgb(94, 94, 94);</string>
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">color: green;
+           <string notr="true">background-color: lightgrey;
+color: green;
 border: 1px;</string>
           </property>
           <property name="text">
@@ -1481,7 +1482,8 @@ border: 1px;</string>
            <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
-           <string notr="true">color: salmon;
+           <string notr="true">background-color: lightgrey;
+color: salmon;
 border: 1px;</string>
           </property>
           <property name="text">

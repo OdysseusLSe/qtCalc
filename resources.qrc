@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
     <!-- Styles -->
+    <file>ui/aluminum.jpg</file>
     <!-- Icons -->
     <file>ui/delete_black.png</file>
     <file>ui/delete_white.png</file>

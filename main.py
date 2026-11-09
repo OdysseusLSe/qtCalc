@@ -73,19 +73,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.DEG = True
         self.btn_DEG.setChecked(self.DEG)
-        self.btn_DEG.setStyleSheet("color: green; border: 1 solid; padding: 3")
+        self.btn_DEG.setStyleSheet("""
+            background-color: lightgrey;
+            color: green;
+            border: 1 solid;
+            padding: 3;
+        """)
         self.btn_DEG.toggled.connect(self.deg_rad_toggle)
         self.RAD = False
         self.btn_RAD.setChecked(self.RAD)
-        self.btn_RAD.setStyleSheet("color: salmon; border: 1 solid; padding: 3")
+        self.btn_RAD.setStyleSheet("""
+            background-color: lightgrey;
+            color: salmon;
+            border: 1 solid;
+            padding: 3;
+        """)
         self.btn_RAD.toggled.connect(self.deg_rad_toggle)
 
         self.status_lbl = QLabel("Ready")
-        self.status_lbl.setStyleSheet(
-            "font-weight: bold; background-color: rgb(94, 94, 94); color: white; border: 1 solid; border-radius: 7;"
-        )
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_bar.addWidget(self.status_lbl, 1)
+
+        self.setStyleSheet("""
+            QMainWindow#MainWindow {
+                border-image: url(:/ui/aluminum.jpg) 0 0 0 0 stretch stretch;
+            }
+        """)
 
         self.expression_line.setFocus()
 
@@ -203,14 +216,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if self.btn_DEG.isChecked():
             self.DEG = True
-            self.btn_DEG.setStyleSheet("color: green; border: 1 solid; padding: 3")
+            self.btn_DEG.setStyleSheet("""
+                background-color: lightgrey;
+                color: green;
+                border: 1 solid;
+                padding: 3;
+            """)
             self.RAD = False
-            self.btn_RAD.setStyleSheet("color: salmon; border: 1 solid; padding: 3")
+            self.btn_RAD.setStyleSheet("""
+                background-color: lightgrey;
+                color: salmon;
+                border: 1 solid;
+                padding: 3;
+            """)
         else:
             self.DEG = False
-            self.btn_DEG.setStyleSheet("color: salmon; border: 1 solid; padding: 3")
+            self.btn_DEG.setStyleSheet("""
+                background-color: lightgrey;
+                color: salmon;
+                border: 1 solid;
+                padding: 3;
+            """)
             self.RAD = True
-            self.btn_RAD.setStyleSheet("color: green; border: 1 solid; padding: 3")
+            self.btn_RAD.setStyleSheet("""
+                background-color: lightgrey;
+                color: green;
+                border: 1 solid;
+                padding: 3;
+            """)
 
         self.expression_line.setFocus()
         self.log.exit("deg_rad_toggle", True)
