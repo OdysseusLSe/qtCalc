@@ -325,26 +325,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             if x is None and y is None:
 
-                #
-                # Add current expression to history list
-                #
-
-                expression = f"{self.text}={self.result}"
-                self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
-                item = QListWidgetItem(self.expression_history)
-                self.log.write(
-                    f"self.expression_history={self.expression_history}",
-                    True
-                )
-
-                if self.history_item % 2 == 0:
-                    item.setBackground(QColor("white"))
-                    item.setForeground(QColor(94, 94, 94))
-                else:
-                    item.setBackground(QColor(94, 94, 94))
-                    item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
+                self.expression_to_history("=")
 
                 # Show result of expression
                 self.text = f"{self.result}"
@@ -443,6 +424,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.log.exit("evaluate_rpn", True)
         return stack[0]
+
+    #
+    # -----------------------------------------------
+    # Add current expression to history list
+    # -----------------------------------------------
+    #
+
+    def expression_to_history(self, appendix):
+        self.log.entry("expression_to_history(appendix)", True)
+        self.log.write(f"appendix={appendix}", True)
+
+        self.text  = self.expression_line.text()
+
+        if appendix == "=":
+            expression = f"{self.text}={self.result}"
+        else:
+            expression = f"{self.text}=Plot"
+        self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
+        item = QListWidgetItem(self.expression_history)
+        self.log.write(
+            f"self.expression_history={self.expression_history}",
+            True
+        )
+
+        if self.history_item % 2 == 0:
+            item.setBackground(QColor("white"))
+            item.setForeground(QColor(94, 94, 94))
+        else:
+            item.setBackground(QColor(94, 94, 94))
+            item.setForeground(QColor("white"))
+        self.history_list.addItem(item)
+        self.history_item += 1
+
+        self.log.exit("expression_to_history", True)
 
     #
     # -----------------------------------------------
@@ -659,6 +674,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_expression(new_char)
 
         if new_char == "=":
+            self.text  = self.expression_line.text()
+            if "x" in self.text:
+                self.status_lbl.setText("Unknown variable 'x'")
+                self.log.exit("plot_expression", True)
+                return
             self.evaluate_expression()
 
         self.log.exit("on_button_clicked", True)
@@ -700,6 +720,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def plot_expression(self):
         self.log.entry("plot_expression()", True)
 
+        expression  = self.expression_line.text()
+        if "x" not in expression:
+            self.status_lbl.setText("Missing variable 'x'")
+            self.log.exit("plot_expression", True)
+            return
+
         new_char = "="
         if not self.is_input_valid(new_char):
             self.log.write(f"is_input_valid(=)=False", True)
@@ -724,14 +750,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.ax.clear()
 
         self.ax.plot(X, Y)
-        self.ax.grid(True)  # Optional: Koordinatengitter anzeigen
+        self.ax.grid(True)
+
+        self.ax.set_title(expression)
+        self.ax.set_xlabel("x")
+        self.ax.set_ylabel("y")
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
         plt.show(block=False)
 
-        if new_char == "=":
-            self.evaluate_expression()
+        self.expression_to_history("Plot")
 
         self.log.exit("plot_expression", True)
 
