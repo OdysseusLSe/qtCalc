@@ -35,7 +35,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.5.2"
+APP_VERSION = "0.6"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -99,6 +99,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 border-image: url(:/ui/aluminum.jpg) 0 0 0 0 stretch stretch;
             }
             """)
+
+        self.fig = None
+        self.ax  = None
 
         self.expression_line.setFocus()
 
@@ -258,8 +261,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    def evaluate_expression(self):
+    def evaluate_expression(self, x=None, y=None):
         self.log.entry("evaluate_expression()", True)
+        self.log.write(f"x,y={x},{y}", True)
+
+        if x is not None:
+            self.variables['x'] = x
+            self.log.write(f"self.variables['x']={self.variables['x']}", True)
+        if y is not None:
+            self.variables['x'] = y
+            self.log.write(f"self.variables['y']={self.variables['y']}", True)
+
+        self.text  = self.expression_line.text()
 
         try:
 
@@ -308,32 +321,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.result = cleaned
 
-            #
-            # Add current expression to history list
-            #
+            self.log.write(f"self.result={self.result}", True)
 
-            expression = f"{self.text}={self.result}"
-            self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
-            item = QListWidgetItem(self.expression_history)
-            self.log.write(
-                f"self.expression_history={self.expression_history}",
-                True
-            )
+            if x is None and y is None:
 
-            if self.history_item % 2 == 0:
-                item.setBackground(QColor("white"))
-                item.setForeground(QColor(94, 94, 94))
-            else:
-                item.setBackground(QColor(94, 94, 94))
-                item.setForeground(QColor("white"))
-            self.history_list.addItem(item)
-            self.history_item += 1
+                #
+                # Add current expression to history list
+                #
 
-            # Show result of expression
-            self.text = f"{self.result}"
-            self.status_lbl.setText("Ready")
-            self.expression_line.setText(self.text)
-            self.log.write(f"self.text={self.text}", True)
+                expression = f"{self.text}={self.result}"
+                self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
+                item = QListWidgetItem(self.expression_history)
+                self.log.write(
+                    f"self.expression_history={self.expression_history}",
+                    True
+                )
+
+                if self.history_item % 2 == 0:
+                    item.setBackground(QColor("white"))
+                    item.setForeground(QColor(94, 94, 94))
+                else:
+                    item.setBackground(QColor(94, 94, 94))
+                    item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
+
+                # Show result of expression
+                self.text = f"{self.result}"
+                self.status_lbl.setText("Ready")
+                self.expression_line.setText(self.text)
+                self.log.write(f"self.text={self.text}", True)
 
         except ZeroDivisionError:
             error = "Error: Division by zero!"
@@ -371,6 +388,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.expression_line.setText(self.text)
 
         self.log.exit("evaluate_expression", True)
+        return self.result
 
     #
     # -----------------------------------------------
@@ -437,6 +455,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"new_char={new_char}", True)
 
         self.status_lbl.setText("Validating input")
+        self.text  = self.expression_line.text()
 
         last_char = self.text[-1] if self.text else ""
         operators_list = list(self.operators.keys())
@@ -566,8 +585,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             value = True
 
         elif button_name == "btn_plot":
-            plt.plot([-1, -4.5, 16, 23, 15, 59, 45, 21])
-            plt.show()
+            self.plot_expression()
+            value = True
 
         else:
             value = False
@@ -617,7 +636,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    @Slot()
     def on_button_clicked(self):
         self.log.entry("on_button_clicked()", True)
 
@@ -626,10 +644,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         button = self.sender()
         button_name = button.objectName()
         if self.is_special_button(button_name):
+            self.log.write(f"is_special_button({button_name})=True", True)
+            self.log.exit("on_button_clicked", True)
             return
 
         new_char = self.buttons[button_name]
         if not self.is_input_valid(new_char):
+            self.log.write(f"is_input_valid({new_char})=False", True)
+            self.log.exit("on_button_clicked", True)
             return
 
         self.result = None
@@ -645,7 +667,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    @Slot()
     def on_item_double_clicked(self, item):
         self.log.entry("on_item_double_clicked(self, item)", True)
         self.log.write(f"item.text()={item.text()}", True)
@@ -671,6 +692,48 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.expression_line.setFocus()
 
         self.log.exit("on_item_double_clicked", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def plot_expression(self):
+        self.log.entry("plot_expression()", True)
+
+        new_char = "="
+        if not self.is_input_valid(new_char):
+            self.log.write(f"is_input_valid(=)=False", True)
+            self.log.exit("plot_expression", True)
+            return
+
+        X = [round(x * 0.1, 1) for x in range(-100, 110)]
+        Y = []
+        for x_value in X:
+            y = self.evaluate_expression(x=x_value)
+            Y.append(y)
+            self.log.write(f"x_value,y={x_value},{y}", True)
+
+        self.log.write(f"X={X}", True)
+        self.log.write(f"Y={Y}", True)
+
+        plt.ion()
+
+        if not hasattr(self, "fig") or self.fig is None or not plt.fignum_exists(self.fig.number):
+            self.fig, self.ax = plt.subplots()
+        else:
+            self.ax.clear()
+
+        self.ax.plot(X, Y)
+        self.ax.grid(True)  # Optional: Koordinatengitter anzeigen
+
+        self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
+        plt.show(block=False)
+
+        if new_char == "=":
+            self.evaluate_expression()
+
+        self.log.exit("plot_expression", True)
 
     #
     # -----------------------------------------------
@@ -732,7 +795,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #
     # -----------------------------------------------
-    # Third, if the input is valid, update the expression and display it
+    # If the input is valid, update the expression and display it
     # -----------------------------------------------
     #
 
