@@ -69,16 +69,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.curve_number = -1
         self.curve_colors = ["white", "black", "red", "green", "blue"]
 
-        plot_layout = QVBoxLayout()
-        self.plot_widget = pg.PlotWidget()
-        plot_layout.addWidget(self.plot_widget)
-        self.bottom.setLayout(plot_layout)
-
-        self.plot_widget.setBackground("gray")
-        self.plot_widget.setLabel("left", "y", color="white")
-        self.plot_widget.setLabel("bottom", "x", color="white")
-        self.plot_widget.showGrid(x=True, y=True)
-
         if "y" not in expression:
             self.status_lbl.setText("Missing variable 'y' --> curve")
             self.y_start.setEnabled(False)
@@ -87,6 +77,24 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         else:
             self.status_lbl.setText("Existing variable 'y' --> surface")
             self.surface = True
+
+        plot_layout = QVBoxLayout()
+
+        if not self.surface:
+            self.status_lbl.setText("2D-Plot")
+            self.log.write("2D-Plot", True)
+            self.plot_widget = pg.PlotWidget()
+            plot_layout.addWidget(self.plot_widget)
+            self.bottom.setLayout(plot_layout)
+
+            self.plot_widget.setBackground("gray")
+            self.plot_widget.setLabel("left", "y", color="white")
+            self.plot_widget.setLabel("bottom", "x", color="white")
+            self.plot_widget.showGrid(x=True, y=True)
+        else:
+            self.status_lbl.setText("3D-Plot")
+            self.log.write("3D-Plot", True)
+            self.plot_widget = gl.GLViewWidget()
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
