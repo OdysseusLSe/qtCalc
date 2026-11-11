@@ -37,7 +37,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.6"
+APP_VERSION = "0.7"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -102,8 +102,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             }
             """)
 
-        self.fig = None
-        self.ax  = None
+        # For 2D plots (see method 'plot_expression')
+        self.curve = False
+
+        # For 3D plots (see method 'plot_expression')
+        self.surface = False
 
         self.expression_line.setFocus()
 
@@ -277,7 +280,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"X=\n{pprint.pformat(X)}", True)
         self.log.write(f"Y=\n{pprint.pformat(Y)}", True)
 
-        self.pw.plot_curve(X, Y)
+        self.plot_2d.plot_curve(X, Y)
 
         self.log.exit("evaluate_curve", True)
 
@@ -462,6 +465,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(log_str, True)
         log_str = f"y_start,y_end,y_steps={y_start},{y_end},{y_steps}"
         self.log.write(log_str, True)
+
+        X = np.linspace(x_start, x_end, x_steps)
+        Y = np.linspace(y_start, y_end, y_steps)
 
         self.log.exit("evaluate_surface", True)
 
@@ -760,6 +766,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def plot_expression(self):
         self.log.entry("plot_expression()", True)
 
+        # Check it at least variable 'x' exists.
         expression  = self.expression_line.text()
         if "x" not in expression:
             self.status_lbl.setText("Missing variable 'x'")
@@ -767,6 +774,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.log.exit("plot_expression", True)
             return
 
+        # Use '=' similar to 'Plot' button.
         new_char = "="
         if not self.is_input_valid(new_char):
             self.status_lbl.setText("Expression is not valid!")
@@ -774,20 +782,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.log.exit("plot_expression", True)
             return
 
-        # Start new window to draw the expression
-
-        if not hasattr(self, 'pw'):
-            self.pw = PlotWindow(expression)
-            self.pw.eval_curve.connect(self.evaluate_curve)
-            self.pw.eval_surface.connect(self.evaluate_surface)
-            self.pw.show()
-        elif self.pw is not None:
-            if not self.pw.isVisible():
-                self.pw.show()
-            self.pw.add_plot(expression)
+        if "x" in expression and "y" in expression:
+            self.surface = True
+            if not hasattr(self, 'plot_3d'):
+                # Start new window to draw the expression
+                self.plot_3d = PlotWindow(expression, self.curve, self.surface)
+                self.plot_3d.eval_curve.connect(self.evaluate_curve)
+                self.plot_3d.eval_surface.connect(self.evaluate_surface)
+                self.plot_3d.show()
+            elif self.plot_3d is not None:
+                if not self.plot_3d.isVisible():
+                    self.plot_3d.show()
+                self.plot_3d.add_plot(expression)
+            else:
+                self.status_lbl.setText("Internal error: plotting not available!")
+                self.log.error("Internal error: plotting not available!", True)
         else:
-            self.status_lbl.setText("Internal error: plotting not available!")
-            self.log.error("Internal error: plotting not available!", True)
+            self.curve = True
+            if not hasattr(self, 'plot_2d'):
+                  # Start new window to draw the expression
+                self.plot_2d = PlotWindow(expression, self.curve, self.surface)
+                self.plot_2d.eval_curve.connect(self.evaluate_curve)
+                self.plot_2d.eval_surface.connect(self.evaluate_surface)
+                self.plot_2d.show()
+            elif self.plot_2d is not None:
+                if not self.plot_2d.isVisible():
+                    self.plot_2d.show()
+                self.plot_2d.add_plot(expression)
+            else:
+                self.status_lbl.setText("Internal error: plotting not available!")
+                self.log.error("Internal error: plotting not available!", True)
 
         self.expression_to_history("Plot")
 
