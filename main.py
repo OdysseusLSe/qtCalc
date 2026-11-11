@@ -21,7 +21,7 @@ import re
 import sys
 
 import logging as pylog
-import matplotlib.pyplot as plt
+import numpy as np
 
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QBrush, QColor
@@ -30,6 +30,7 @@ from PySide6.QtWidgets import QLabel, QListWidgetItem, QMainWindow, QPushButton
 
 from MainWindow_ui import Ui_MainWindow
 
+from PlotWindow import PlotWindow
 from Logging import Logging
 
 import resources_rc
@@ -123,7 +124,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             '^': (3, False)
         }
 
-        # Functions with their corresponding implementations
+        # Functions with their corresponding implementations and # of arguments
         self.functions = {
             'abs'   : (math.fabs, 1),
             'cos'   : (math.cos, 1),
@@ -217,7 +218,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    @Slot()
     def deg_rad_toggle(self, checked):
         self.log.entry("deg_rad_toggle(checked)", True)
 
@@ -254,6 +254,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.expression_line.setFocus()
         self.log.exit("deg_rad_toggle", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def evaluate_curve(self, x_start, x_end, x_steps):
+        self.log.entry("evaluate_curve(x_start, x_end, x_steps)", True)
+        log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
+        self.log.write(log_str, True)
+
+        X = np.linspace(x_start, x_end, x_steps)
+        Y = []
+
+        for x_value in X:
+            y = self.evaluate_expression(x=x_value)
+            Y.append(y)
+            self.log.write(f"x_value,y={x_value},{y}", True)
+
+        self.log.write(f"X={X}", True)
+        self.log.write(f"Y={Y}", True)
+
+        self.pw.plot_curve(X, Y)
+
+        self.log.exit("evaluate_curve", True)
 
     #
     # -----------------------------------------------
@@ -424,6 +448,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.log.exit("evaluate_rpn", True)
         return stack[0]
+
+    #
+    # -----------------------------------------------
+    #
+
+    def evaluate_surface(self, x_start, x_end, x_steps, y_start, y_end, y_steps):
+        self.log.entry("evaluate_surface(x_start, x_end, x_steps)", True)
+
+        log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
+        self.log.write(log_str, True)
+        log_str = f"y_start,y_end,y_steps={y_start},{y_end},{y_steps}"
+        self.log.write(log_str, True)
+
+        self.log.exit("evaluate_surface", True)
 
     #
     # -----------------------------------------------
@@ -723,42 +761,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         expression  = self.expression_line.text()
         if "x" not in expression:
             self.status_lbl.setText("Missing variable 'x'")
+            self.log.warning("Missing variable 'x'!", True)
             self.log.exit("plot_expression", True)
             return
 
         new_char = "="
         if not self.is_input_valid(new_char):
-            self.log.write(f"is_input_valid(=)=False", True)
+            self.status_lbl.setText("Expression is not valid!")
+            self.log.warning("is_input_valid(=)=False", True)
             self.log.exit("plot_expression", True)
             return
 
-        X = [round(x * 0.1, 1) for x in range(-100, 110)]
-        Y = []
-        for x_value in X:
-            y = self.evaluate_expression(x=x_value)
-            Y.append(y)
-            self.log.write(f"x_value,y={x_value},{y}", True)
+        # Start new window to draw the expression
 
-        self.log.write(f"X={X}", True)
-        self.log.write(f"Y={Y}", True)
-
-        plt.ion()
-
-        if not hasattr(self, "fig") or self.fig is None or not plt.fignum_exists(self.fig.number):
-            self.fig, self.ax = plt.subplots()
-        else:
-            self.ax.clear()
-
-        self.ax.plot(X, Y)
-        self.ax.grid(True)
-
-        self.ax.set_title(expression)
-        self.ax.set_xlabel("x")
-        self.ax.set_ylabel("y")
-
-        self.fig.canvas.draw()
-        self.fig.canvas.flush_events()
-        plt.show(block=False)
+        self.pw = PlotWindow(expression)
+        self.pw.eval_curve.connect(self.evaluate_curve)
+        self.pw.eval_surface.connect(self.evaluate_surface)
+        self.pw.show()
 
         self.expression_to_history("Plot")
 
