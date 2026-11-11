@@ -17,6 +17,7 @@
 #
 
 import math
+import pprint
 import re
 import sys
 
@@ -272,8 +273,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Y.append(y)
             self.log.write(f"x_value,y={x_value},{y}", True)
 
-        self.log.write(f"X={X}", True)
-        self.log.write(f"Y={Y}", True)
+        #log_str = pprint.pformat(X)
+        self.log.write(f"X=\n{pprint.pformat(X)}", True)
+        self.log.write(f"Y=\n{pprint.pformat(Y)}", True)
 
         self.pw.plot_curve(X, Y)
 
@@ -286,14 +288,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_expression(self, x=None, y=None):
-        self.log.entry("evaluate_expression()", True)
+        self.log.entry("evaluate_expression(x, y)", True)
         self.log.write(f"x,y={x},{y}", True)
 
         if x is not None:
             self.variables['x'] = x
             self.log.write(f"self.variables['x']={self.variables['x']}", True)
         if y is not None:
-            self.variables['x'] = y
+            self.variables['y'] = y
             self.log.write(f"self.variables['y']={self.variables['y']}", True)
 
         self.text  = self.expression_line.text()
@@ -302,7 +304,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
             raw_tokens = re.findall(token_spec, self.text)
-            self.log.write(f"raw_tokens={raw_tokens}", True)
+            self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}", True)
 
             #
             # Implement implicit multiplication
@@ -774,10 +776,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Start new window to draw the expression
 
-        self.pw = PlotWindow(expression)
-        self.pw.eval_curve.connect(self.evaluate_curve)
-        self.pw.eval_surface.connect(self.evaluate_surface)
-        self.pw.show()
+        if not hasattr(self, 'pw'):
+            self.pw = PlotWindow(expression)
+            self.pw.eval_curve.connect(self.evaluate_curve)
+            self.pw.eval_surface.connect(self.evaluate_surface)
+            self.pw.show()
+        elif self.pw is not None:
+            if not self.pw.isVisible():
+                self.pw.show()
+            self.pw.add_plot(expression)
+        else:
+            self.status_lbl.setText("Internal error: plotting not available!")
+            self.log.error("Internal error: plotting not available!", True)
 
         self.expression_to_history("Plot")
 

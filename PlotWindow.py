@@ -16,8 +16,8 @@
 # If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
 #
 
-import logging as pylog
-import numpy as np
+import pprint
+
 import pyqtgraph as pg
 
 from PySide6.QtCore import Qt, Signal
@@ -45,17 +45,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.setWindowTitle("Plot Window")
 
-        self.log.entry("__init__", True)
+        self.log.entry("__init__(expression)", True)
+        self.log.write(f"expression={expression}", True)
 
-        plot_layout = QVBoxLayout()
-        self.plot_widget = pg.PlotWidget()
-        plot_layout.addWidget(self.plot_widget)
-        self.bottom.setLayout(plot_layout)
-
-        self.plot_widget.setTitle(expression, size="14pt")
-        self.plot_widget.setLabel("left", "y")
-        self.plot_widget.setLabel("bottom", "x")
-        self.plot_widget.showGrid(x=True, y=True)
+        self.plot_title = expression
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -72,6 +65,19 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.curve   = True
         self.surface = False
 
+        self.curve_number = -1
+        self.curve_colors = ["white", "black", "red", "green", "blue"]
+
+        plot_layout = QVBoxLayout()
+        self.plot_widget = pg.PlotWidget()
+        plot_layout.addWidget(self.plot_widget)
+        self.bottom.setLayout(plot_layout)
+
+        self.plot_widget.setBackground("gray")
+        self.plot_widget.setLabel("left", "y", color="white")
+        self.plot_widget.setLabel("bottom", "x", color="white")
+        self.plot_widget.showGrid(x=True, y=True)
+
         if "y" not in expression:
             self.status_lbl.setText("Missing variable 'y' --> curve")
             self.y_start.setEnabled(False)
@@ -81,7 +87,37 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.status_lbl.setText("Existing variable 'y' --> surface")
             self.surface = True
 
+        status_str = "Define parameters for expression '" + expression + "'"
+        self.status_lbl.setText(status_str)
+
         self.log.entry("__init__", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def add_plot(self, expression):
+        self.log.entry("add_plot(self, expression)", True)
+
+        if "y" in expression and self.surface is False:
+            self.status_lbl.setText("3D plot not available in 2D plot!")
+            self.log.warning("3D plot not available in 2D plot!", True)
+            return
+
+        self.x_start.setText("")
+        self.x_end.setText("")
+        self.x_steps.setValue(1)
+
+        self.y_start.setText("")
+        self.y_end.setText("")
+        self.y_steps.setValue(1)
+
+        self.plot_title += "  ]|[  " + expression
+
+        status_str = "Define parameters for expression '" + expression + "'"
+        self.status_lbl.setText(status_str)
+
+        self.log.exit("add_plot", True)
 
     #
     # -----------------------------------------------
@@ -90,8 +126,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def plot_curve(self, X, Y):
         self.log.entry("plot_curve(X, Y)", True)
 
+        self.plot_widget.setTitle(self.plot_title, size="14pt")
+
+        self.curve_number += 1
+
         self.status_lbl.setText("Plotting curve")
-        pen = pg.mkPen(width=2)
+        pen = pg.mkPen(color=self.curve_colors[self.curve_number], width=2)
         self.plot_widget.plot(X, Y, pen=pen)
         self.status_lbl.setText("Finished")
 
