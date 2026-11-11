@@ -101,22 +101,6 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.label_3, 1, 3, 1, 1)
 
-        self.start_btn = QPushButton(self.centralwidget)
-        self.start_btn.setObjectName(u"start_btn")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.start_btn.sizePolicy().hasHeightForWidth())
-        self.start_btn.setSizePolicy(sizePolicy1)
-        font = QFont()
-        font.setPointSize(25)
-        font.setWeight(QFont.DemiBold)
-        self.start_btn.setFont(font)
-        self.start_btn.setStyleSheet(u"background-color: green;\n"
-"color: white;")
-
-        self.gridLayout_2.addWidget(self.start_btn, 0, 6, 3, 1)
-
         self.x_steps = QSpinBox(self.centralwidget)
         self.x_steps.setObjectName(u"x_steps")
         self.x_steps.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -133,6 +117,33 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.y_steps, 2, 4, 1, 1)
 
+        self.start_btn = QPushButton(self.centralwidget)
+        self.start_btn.setObjectName(u"start_btn")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.start_btn.sizePolicy().hasHeightForWidth())
+        self.start_btn.setSizePolicy(sizePolicy1)
+        font = QFont()
+        font.setPointSize(20)
+        font.setWeight(QFont.DemiBold)
+        self.start_btn.setFont(font)
+        self.start_btn.setStyleSheet(u"background-color: green;\n"
+"color: white;")
+
+        self.gridLayout_2.addWidget(self.start_btn, 0, 6, 1, 1)
+
+        self.clear_btn = QPushButton(self.centralwidget)
+        self.clear_btn.setObjectName(u"clear_btn")
+        sizePolicy1.setHeightForWidth(self.clear_btn.sizePolicy().hasHeightForWidth())
+        self.clear_btn.setSizePolicy(sizePolicy1)
+        self.clear_btn.setFont(font)
+
+        self.gridLayout_2.addWidget(self.clear_btn, 2, 6, 1, 1)
+
+        self.gridLayout_2.setRowStretch(0, 1)
+        self.gridLayout_2.setRowStretch(1, 1)
+        self.gridLayout_2.setRowStretch(2, 1)
         self.gridLayout_2.setColumnStretch(5, 1)
 
         self.verticalLayout.addLayout(self.gridLayout_2)
@@ -180,5 +191,6 @@ class Ui_PlotWindow(object):
         self.label.setText(QCoreApplication.translate("PlotWindow", u"x-Start:", None))
         self.label_3.setText(QCoreApplication.translate("PlotWindow", u"y-End:", None))
         self.start_btn.setText(QCoreApplication.translate("PlotWindow", u"Start", None))
+        self.clear_btn.setText(QCoreApplication.translate("PlotWindow", u"Clear", None))
     # retranslateUi
 

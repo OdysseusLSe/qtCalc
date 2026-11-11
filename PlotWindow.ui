@@ -30,7 +30,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,5">
       <item>
-       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0,0,1,0" columnminimumwidth="0,0,0,0,0,0,0">
+       <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1,1" columnstretch="0,0,0,0,0,1,0" columnminimumwidth="0,0,0,0,0,0,0">
         <item row="1" column="5">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
@@ -127,29 +127,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="6" rowspan="3">
-         <widget class="QPushButton" name="start_btn">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <pointsize>25</pointsize>
-            <fontweight>DemiBold</fontweight>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: green;
-color: white;</string>
-          </property>
-          <property name="text">
-           <string>Start</string>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QSpinBox" name="x_steps">
           <property name="alignment">
@@ -173,6 +150,48 @@ color: white;</string>
           </property>
           <property name="maximum">
            <number>10000</number>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="6">
+         <widget class="QPushButton" name="start_btn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>20</pointsize>
+            <fontweight>DemiBold</fontweight>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: green;
+color: white;</string>
+          </property>
+          <property name="text">
+           <string>Start</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6">
+         <widget class="QPushButton" name="clear_btn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>20</pointsize>
+            <fontweight>DemiBold</fontweight>
+           </font>
+          </property>
+          <property name="text">
+           <string>Clear</string>
           </property>
          </widget>
         </item>

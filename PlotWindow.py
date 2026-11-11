@@ -19,6 +19,7 @@
 import pprint
 
 import pyqtgraph as pg
+import pyqtgraph.opengl as gl
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QDoubleValidator
