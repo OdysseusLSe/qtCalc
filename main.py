@@ -60,7 +60,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.advanced_operator()
         self.button_mapping()
 
-        self.text = ""
         self.expression_line.setFocus()
         self.expression_history = ""
 
@@ -263,7 +262,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    def evaluate_curve(self, x_start, x_end, x_steps):
+    def evaluate_curve(self, expression, x_start, x_end, x_steps):
         self.log.entry("evaluate_curve(x_start, x_end, x_steps)", True)
         log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
         self.log.write(log_str, True)
@@ -271,10 +270,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         X = np.linspace(x_start, x_end, x_steps)
         Y = []
 
-        for x_value in X:
-            y = self.evaluate_expression(x=x_value)
+        for x in X:
+            y = self.evaluate_expression(expression, x=x)
             Y.append(y)
-            self.log.write(f"x_value,y={x_value},{y}", True)
+            self.log.write(f"x,y={x},{y}", True)
 
         #log_str = pprint.pformat(X)
         self.log.write(f"X=\n{pprint.pformat(X)}", True)
@@ -290,9 +289,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    def evaluate_expression(self, x=None, y=None):
+    def evaluate_expression(self, expression, x=None, y=None):
         self.log.entry("evaluate_expression(x, y)", True)
-        self.log.write(f"x,y={x},{y}", True)
+        self.log.write(f"expression,x,y={expression},{x},{y}", True)
 
         if x is not None:
             self.variables['x'] = x
@@ -301,12 +300,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.variables['y'] = y
             self.log.write(f"self.variables['y']={self.variables['y']}", True)
 
-        self.text  = self.expression_line.text()
-
         try:
 
             token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
-            raw_tokens = re.findall(token_spec, self.text)
+            raw_tokens = re.findall(token_spec, expression)
             self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}", True)
 
             #
@@ -357,45 +354,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.expression_to_history("=")
 
                 # Show result of expression
-                self.text = f"{self.result}"
+                expression = f"{self.result}"
                 self.status_lbl.setText("Ready")
-                self.expression_line.setText(self.text)
-                self.log.write(f"self.text={self.text}", True)
+                self.expression_line.setText(expression)
+                self.log.write(f"expression={expression}", True)
 
         except ZeroDivisionError:
             error = "Error: Division by zero!"
             self.status_lbl.setText(error)
-            self.log.error(error, True)
-            item = QListWidgetItem(f"{self.text} --> {error}")
-            item.setBackground(QBrush(QColor("red")))
-            item.setForeground(QColor("white"))
-            self.history_list.addItem(item)
-            self.history_item += 1
-            self.text = ""
-            self.expression_line.setText(self.text)
+            self.log.error(f"{expression} --> {error}", True)
+            if x is None and y is None:
+                item = QListWidgetItem(f"{expression} --> {error}")
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
+                self.expression_line.setText("")
 
         except IndexError:
             error = "Error: Insufficient operands or parentheses error!"
             self.status_lbl.setText(error)
-            self.log.error(error, True)
-            item = QListWidgetItem(f"{self.text} --> {error}")
-            item.setBackground(QBrush(QColor("red")))
-            item.setForeground(QColor("white"))
-            self.history_list.addItem(item)
-            self.history_item += 1
-            self.text = ""
-            self.expression_line.setText(self.text)
+            self.log.error(f"{expression} --> {error}", True)
+            if x is None and y is None:
+                item = QListWidgetItem(f"{expression} --> {error}")
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
+                self.expression_line.setText("")
 
         except Exception as e:
             error = f"Error: General error: {str(e)}"
             self.status_lbl.setText(error)
-            item = QListWidgetItem(f"{self.text} --> {error}")
-            item.setBackground(QBrush(QColor("red")))
-            item.setForeground(QColor("white"))
-            self.history_list.addItem(item)
-            self.history_item += 1
-            self.text = ""
-            self.expression_line.setText(self.text)
+            self.log.error(f"{expression} --> {error}", True)
+            if x is None and y is None:
+                item = QListWidgetItem(f"{expression} --> {error}")
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
+                self.expression_line.setText("")
 
         self.log.exit("evaluate_expression", True)
         return self.result
@@ -458,7 +456,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    def evaluate_surface(self, x_start, x_end, x_steps, y_start, y_end, y_steps):
+    def evaluate_surface(
+            self,
+            expression,
+            x_start, x_end, x_steps,
+            y_start, y_end, y_steps
+        ):
         self.log.entry("evaluate_surface(x_start, x_end, x_steps)", True)
 
         log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
@@ -468,6 +471,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         X = np.linspace(x_start, x_end, x_steps)
         Y = np.linspace(y_start, y_end, y_steps)
+
+        Z = np.zeros((len(X), len(Y)))
+        for x_val in range(len(X)):
+            for y_val in range(len(Y)):
+                x = float(X[x_val]) # NumPy float to Python float!
+                y = float(Y[y_val]) # NumPy float to Python float!
+                Z[x_val, y_val] = self.evaluate_expression(expression, x=x, y=y)
+                self.log.write(f"x,y,z={x},{y},{Z[x_val, y_val]}", True)
+
+        self.plot_3d.plot_surface(X, Y, Z)
 
         self.log.exit("evaluate_surface", True)
 
@@ -481,12 +494,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.entry("expression_to_history(appendix)", True)
         self.log.write(f"appendix={appendix}", True)
 
-        self.text  = self.expression_line.text()
+        expression  = self.expression_line.text()
 
         if appendix == "=":
-            expression = f"{self.text}={self.result}"
+            expression = f"{expression}={self.result}"
         else:
-            expression = f"{self.text}=Plot"
+            expression = f"{expression}=Plot"
         self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
         item = QListWidgetItem(self.expression_history)
         self.log.write(
@@ -516,9 +529,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"new_char={new_char}", True)
 
         self.status_lbl.setText("Validating input")
-        self.text  = self.expression_line.text()
+        expression = self.expression_line.text()
 
-        last_char = self.text[-1] if self.text else ""
+        last_char = expression[-1] if expression else ""
         operators_list = list(self.operators.keys())
 
         def reject(reason):
@@ -530,16 +543,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if new_char == "=":
 
-            if not self.text:
+            if not expression:
                 return reject("Empty expression!")
             if last_char in operators_list or last_char in ("(", ","):
                 return reject(f"Expression cannot end with '{last_char}'!")
-            if self.text.count("(") != self.text.count(")"):
+            if expression.count("(") != expression.count(")"):
                 return reject("Unclosed parentheses!")
 
         else:
 
-            if not self.text:
+            if not expression:
                 if new_char in self.powers or new_char in (",", ")"):
                     return reject(f"Invalid start token: {new_char}!")
                 if new_char in operators_list and new_char != "-":
@@ -558,14 +571,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     return reject(f"Operator after '{last_char}': {new_char}!")
 
             if new_char == ")":
-                if self.text.count(")") >= self.text.count("("):
+                if expression.count(")") >= expression.count("("):
                     return reject("Too many closing parentheses!")
 
             if new_char == ".":
-                if last_char == ")" or self.text.endswith(tuple(self.variables.keys())):
+                if last_char == ")" or expression.endswith(tuple(self.variables.keys())):
                     return reject("Decimal point cannot follow a constant or closing parenthesis!")
 
-                current_number = re.search(r'[\d.]+$', self.text)
+                current_number = re.search(r'[\d.]+$', expression)
                 if current_number and "." in current_number.group():
                     return reject("Multiple decimal points in one number!")
 
@@ -585,8 +598,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if button_name == "btn_clear":
             # Clear the current expression and reset the display
-            self.text = ""
-            self.expression_line.setText(self.text)
+            self.expression_line.setText("")
             self.log.write("clear", True)
             self.expression_line.setFocus()
             value = True
@@ -595,8 +607,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             cursor_pos = self.expression_line.cursorPosition()
             old_text   = self.expression_line.text()
             new_text   = old_text[:cursor_pos-1] + old_text[cursor_pos:]
-            self.text  = new_text
-            self.expression_line.setText(self.text)
+            self.expression_line.setText(new_text)
             self.expression_line.setCursorPosition(cursor_pos-1)
             self.expression_line.setFocus()
             value = True
@@ -625,10 +636,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 cursor_pos = self.expression_line.cursorPosition()
                 old_text = self.expression_line.text()
                 new_text = old_text[:cursor_pos] + mem_value + old_text[cursor_pos:]
-                self.text = new_text
-                self.expression_line.setText(self.text)
-                self.text += mem_value
-                self.expression_line.setText(self.text)
+                self.expression_line.setText(new_text)
                 self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
                 self.expression_line.setFocus()
             value = True
@@ -720,12 +728,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.update_expression(new_char)
 
         if new_char == "=":
-            self.text  = self.expression_line.text()
-            if "x" in self.text:
+            expression = self.expression_line.text()
+            if "x" in expression:
                 self.status_lbl.setText("Unknown variable 'x'")
                 self.log.exit("plot_expression", True)
                 return
-            self.evaluate_expression()
+            self.evaluate_expression(expression)
 
         self.log.exit("on_button_clicked", True)
 
@@ -746,7 +754,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.log.exit("on_item_double_clicked", True)
             return
 
-        self.text  = self.expression_line.text()
         cursor_pos = self.expression_line.cursorPosition()
         old_text   = self.expression_line.text()
         new_text   = old_text[:cursor_pos] + insert_text + old_text[cursor_pos:]
@@ -887,17 +894,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         cursor_pos = self.expression_line.cursorPosition()
         self.log.write(f"cursor_pos={cursor_pos}", True)
+
         if new_char != "=":
             old_text = self.expression_line.text()
             new_text = old_text[:cursor_pos] + new_char + old_text[cursor_pos:]
-            self.text = new_text
-            self.expression_line.setText(self.text)
+            self.expression_line.setText(new_text)
             self.expression_line.setCursorPosition(cursor_pos + len(new_char))
-        else:
-            self.text = self.expression_line.text()
+
+        expression = self.expression_line.text()
         cursor_pos = self.expression_line.cursorPosition()
         self.log.write(f"cursor_pos={cursor_pos}", True)
-        self.log.write(f"self.text={self.text}", True)
+        self.log.write(f"expression={expression}", True)
         self.log.write(f"new_char={new_char}", True)
 
         self.log.exit("update_expression", True)

@@ -36,8 +36,8 @@ from Logging import Logging
 class PlotWindow(QMainWindow, Ui_PlotWindow):
 
     # Signal to start evaluation of expression
-    eval_curve   = Signal(float, float, int)
-    eval_surface = Signal(float, float, int, float, float, int)
+    eval_curve   = Signal(str, float, float, int)
+    eval_surface = Signal(str, float, float, int, float, float, int)
 
     def __init__(self, expression, curve, surface):
         super().__init__()
@@ -53,6 +53,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.surface = surface
 
         self.plot_title = expression
+        self.expression = expression
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -112,7 +113,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
 
-        self.log.entry("__init__", True)
+        self.log.exit("__init__", True)
 
     #
     # -----------------------------------------------
@@ -166,13 +167,22 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def plot_surface(self, X, Y, Z):
         self.log.entry("plot_surface(X, Y, Z)", True)
 
-        self.plot_widget.setTitle(self.plot_title, size="14pt")
+        #self.plot_widget.setTitle(self.plot_title, size="14pt")
 
         self.curve_number += 1
 
         self.status_lbl.setText("Plotting surface")
-        pen = pg.mkPen(color=self.curve_colors[self.curve_number], width=2)
-        self.plot_widget.plot(X, Y, pen=pen)
+        #pen = pg.mkPen(color=self.curve_colors[self.curve_number], width=2)
+        #self.plot_widget.plot(X, Y, pen=pen)
+        surface = gl.GLSurfacePlotItem(
+            x=X,
+            y=Y,
+            z=Z,
+            shader='heightColor',
+            computeNormals=False,
+            smooth=True
+        )
+        self.plot_widget.addItem(surface)
         self.status_lbl.setText("Finished")
 
         self.log.exit("plot_surface", True)
@@ -192,7 +202,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.status_lbl.setText("No valid x values")
 
         if self.curve:
-            self.eval_curve.emit(x_start, x_end, x_steps)
+            self.eval_curve.emit(self.expression, x_start, x_end, x_steps)
             self.log.exit("start", True)
             return
 
@@ -201,6 +211,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             y_end   = float(self.y_end.text())
             y_steps = float(self.y_steps.text())
             self.eval_surface.emit(
+                self.expression,
                 x_start, x_end, x_steps,
                 y_start, y_end, y_steps
             )
