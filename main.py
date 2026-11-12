@@ -72,24 +72,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.memory_index = -1
         self.tokens = []
 
-        self.DEG = True
-        self.btn_DEG.setChecked(self.DEG)
-        self.btn_DEG.setStyleSheet("""
+        self.RAD = True
+        self.btn_RAD.setChecked(self.RAD)
+        self.btn_RAD.setStyleSheet("""
             background-color: lightgrey;
             color: green;
             border: 1 solid;
             padding: 3;
             """)
-        self.btn_DEG.toggled.connect(self.deg_rad_toggle)
-        self.RAD = False
-        self.btn_RAD.setChecked(self.RAD)
-        self.btn_RAD.setStyleSheet("""
+        self.btn_RAD.toggled.connect(self.deg_rad_toggle)
+
+        self.DEG = False
+        self.btn_DEG.setChecked(self.DEG)
+        self.btn_DEG.setStyleSheet("""
             background-color: lightgrey;
             color: salmon;
             border: 1 solid;
             padding: 3;
             """)
-        self.btn_RAD.toggled.connect(self.deg_rad_toggle)
+        self.btn_DEG.toggled.connect(self.deg_rad_toggle)
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -263,7 +264,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_curve(self, expression, x_start, x_end, x_steps):
-        self.log.entry("evaluate_curve(x_start, x_end, x_steps)", True)
+        log_str = "evaluate_curve(expression, x_start, x_end, x_steps)"
+        self.log.entry(log_str, True)
+        self.log.write(f"expression={expression}", True)
         log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
         self.log.write(log_str, True)
 
@@ -462,8 +465,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             x_start, x_end, x_steps,
             y_start, y_end, y_steps
         ):
-        self.log.entry("evaluate_surface(x_start, x_end, x_steps)", True)
+        log_str = "evaluate_surface(expressiob, x_start, x_end, x_steps,"
+        log_str += "y_start, y_end, y_steps)"
+        self.log.entry(log_str, True)
 
+        self.log.write(f"expression={expression}", True)
         log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
         self.log.write(log_str, True)
         log_str = f"y_start,y_end,y_steps={y_start},{y_end},{y_steps}"

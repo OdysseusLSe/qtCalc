@@ -46,14 +46,15 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.setWindowTitle("Plot Window")
 
+        self.expression   = expression
+        self.done         = False
+        self.curve_number = -1
+
         self.log.entry("__init__(expression)", True)
         self.log.write(f"expression={expression}", True)
 
         self.curve   = curve
         self.surface = surface
-
-        self.plot_title = expression
-        self.expression = expression
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -66,9 +67,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.y_end.setValidator(QDoubleValidator(-1000, 1000, 15))
 
         self.start_btn.clicked.connect(self.start)
+        self.clear_btn.clicked.connect(self.clear)
 
-        self.curve_number = -1
-        self.curve_colors = ["white", "black", "red", "green", "blue"]
+        self.curve_colors = ["white", "black", "red", "green", "blue", "yellow"]
 
         pg.setConfigOption('background', 'grey')
         pg.setConfigOption('foreground', 'white')
@@ -77,9 +78,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         if not self.surface:
 
-            self.status_lbl.setText("2D-Plot")
-            self.setWindowTitle("2D-Plot Window")
-            self.log.write("2D-Plot", True)
+            self.window_title = f"2D-Plot: {self.expression}"
+            self.setWindowTitle(self.window_title)
+            self.status_lbl.setText(self.window_title)
+            self.log.write(self.window_title, True)
 
             self.y_start.setEnabled(False)
             self.y_end.setEnabled(False)
@@ -95,20 +97,17 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         else:
 
-            self.status_lbl.setText("3D-Plot")
-            self.setWindowTitle("3D-Plot Window")
-            self.log.write("3D-Plot", True)
+            self.window_title = f"3D-Plot: {self.expression}"
+            self.setWindowTitle(self.window_title)
+            self.status_lbl.setText(self.window_title)
+            self.log.write(self.window_title, True)
 
             self.plot_widget = gl.GLViewWidget()
             plot_layout.addWidget(self.plot_widget)
             self.bottom.setLayout(plot_layout)
 
             xgrid = gl.GLGridItem()
-            #ygrid = gl.GLGridItem()
-            #zgrid = gl.GLGridItem()
             self.plot_widget.addItem(xgrid)
-            #self.plot_widget.addItem(ygrid)
-            #self.plot_widget.addItem(zgrid)
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
@@ -127,6 +126,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.log.warning("3D plot not available in 2D plot!", True)
             return
 
+        if not self.done:
+            self.status_lbl.setText("Previous plot not finished!")
+            self.log.warning("Previous plot not finished!", True)
+            return
+
+        self.expression   = expression
+        self.done         = False
+
         self.x_start.setText("")
         self.x_end.setText("")
         self.x_steps.setValue(1)
@@ -134,8 +141,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.y_start.setText("")
         self.y_end.setText("")
         self.y_steps.setValue(1)
-
-        self.plot_title += "  ]|[  " + expression
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
@@ -146,10 +151,41 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     # -----------------------------------------------
     #
 
+    def clear(self):
+        self.log.entry("clear()", True)
+
+        self.plot_widget.clear()
+
+        self.setWindowTitle("Plot Window")
+
+        self.expression   = ""
+        self.done         = True
+        self.curve_number = -1
+
+        self.x_start.setText("")
+        self.x_end.setText("")
+        self.x_steps.setValue(1)
+
+        self.y_start.setText("")
+        self.y_end.setText("")
+        self.y_steps.setValue(1)
+
+        self.status_lbl.setText("Cleared!")
+
+        self.log.exit("clear", True)
+
+    #
+    # -----------------------------------------------
+    #
+
     def plot_curve(self, X, Y):
         self.log.entry("plot_curve(X, Y)", True)
 
-        self.plot_widget.setTitle(self.plot_title, size="14pt")
+        if self.curve_number != -1:
+            self.window_title += "  ]|[  " + self.expression
+        else:
+            self.window_title = f"2D-Plot: {self.expression}"
+        self.setWindowTitle(self.window_title)
 
         self.curve_number += 1
 
@@ -157,6 +193,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         pen = pg.mkPen(color=self.curve_colors[self.curve_number], width=2)
         self.plot_widget.plot(X, Y, pen=pen)
         self.status_lbl.setText("Finished")
+
+        self.expression = ""
+        self.done = True
 
         self.log.exit("plot_curve", True)
 
@@ -167,13 +206,15 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def plot_surface(self, X, Y, Z):
         self.log.entry("plot_surface(X, Y, Z)", True)
 
-        #self.plot_widget.setTitle(self.plot_title, size="14pt")
+        if self.curve_number != -1:
+            self.window_title += "  ]|[  " + self.expression
+        else:
+            self.window_title = f"2D-Plot: {self.expression}"
+        self.setWindowTitle(self.window_title)
 
         self.curve_number += 1
 
         self.status_lbl.setText("Plotting surface")
-        #pen = pg.mkPen(color=self.curve_colors[self.curve_number], width=2)
-        #self.plot_widget.plot(X, Y, pen=pen)
         surface = gl.GLSurfacePlotItem(
             x=X,
             y=Y,
@@ -184,6 +225,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         )
         self.plot_widget.addItem(surface)
         self.status_lbl.setText("Finished")
+
+        self.expression = ""
+        self.done = True
 
         self.log.exit("plot_surface", True)
 
