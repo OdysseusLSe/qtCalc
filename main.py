@@ -49,7 +49,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle(f"{APP_NAME} {APP_VERSION}")
 
         self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
-        self.log.entry("__init__", True)
+        self.log.entry("__init__()", False)
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
@@ -110,14 +110,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.expression_line.setFocus()
 
-        self.log.exit("__init__", True)
+        self.log.exit("__init__", False)
 
     #
     # -----------------------------------------------
     #
 
     def advanced_operator(self):
-        self.log.entry("advanced_operator()", True)
+        self.log.entry("advanced_operator()", False)
 
         # Operators with their precedence and associativity
         self.operators = {
@@ -159,14 +159,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'y'  : 'y',
         }
 
-        self.log.exit("advanced_operator", True)
+        self.log.exit("advanced_operator", False)
 
     #
     # -----------------------------------------------
     #
 
     def button_mapping(self):
-        self.log.entry("button_mapping()", True)
+        self.log.entry("button_mapping()", False)
 
         self.buttons = {
             "btn_0"             : "0",
@@ -216,14 +216,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_y"             : "y"
         }
 
-        self.log.entry("button_mapping()", True)
+        self.log.entry("button_mapping()", False)
 
     #
     # -----------------------------------------------
     #
 
     def deg_rad_toggle(self, checked):
-        self.log.entry("deg_rad_toggle(checked)", True)
+        self.log.entry("deg_rad_toggle(checked)", False)
 
         if self.btn_DEG.isChecked():
             self.DEG = True
@@ -257,7 +257,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 """)
 
         self.expression_line.setFocus()
-        self.log.exit("deg_rad_toggle", True)
+        self.log.exit("deg_rad_toggle", False)
 
     #
     # -----------------------------------------------
@@ -497,8 +497,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def expression_to_history(self, appendix):
-        self.log.entry("expression_to_history(appendix)", True)
-        self.log.write(f"appendix={appendix}", True)
+        self.log.entry("expression_to_history(appendix)", False)
+        self.log.write(f"appendix={appendix}", False)
 
         expression  = self.expression_line.text()
 
@@ -510,7 +510,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item = QListWidgetItem(self.expression_history)
         self.log.write(
             f"self.expression_history={self.expression_history}",
-            True
+            False
         )
 
         if self.history_item % 2 == 0:
@@ -522,7 +522,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_list.addItem(item)
         self.history_item += 1
 
-        self.log.exit("expression_to_history", True)
+        self.log.exit("expression_to_history", False)
 
     #
     # -----------------------------------------------
@@ -597,15 +597,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
 
     def is_special_button(self, button_name):
-        self.log.entry("is_special_button(button_name)", True)
-        self.log.write(f"button_name={button_name}", True)
+        self.log.entry("is_special_button(button_name)", False)
+        self.log.write(f"button_name={button_name}", False)
 
         self.status_lbl.setText("Checking for special button")
 
         if button_name == "btn_clear":
             # Clear the current expression and reset the display
             self.expression_line.setText("")
-            self.log.write("clear", True)
+            self.log.write("clear", False)
             self.expression_line.setFocus()
             value = True
 
@@ -666,23 +666,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             value = False
 
-        self.log.write(f"value={value}", True)
+        self.log.write(f"value={value}", False)
 
-        self.log.exit("is_special_button", True)
+        self.log.exit("is_special_button", False)
         return value
 
     #
     # -----------------------------------------------
     #
 
-    @Slot()
     def keyPressEvent(self, event):
-        self.log.entry("keyPressEvent(event)", True)
+        self.log.entry("keyPressEvent(event)", False)
 
         key_text = event.text()
-        self.log.write(f"event.text()='{event.text()}'", True)
-        self.log.write(f"event.key()='{event.key()}'", True)
-        self.log.write(f"Native='{event.nativeVirtualKey()}'", True)
+        self.log.write(f"event.text()='{event.text()}'", False)
+        self.log.write(f"event.key()='{event.key()}'", False)
+        self.log.write(f"Native='{event.nativeVirtualKey()}'", False)
 
         matched_btn_name = None
 
@@ -698,35 +697,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             button_object = getattr(self, matched_btn_name, None)
             if button_object:
                 button_object.click()
-                self.log.write(f"matched_btn_name={matched_btn_name}", True)
+                self.log.write(f"matched_btn_name={matched_btn_name}", False)
                 event.accept()
-                self.log.exit("keyPressEvent(event)", True)
+                self.log.exit("keyPressEvent(event)", False)
                 return
 
         super().keyPressEvent(event)
 
-        self.log.exit("keyPressEvent(event)", True)
+        self.log.exit("keyPressEvent(event)", False)
 
     #
     # -----------------------------------------------
     #
 
     def on_button_clicked(self):
-        self.log.entry("on_button_clicked()", True)
+        self.log.entry("on_button_clicked()", False)
 
         self.expression_line.setFocus()
 
         button = self.sender()
         button_name = button.objectName()
         if self.is_special_button(button_name):
-            self.log.write(f"is_special_button({button_name})=True", True)
-            self.log.exit("on_button_clicked", True)
+            self.log.write(f"is_special_button({button_name})=True", False)
+            self.log.exit("on_button_clicked", False)
             return
 
         new_char = self.buttons[button_name]
         if not self.is_input_valid(new_char):
-            self.log.write(f"is_input_valid({new_char})=False", True)
-            self.log.exit("on_button_clicked", True)
+            self.log.write(f"is_input_valid({new_char})=False", False)
+            self.log.exit("on_button_clicked", False)
             return
 
         self.result = None
@@ -737,19 +736,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             expression = self.expression_line.text()
             if "x" in expression:
                 self.status_lbl.setText("Unknown variable 'x'")
-                self.log.exit("plot_expression", True)
+                self.log.exit("on_button_clicked", False)
                 return
             self.evaluate_expression(expression)
 
-        self.log.exit("on_button_clicked", True)
+        self.log.exit("on_button_clicked", False)
 
     #
     # -----------------------------------------------
     #
 
     def on_item_double_clicked(self, item):
-        self.log.entry("on_item_double_clicked(self, item)", True)
-        self.log.write(f"item.text()={item.text()}", True)
+        self.log.entry("on_item_double_clicked(self, item)", False)
+        self.log.write(f"item.text()={item.text()}", False)
 
         if "=" in item.text():
             # Copy text just before "=" and attach it to the current expression.
@@ -757,7 +756,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             # Errorneous expression will be ignored.
             self.status_lbl.setText("Errorneous expression ignored!")
-            self.log.exit("on_item_double_clicked", True)
+            self.log.exit("on_item_double_clicked", False)
             return
 
         cursor_pos = self.expression_line.cursorPosition()
@@ -766,11 +765,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.expression_line.setText(new_text)
         self.expression_line.setCursorPosition(cursor_pos + len(insert_text))
-        self.log.write(f"new_text={new_text}", True)
+        self.log.write(f"new_text={new_text}", False)
 
         self.expression_line.setFocus()
 
-        self.log.exit("on_item_double_clicked", True)
+        self.log.exit("on_item_double_clicked", False)
 
     #
     # -----------------------------------------------
@@ -778,6 +777,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def plot_expression(self):
         self.log.entry("plot_expression()", True)
+
+        self.curve   = False
+        self.surface = False
 
         # Check it at least variable 'x' exists.
         expression  = self.expression_line.text()
@@ -787,7 +789,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.log.exit("plot_expression", True)
             return
 
-        # Use '=' similar to 'Plot' button.
+        # Use '=' as equivalent to 'Plot' button.
         new_char = "="
         if not self.is_input_valid(new_char):
             self.status_lbl.setText("Expression is not valid!")
@@ -895,11 +897,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def update_expression(self, new_char):
-        self.log.entry("update_expression(new_char)", True)
-        self.log.write(f"new_char={new_char}", True)
+        self.log.entry("update_expression(new_char)", False)
+        self.log.write(f"new_char={new_char}", False)
 
         cursor_pos = self.expression_line.cursorPosition()
-        self.log.write(f"cursor_pos={cursor_pos}", True)
+        self.log.write(f"cursor_pos={cursor_pos}", False)
 
         if new_char != "=":
             old_text = self.expression_line.text()
@@ -909,11 +911,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         expression = self.expression_line.text()
         cursor_pos = self.expression_line.cursorPosition()
-        self.log.write(f"cursor_pos={cursor_pos}", True)
-        self.log.write(f"expression={expression}", True)
-        self.log.write(f"new_char={new_char}", True)
+        self.log.write(f"cursor_pos={cursor_pos}", False)
+        self.log.write(f"expression={expression}", False)
+        self.log.write(f"new_char={new_char}", False)
 
-        self.log.exit("update_expression", True)
+        self.log.exit("update_expression", False)
 
 #
 # -----------------------------------------------
