@@ -209,7 +209,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         if self.curve_number != -1:
             self.window_title += "  ]|[  " + self.expression
         else:
-            self.window_title = f"2D-Plot: {self.expression}"
+            self.window_title = f"3D-Plot: {self.expression}"
         self.setWindowTitle(self.window_title)
 
         self.curve_number += 1
