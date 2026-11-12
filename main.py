@@ -24,7 +24,7 @@ import sys
 import logging as pylog
 import numpy as np
 
-from PySide6.QtCore import Qt, Slot
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QBrush, QColor
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLabel, QListWidgetItem, QMainWindow, QPushButton
@@ -278,7 +278,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Y.append(y)
             self.log.write(f"x,y={x},{y}", True)
 
-        #log_str = pprint.pformat(X)
         self.log.write(f"X=\n{pprint.pformat(X)}", True)
         self.log.write(f"Y=\n{pprint.pformat(Y)}", True)
 
@@ -481,8 +480,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Z = np.zeros((len(X), len(Y)))
         for x_val in range(len(X)):
             for y_val in range(len(Y)):
-                x = float(X[x_val]) # NumPy float to Python float!
-                y = float(Y[y_val]) # NumPy float to Python float!
+                x = float(X[x_val])  # NumPy float to Python float!
+                y = float(Y[y_val])  # NumPy float to Python float!
                 Z[x_val, y_val] = self.evaluate_expression(expression, x=x, y=y)
                 self.log.write(f"x,y,z={x},{y},{Z[x_val, y_val]}", True)
 
@@ -815,7 +814,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.curve = True
             if not hasattr(self, 'plot_2d'):
-                  # Start new window to draw the expression
+                # Start new window to draw the expression
                 self.plot_2d = PlotWindow(expression, self.curve, self.surface)
                 self.plot_2d.eval_curve.connect(self.evaluate_curve)
                 self.plot_2d.eval_surface.connect(self.evaluate_surface)
@@ -916,6 +915,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"new_char={new_char}", False)
 
         self.log.exit("update_expression", False)
+
 
 #
 # -----------------------------------------------
