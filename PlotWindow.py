@@ -52,6 +52,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.expression       = expression
         self.done             = False
         self.curve_number     = -1
+        self.max_curves       = 6
         self.list_of_curves   = []
         self.surface_number   = -1
         self.list_of_surfaces = []
@@ -142,6 +143,11 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.log.warning("Previous plot not finished!")
             return
 
+        if self.curve and self.curve_number == (self.max_curves - 1):
+            self.status_lbl.setText("Limit of curves reached!")
+            self.log.warning("Limit of curves reached!")
+            return
+
         self.expression   = expression
         self.done         = False
 
@@ -188,6 +194,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.save_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
+        if self.surface:
+            self.setWindowTitle("3D-Plot")
+
         self.status_lbl.setText("Cleared!")
 
         self.log.exit("clear")
@@ -202,7 +211,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.curve_number += 1
 
         self.status_lbl.setText("Plotting curve")
-        pen = pg.mkPen(color=self.colors[self.curve_number], width=2)
+        pen = pg.mkPen(color=self.colors[self.curve_number], width=4)
         self.plot_widget.plot(X, Y, pen=pen, name=self.expression)
         self.status_lbl.setText("Finished")
 
