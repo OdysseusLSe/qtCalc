@@ -47,7 +47,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def __init__(self, expression, curve, surface):
         super().__init__()
         self.setupUi(self)
-        self.log = Logging("PlotWindow", True)
+        self.log = Logging("PlotWindow")
 
         self.expression       = expression
         self.done             = False

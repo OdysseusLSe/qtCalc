@@ -16,6 +16,7 @@
 # If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
 #
 
+import argparse
 import math
 import pprint
 import re
@@ -37,19 +38,19 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7.2"
+APP_VERSION = "0.7.4"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.log = Logging("MainWindow", True)
+        self.log = Logging("MainWindow")
 
         self.setWindowTitle(f"{APP_NAME} {APP_VERSION}")
 
         self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
-        self.log.entry("__init__()", False)
+        self.log.entry("__init__()")
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
@@ -110,14 +111,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.expression_line.setFocus()
 
-        self.log.exit("__init__", False)
+        self.log.exit("__init__")
 
     #
     # -----------------------------------------------
     #
 
     def advanced_operator(self):
-        self.log.entry("advanced_operator()", False)
+        self.log.entry("advanced_operator()")
 
         # Operators with their precedence and associativity
         self.operators = {
@@ -159,14 +160,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'y'  : 'y',
         }
 
-        self.log.exit("advanced_operator", False)
+        self.log.exit("advanced_operator")
 
     #
     # -----------------------------------------------
     #
 
     def button_mapping(self):
-        self.log.entry("button_mapping()", False)
+        self.log.entry("button_mapping()")
 
         self.buttons = {
             "btn_0"             : "0",
@@ -216,14 +217,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_y"             : "y"
         }
 
-        self.log.entry("button_mapping()", False)
+        self.log.entry("button_mapping()")
 
     #
     # -----------------------------------------------
     #
 
     def deg_rad_toggle(self, checked):
-        self.log.entry("deg_rad_toggle(checked)", False)
+        self.log.entry("deg_rad_toggle(checked)")
 
         if self.btn_DEG.isChecked():
             self.DEG = True
@@ -257,7 +258,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 """)
 
         self.expression_line.setFocus()
-        self.log.exit("deg_rad_toggle", False)
+        self.log.exit("deg_rad_toggle")
 
     #
     # -----------------------------------------------
@@ -496,8 +497,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def expression_to_history(self, appendix):
-        self.log.entry("expression_to_history(appendix)", False)
-        self.log.write(f"appendix={appendix}", False)
+        self.log.entry("expression_to_history(appendix)")
+        self.log.write(f"appendix={appendix}")
 
         expression  = self.expression_line.text()
 
@@ -507,10 +508,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             expression = f"{expression}=Plot"
         self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
         item = QListWidgetItem(self.expression_history)
-        self.log.write(
-            f"self.expression_history={self.expression_history}",
-            False
-        )
+        self.log.write(f"self.expression_history={self.expression_history}")
 
         if self.history_item % 2 == 0:
             item.setBackground(QColor("white"))
@@ -521,7 +519,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_list.addItem(item)
         self.history_item += 1
 
-        self.log.exit("expression_to_history", False)
+        self.log.exit("expression_to_history")
 
     #
     # -----------------------------------------------
@@ -530,8 +528,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def is_input_valid(self, new_char):
-        self.log.entry("is_input_valid(new_char)", False)
-        self.log.write(f"new_char={new_char}", False)
+        self.log.entry("is_input_valid(new_char)")
+        self.log.write(f"new_char={new_char}")
 
         self.status_lbl.setText("Validating input")
         expression = self.expression_line.text()
@@ -543,7 +541,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg = f"Validation is blocking: {reason}"
             self.status_lbl.setText(msg)
             self.log.warning(msg)
-            self.log.exit("is_input_valid", False)
+            self.log.exit("is_input_valid")
             return False
 
         if new_char == "=":
@@ -587,7 +585,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if current_number and "." in current_number.group():
                     return reject("Multiple decimal points in one number!")
 
-        self.log.exit("is_input_valid", False)
+        self.log.exit("is_input_valid")
         return True
 
     #
@@ -596,15 +594,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
 
     def is_special_button(self, button_name):
-        self.log.entry("is_special_button(button_name)", False)
-        self.log.write(f"button_name={button_name}", False)
+        self.log.entry("is_special_button(button_name)")
+        self.log.write(f"button_name={button_name}")
 
         self.status_lbl.setText("Checking for special button")
 
         if button_name == "btn_clear":
             # Clear the current expression and reset the display
             self.expression_line.setText("")
-            self.log.write("clear", False)
+            self.log.write("clear")
             self.expression_line.setFocus()
             value = True
 
@@ -665,9 +663,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             value = False
 
-        self.log.write(f"value={value}", False)
+        self.log.write(f"value={value}")
 
-        self.log.exit("is_special_button", False)
+        self.log.exit("is_special_button")
         return value
 
     #
@@ -675,12 +673,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def keyPressEvent(self, event):
-        self.log.entry("keyPressEvent(event)", False)
+        self.log.entry("keyPressEvent(event)")
 
         key_text = event.text()
-        self.log.write(f"event.text()='{event.text()}'", False)
-        self.log.write(f"event.key()='{event.key()}'", False)
-        self.log.write(f"Native='{event.nativeVirtualKey()}'", False)
+        self.log.write(f"event.text()='{event.text()}'")
+        self.log.write(f"event.key()='{event.key()}'")
+        self.log.write(f"Native='{event.nativeVirtualKey()}'")
 
         matched_btn_name = None
 
@@ -696,35 +694,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             button_object = getattr(self, matched_btn_name, None)
             if button_object:
                 button_object.click()
-                self.log.write(f"matched_btn_name={matched_btn_name}", False)
+                self.log.write(f"matched_btn_name={matched_btn_name}")
                 event.accept()
-                self.log.exit("keyPressEvent(event)", False)
+                self.log.exit("keyPressEvent(event)")
                 return
 
         super().keyPressEvent(event)
 
-        self.log.exit("keyPressEvent(event)", False)
+        self.log.exit("keyPressEvent(event)")
 
     #
     # -----------------------------------------------
     #
 
     def on_button_clicked(self):
-        self.log.entry("on_button_clicked()", False)
+        self.log.entry("on_button_clicked()")
 
         self.expression_line.setFocus()
 
         button = self.sender()
         button_name = button.objectName()
         if self.is_special_button(button_name):
-            self.log.write(f"is_special_button({button_name})=True", False)
-            self.log.exit("on_button_clicked", False)
+            self.log.write(f"is_special_button({button_name})=True")
+            self.log.exit("on_button_clicked")
             return
 
         new_char = self.buttons[button_name]
         if not self.is_input_valid(new_char):
-            self.log.write(f"is_input_valid({new_char})=False", False)
-            self.log.exit("on_button_clicked", False)
+            self.log.write(f"is_input_valid({new_char})=False")
+            self.log.exit("on_button_clicked")
             return
 
         self.result = None
@@ -739,15 +737,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.evaluate_expression(expression)
 
-        self.log.exit("on_button_clicked", False)
+        self.log.exit("on_button_clicked")
 
     #
     # -----------------------------------------------
     #
 
     def on_item_double_clicked(self, item):
-        self.log.entry("on_item_double_clicked(self, item)", False)
-        self.log.write(f"item.text()={item.text()}", False)
+        self.log.entry("on_item_double_clicked(self, item)")
+        self.log.write(f"item.text()={item.text()}")
 
         if "=" in item.text():
             # Copy text just before "=" and attach it to the current expression.
@@ -755,7 +753,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             # Errorneous expression will be ignored.
             self.status_lbl.setText("Errorneous expression ignored!")
-            self.log.exit("on_item_double_clicked", False)
+            self.log.exit("on_item_double_clicked")
             return
 
         cursor_pos = self.expression_line.cursorPosition()
@@ -764,11 +762,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.expression_line.setText(new_text)
         self.expression_line.setCursorPosition(cursor_pos + len(insert_text))
-        self.log.write(f"new_text={new_text}", False)
+        self.log.write(f"new_text={new_text}")
 
         self.expression_line.setFocus()
 
-        self.log.exit("on_item_double_clicked", False)
+        self.log.exit("on_item_double_clicked")
 
     #
     # -----------------------------------------------
@@ -783,8 +781,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Check it at least variable 'x' exists.
         expression  = self.expression_line.text()
         if "x" not in expression:
-            self.status_lbl.setText("Missing variable 'x'")
-            self.log.warning("Missing variable 'x'!")
+            self.status_lbl.setText("Missing primary variable 'x'")
+            self.log.warning("Missing primary variable 'x'!")
             self.log.exit("plot_expression")
             return
 
@@ -896,11 +894,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def update_expression(self, new_char):
-        self.log.entry("update_expression(new_char)", False)
-        self.log.write(f"new_char={new_char}", False)
+        self.log.entry("update_expression(new_char)")
+        self.log.write(f"new_char={new_char}")
 
         cursor_pos = self.expression_line.cursorPosition()
-        self.log.write(f"cursor_pos={cursor_pos}", False)
+        self.log.write(f"cursor_pos={cursor_pos}")
 
         if new_char != "=":
             old_text = self.expression_line.text()
@@ -910,11 +908,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         expression = self.expression_line.text()
         cursor_pos = self.expression_line.cursorPosition()
-        self.log.write(f"cursor_pos={cursor_pos}", False)
-        self.log.write(f"expression={expression}", False)
-        self.log.write(f"new_char={new_char}", False)
+        self.log.write(f"cursor_pos={cursor_pos}")
+        self.log.write(f"expression={expression}")
+        self.log.write(f"new_char={new_char}")
 
-        self.log.exit("update_expression", False)
+        self.log.exit("update_expression")
 
 
 #
@@ -923,17 +921,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 # -----------------------------------------------
 #
 
+parser = argparse.ArgumentParser(description="Greet a user from the command line.")
+parser.add_argument(
+    "-d", "--debug", type=int, default=0,
+    help="Write debug information"
+)
+args = parser.parse_args()
+
+if args.debug == 0:
+    print("No debug information!")
+    pylog.basicConfig(level=pylog.ERROR)
+else:
+    print(f"Debug information is written in '{APP_NAME}-{APP_VERSION}.log'")
+    pylog.basicConfig(
+        filename=f"{APP_NAME}-{APP_VERSION}.log",
+        filemode="w",
+        level=pylog.DEBUG,
+        style="{",
+        format="{asctime} [{levelname:8}] {message}"
+    )
+
 app = QtWidgets.QApplication([])
 
 app.setStyle('Fusion')
-
-pylog.basicConfig(
-    filename=f"{APP_NAME}.log",
-    filemode="w",
-    level=pylog.DEBUG,
-    style="{",
-    format="{asctime} [{levelname:8}] {message}"
-)
 
 #load_stylesheet(":/ui/style.css")
 
