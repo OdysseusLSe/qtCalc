@@ -37,7 +37,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7"
+APP_VERSION = "0.7.1"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -530,8 +530,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def is_input_valid(self, new_char):
-        self.log.entry("is_input_valid(new_char)", True)
-        self.log.write(f"new_char={new_char}", True)
+        self.log.entry("is_input_valid(new_char)", False)
+        self.log.write(f"new_char={new_char}", False)
 
         self.status_lbl.setText("Validating input")
         expression = self.expression_line.text()
@@ -543,7 +543,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             msg = f"Validation is blocking: {reason}"
             self.status_lbl.setText(msg)
             self.log.warning(msg, True)
-            self.log.exit("is_input_valid", True)
+            self.log.exit("is_input_valid", False)
             return False
 
         if new_char == "=":
@@ -587,7 +587,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if current_number and "." in current_number.group():
                     return reject("Multiple decimal points in one number!")
 
-        self.log.exit("is_input_valid", True)
+        self.log.exit("is_input_valid", False)
         return True
 
     #
@@ -734,10 +734,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if new_char == "=":
             expression = self.expression_line.text()
             if "x" in expression:
-                self.status_lbl.setText("Unknown variable 'x'")
-                self.log.exit("on_button_clicked", False)
-                return
-            self.evaluate_expression(expression)
+                # At least one unknown variable --> 2D/3D-plot
+                self.plot_expression()
+            else:
+                self.evaluate_expression(expression)
 
         self.log.exit("on_button_clicked", False)
 
