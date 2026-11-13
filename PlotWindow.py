@@ -242,18 +242,27 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.surface_number += 1
 
         self.status_lbl.setText("Plotting surface")
+
         surface = gl.GLSurfacePlotItem(
-            x=X,
-            y=Y,
-            z=Z,
+            x=X, y=Y, z=Z,
             shader='heightColor',
+            showGrid=True,
             computeNormals=False,
             smooth=True
         )
+
+        # Map Z values to RGB channels:
+        # [
+        #  red_scale, red_offset,
+        #  green_scale, green_offset,
+        #  blue_scale, blue_offset
+        # ]
+        #surface.shader()['colorMap'] = np.array([0.2, 2.0, 0.5, 2.0, 1.0, 2.0])
+
         self.plot_widget.addItem(surface)
         self.status_lbl.setText("Finished")
 
-        surface = {
+        surface_item = {
             'number'     : self.surface_number,
             'expression' : self.expression,
             'color'      : self.colors[self.curve_number],
@@ -261,7 +270,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             'Y'          : Y,
             'Z'          : Z
         }
-        self.list_of_surfaces.append(surface)
+        self.list_of_surfaces.append(surface_item)
 
         self.setWindowTitle(f"3D-Plot: {self.expression}")
 
