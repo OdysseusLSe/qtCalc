@@ -265,10 +265,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def evaluate_curve(self, expression, x_start, x_end, x_steps):
         log_str = "evaluate_curve(expression, x_start, x_end, x_steps)"
-        self.log.entry(log_str, True)
-        self.log.write(f"expression={expression}", True)
+        self.log.entry(log_str)
+        self.log.write(f"expression={expression}")
         log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
-        self.log.write(log_str, True)
+        self.log.write(log_str)
 
         X = np.linspace(x_start, x_end, x_steps)
         Y = []
@@ -276,14 +276,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for x in X:
             y = self.evaluate_expression(expression, x=x)
             Y.append(y)
-            self.log.write(f"x,y={x},{y}", True)
+            self.log.write(f"x,y={x},{y}")
 
-        self.log.write(f"X=\n{pprint.pformat(X)}", True)
-        self.log.write(f"Y=\n{pprint.pformat(Y)}", True)
+        self.log.write(f"X=\n{pprint.pformat(X)}")
+        self.log.write(f"Y=\n{pprint.pformat(Y)}")
 
         self.plot_2d.plot_curve(X, Y)
 
-        self.log.exit("evaluate_curve", True)
+        self.log.exit("evaluate_curve")
 
     #
     # -----------------------------------------------
@@ -292,21 +292,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_expression(self, expression, x=None, y=None):
-        self.log.entry("evaluate_expression(x, y)", True)
-        self.log.write(f"expression,x,y={expression},{x},{y}", True)
+        self.log.entry("evaluate_expression(x, y)")
+        self.log.write(f"expression,x,y={expression},{x},{y}")
 
         if x is not None:
             self.variables['x'] = x
-            self.log.write(f"self.variables['x']={self.variables['x']}", True)
+            self.log.write(f"self.variables['x']={self.variables['x']}")
         if y is not None:
             self.variables['y'] = y
-            self.log.write(f"self.variables['y']={self.variables['y']}", True)
+            self.log.write(f"self.variables['y']={self.variables['y']}")
 
         try:
 
             token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
             raw_tokens = re.findall(token_spec, expression)
-            self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}", True)
+            self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}")
 
             #
             # Implement implicit multiplication
@@ -339,7 +339,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 processed_tokens.append(tok)
 
             shunting_yard_output = self.shunting_yard(processed_tokens)
-            self.log.write(f"shunting_yard_output={shunting_yard_output}", True)
+            self.log.write(f"shunting_yard_output={shunting_yard_output}")
 
             raw_result = self.evaluate_rpn(shunting_yard_output)
 
@@ -349,7 +349,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.result = cleaned
 
-            self.log.write(f"self.result={self.result}", True)
+            self.log.write(f"self.result={self.result}")
 
             if x is None and y is None:
 
@@ -359,12 +359,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 expression = f"{self.result}"
                 self.status_lbl.setText("Ready")
                 self.expression_line.setText(expression)
-                self.log.write(f"expression={expression}", True)
+                self.log.write(f"expression={expression}")
 
         except ZeroDivisionError:
             error = "Error: Division by zero!"
             self.status_lbl.setText(error)
-            self.log.error(f"{expression} --> {error}", True)
+            self.log.error(f"{expression} --> {error}")
             if x is None and y is None:
                 item = QListWidgetItem(f"{expression} --> {error}")
                 item.setBackground(QBrush(QColor("red")))
@@ -376,7 +376,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except IndexError:
             error = "Error: Insufficient operands or parentheses error!"
             self.status_lbl.setText(error)
-            self.log.error(f"{expression} --> {error}", True)
+            self.log.error(f"{expression} --> {error}")
             if x is None and y is None:
                 item = QListWidgetItem(f"{expression} --> {error}")
                 item.setBackground(QBrush(QColor("red")))
@@ -388,7 +388,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except Exception as e:
             error = f"Error: General error: {str(e)}"
             self.status_lbl.setText(error)
-            self.log.error(f"{expression} --> {error}", True)
+            self.log.error(f"{expression} --> {error}")
             if x is None and y is None:
                 item = QListWidgetItem(f"{expression} --> {error}")
                 item.setBackground(QBrush(QColor("red")))
@@ -397,7 +397,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.history_item += 1
                 self.expression_line.setText("")
 
-        self.log.exit("evaluate_expression", True)
+        self.log.exit("evaluate_expression")
         return self.result
 
     #
@@ -405,7 +405,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_rpn(self, postfix_tokens):
-        self.log.entry("evaluate_rpn(postfix_tokens)", True)
+        self.log.entry("evaluate_rpn(postfix_tokens)")
 
         stack = []
 
@@ -440,18 +440,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                 if num_args == 1:
                     a = stack.pop()
-                    self.log.write(f"token(a)={token}({a})", True)
+                    self.log.write(f"token(a)={token}({a})")
                     if token in self.trig_functions and self.DEG:
                         # Trigonometric functions need radians values
                         a = math.radians(a)
-                        self.log.write(f"token(a)={token}({a})", True)
+                        self.log.write(f"token(a)={token}({a})")
                     stack.append(func(a))
                 elif num_args == 2:
                     b = stack.pop()
                     a = stack.pop()
                     stack.append(func(a, b))
 
-        self.log.exit("evaluate_rpn", True)
+        self.log.exit("evaluate_rpn")
         return stack[0]
 
     #
@@ -466,13 +466,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ):
         log_str = "evaluate_surface(expressiob, x_start, x_end, x_steps,"
         log_str += "y_start, y_end, y_steps)"
-        self.log.entry(log_str, True)
+        self.log.entry(log_str)
 
-        self.log.write(f"expression={expression}", True)
+        self.log.write(f"expression={expression}")
         log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
-        self.log.write(log_str, True)
+        self.log.write(log_str)
         log_str = f"y_start,y_end,y_steps={y_start},{y_end},{y_steps}"
-        self.log.write(log_str, True)
+        self.log.write(log_str)
 
         X = np.linspace(x_start, x_end, x_steps)
         Y = np.linspace(y_start, y_end, y_steps)
@@ -483,11 +483,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 x = float(X[x_val])  # NumPy float to Python float!
                 y = float(Y[y_val])  # NumPy float to Python float!
                 Z[x_val, y_val] = self.evaluate_expression(expression, x=x, y=y)
-                self.log.write(f"x,y,z={x},{y},{Z[x_val, y_val]}", True)
+                self.log.write(f"x,y,z={x},{y},{Z[x_val, y_val]}")
 
         self.plot_3d.plot_surface(X, Y, Z)
 
-        self.log.exit("evaluate_surface", True)
+        self.log.exit("evaluate_surface")
 
     #
     # -----------------------------------------------
@@ -542,7 +542,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         def reject(reason):
             msg = f"Validation is blocking: {reason}"
             self.status_lbl.setText(msg)
-            self.log.warning(msg, True)
+            self.log.warning(msg)
             self.log.exit("is_input_valid", False)
             return False
 
@@ -775,7 +775,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def plot_expression(self):
-        self.log.entry("plot_expression()", True)
+        self.log.entry("plot_expression()")
 
         self.curve   = False
         self.surface = False
@@ -784,16 +784,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         expression  = self.expression_line.text()
         if "x" not in expression:
             self.status_lbl.setText("Missing variable 'x'")
-            self.log.warning("Missing variable 'x'!", True)
-            self.log.exit("plot_expression", True)
+            self.log.warning("Missing variable 'x'!")
+            self.log.exit("plot_expression")
             return
 
         # Use '=' as equivalent to 'Plot' button.
         new_char = "="
         if not self.is_input_valid(new_char):
             self.status_lbl.setText("Expression is not valid!")
-            self.log.warning("is_input_valid(=)=False", True)
-            self.log.exit("plot_expression", True)
+            self.log.warning("is_input_valid(=)=False")
+            self.log.exit("plot_expression")
             return
 
         if "x" in expression and "y" in expression:
@@ -810,7 +810,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.plot_3d.add_plot(expression)
             else:
                 self.status_lbl.setText("Internal error: plotting not available!")
-                self.log.error("Internal error: plotting not available!", True)
+                self.log.error("Internal error: plotting not available!")
         else:
             self.curve = True
             if not hasattr(self, 'plot_2d'):
@@ -825,18 +825,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.plot_2d.add_plot(expression)
             else:
                 self.status_lbl.setText("Internal error: plotting not available!")
-                self.log.error("Internal error: plotting not available!", True)
+                self.log.error("Internal error: plotting not available!")
 
         self.expression_to_history("Plot")
 
-        self.log.exit("plot_expression", True)
+        self.log.exit("plot_expression")
 
     #
     # -----------------------------------------------
     #
 
     def shunting_yard(self, tokens):
-        self.log.entry("shunting_yard(self, tokens)", True)
+        self.log.entry("shunting_yard(self, tokens)")
 
         output = []
         operator = []
@@ -886,7 +886,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while operator:
             output.append(operator.pop())
 
-        self.log.exit("shunting_yard", True)
+        self.log.exit("shunting_yard")
         return output
 
     #
