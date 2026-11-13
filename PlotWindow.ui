@@ -190,8 +190,31 @@ color: white;</string>
             <fontweight>DemiBold</fontweight>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: salmon;
+color: white;</string>
+          </property>
           <property name="text">
            <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6">
+         <widget class="QPushButton" name="save_btn">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>20</pointsize>
+            <fontweight>DemiBold</fontweight>
+           </font>
+          </property>
+          <property name="text">
+           <string>Save</string>
           </property>
          </widget>
         </item>
@@ -234,6 +257,17 @@ color: white;</string>
   </widget>
   <widget class="QStatusBar" name="status_bar"/>
  </widget>
+ <tabstops>
+  <tabstop>x_start</tabstop>
+  <tabstop>x_end</tabstop>
+  <tabstop>x_steps</tabstop>
+  <tabstop>y_start</tabstop>
+  <tabstop>y_end</tabstop>
+  <tabstop>y_steps</tabstop>
+  <tabstop>start_btn</tabstop>
+  <tabstop>save_btn</tabstop>
+  <tabstop>clear_btn</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

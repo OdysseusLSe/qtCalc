@@ -138,8 +138,18 @@ class Ui_PlotWindow(object):
         sizePolicy1.setHeightForWidth(self.clear_btn.sizePolicy().hasHeightForWidth())
         self.clear_btn.setSizePolicy(sizePolicy1)
         self.clear_btn.setFont(font)
+        self.clear_btn.setStyleSheet(u"background-color: salmon;\n"
+"color: white;")
 
         self.gridLayout_2.addWidget(self.clear_btn, 2, 6, 1, 1)
+
+        self.save_btn = QPushButton(self.centralwidget)
+        self.save_btn.setObjectName(u"save_btn")
+        sizePolicy1.setHeightForWidth(self.save_btn.sizePolicy().hasHeightForWidth())
+        self.save_btn.setSizePolicy(sizePolicy1)
+        self.save_btn.setFont(font)
+
+        self.gridLayout_2.addWidget(self.save_btn, 1, 6, 1, 1)
 
         self.gridLayout_2.setRowStretch(0, 1)
         self.gridLayout_2.setRowStretch(1, 1)
@@ -176,6 +186,14 @@ class Ui_PlotWindow(object):
         self.status_bar = QStatusBar(PlotWindow)
         self.status_bar.setObjectName(u"status_bar")
         PlotWindow.setStatusBar(self.status_bar)
+        QWidget.setTabOrder(self.x_start, self.x_end)
+        QWidget.setTabOrder(self.x_end, self.x_steps)
+        QWidget.setTabOrder(self.x_steps, self.y_start)
+        QWidget.setTabOrder(self.y_start, self.y_end)
+        QWidget.setTabOrder(self.y_end, self.y_steps)
+        QWidget.setTabOrder(self.y_steps, self.start_btn)
+        QWidget.setTabOrder(self.start_btn, self.save_btn)
+        QWidget.setTabOrder(self.save_btn, self.clear_btn)
 
         self.retranslateUi(PlotWindow)
 
@@ -192,5 +210,6 @@ class Ui_PlotWindow(object):
         self.label_3.setText(QCoreApplication.translate("PlotWindow", u"y-End:", None))
         self.start_btn.setText(QCoreApplication.translate("PlotWindow", u"Start", None))
         self.clear_btn.setText(QCoreApplication.translate("PlotWindow", u"Clear", None))
+        self.save_btn.setText(QCoreApplication.translate("PlotWindow", u"Save", None))
     # retranslateUi
 

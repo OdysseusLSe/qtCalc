@@ -37,7 +37,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7.1"
+APP_VERSION = "0.7.2"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):

@@ -16,6 +16,7 @@
 # If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
 #
 
+import copy
 import pprint
 
 import pyqtgraph as pg
@@ -67,7 +68,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.y_end.setValidator(QDoubleValidator(-1000, 1000, 15))
 
         self.start_btn.clicked.connect(self.start)
+
+        self.save_btn.clicked.connect(self.save)
+        self.save_btn.setEnabled(False)
+
         self.clear_btn.clicked.connect(self.clear)
+        self.clear_btn.setEnabled(False)
 
         self.curve_colors = ["white", "black", "red", "green", "blue", "yellow"]
 
@@ -170,6 +176,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.y_end.setText("")
         self.y_steps.setValue(1)
 
+        self.X = None
+        self.Y = None
+        self.Z = None
+        self.save_btn.setEnabled(False)
+        self.clear_btn.setEnabled(False)
+
         self.status_lbl.setText("Cleared!")
 
         self.log.exit("clear", True)
@@ -196,6 +208,11 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.expression = ""
         self.done = True
+
+        self.X = copy.copy(X)
+        self.Y = copy.copy(Y)
+        self.save_btn.setEnabled(True)
+        self.clear_btn.setEnabled(True)
 
         self.log.exit("plot_curve", True)
 
@@ -229,7 +246,22 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.expression = ""
         self.done = True
 
+        self.X = copy.copy(X)
+        self.Y = copy.copy(Y)
+        self.Z = copy.copy(Z)
+        self.save_btn.setEnabled(True)
+        self.clear_btn.setEnabled(True)
+
         self.log.exit("plot_surface", True)
+
+    #
+    # -----------------------------------------------
+    #
+
+    def save(self):
+        self.log.entry("save()")
+
+        self.log.exit("save")
 
     #
     # -----------------------------------------------
@@ -244,6 +276,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             x_steps = float(self.x_steps.text())
         except (ValueError, TypeError):
             self.status_lbl.setText("No valid x values")
+            return
 
         if self.curve:
             self.eval_curve.emit(self.expression, x_start, x_end, x_steps)
@@ -261,5 +294,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             )
         except (ValueError, TypeError):
             self.status_lbl.setText("No valid y values")
+            return
 
         self.log.exit("start", True)
