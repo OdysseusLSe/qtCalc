@@ -224,3 +224,4 @@ __marimo__/
 #
 Temp/*
 .DS_Store
+*.csv

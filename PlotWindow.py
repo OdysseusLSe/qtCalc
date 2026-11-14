@@ -17,10 +17,14 @@
 #
 
 import copy
+import csv
 import pprint
 
+import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
+
+from itertools import product
 
 from pyqtgraph.Qt import QtGui
 
@@ -288,6 +292,36 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
     def save(self):
         self.log.entry("save()")
+
+        if self.curve:
+
+            with open("qtCalc-X_Y-data.csv", "w", newline="", encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow(["X", "Y"])  # Header
+                writer.writerows(zip(
+                    self.list_of_curves[self.curve_number]['X'],
+                    self.list_of_curves[self.curve_number]['Y']
+                ))
+
+        else:
+
+            X = self.list_of_surfaces[self.surface_number]['X']
+            Y = self.list_of_surfaces[self.surface_number]['Y']
+            Z = self.list_of_surfaces[self.surface_number]['Z']
+
+            grid_with_y = np.column_stack((Y, Z))
+
+            try:
+                with open("qtCalc-X_Y_Z-data.csv", "x") as f:
+                    np.savetxt(
+                        f,
+                        grid_with_y,
+                        footer=self.list_of_surfaces[self.surface_number]['expression'],
+                        delimiter=",", fmt="%.20g", encoding="utf-8",
+                        header="y\\x," + ",".join(map(str, X))
+                    )
+            except FileExistsError:
+                self.log.warning("File already exists!")
 
         self.log.exit("save")
 
