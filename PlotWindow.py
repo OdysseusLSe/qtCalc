@@ -300,7 +300,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def save_curve(self):
         self.log.entry("save_curve()")
 
-        selected_curve, ok = QInputDialog.getItem(
+        selected_expression, ok = QInputDialog.getItem(
             self,
             "Select a curve",
             "Select a curve from the list:",
@@ -312,6 +312,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         if not ok:
             self.log.exit("save_curve")
             return
+
+        # Choose selected item from list of curves
+        for element in self.list_of_curves:
+            if selected_expression == element['expression']:
+                self.selectec_curve = element
+                break
 
         #
         # Select directory where to save the data of the curve
@@ -333,10 +339,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             try:
                 with open(full_path_name, "w", newline="", encoding="utf-8") as f:
                     writer = csv.writer(f)
-                    writer.writerow(["X", "Y"])  # Header
+                    writer.writerow(["X", self.selectec_curve['expression']])  # Header
                     writer.writerows(zip(
-                        self.list_of_curves[self.curve_number]['X'],
-                        self.list_of_curves[self.curve_number]['Y']
+                        self.selectec_curve['X'],
+                        self.selectec_curve['Y']
                     ))
             except FileExistsError:
                 msg = "File already exists!"
@@ -369,7 +375,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def save_surface(self):
         self.log.entry("save_surface()")
 
-        selected_surface, ok = QInputDialog.getItem(
+        selected_expression, ok = QInputDialog.getItem(
             self,
             "Select a surface",
             "Select a surface from the list:",
@@ -381,6 +387,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         if not ok:
             self.log.exit("save_surface")
             return
+
+        # Choose selected item from list of surfaces
+        for element in self.list_of_surfaces:
+            if selected_expression == element['expression']:
+                self.selectec_surface = element
+                break
 
         #
         # Select directory where to save the data of the curve
@@ -399,9 +411,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             csv_file_name = f"qtCalc-X_Y_Z-data_{dir_time}.csv"
             full_path_name = folder_path + "/" + csv_file_name
 
-            X = self.list_of_surfaces[self.surface_number]['X']
-            Y = self.list_of_surfaces[self.surface_number]['Y']
-            Z = self.list_of_surfaces[self.surface_number]['Z']
+            X = self.selectec_surface['X']
+            Y = self.selectec_surface['Y']
+            Z = self.selectec_surface['Z']
 
             grid_with_y = np.column_stack((Y, Z))
 
@@ -410,7 +422,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                     np.savetxt(
                         f,
                         grid_with_y,
-                        footer=self.list_of_surfaces[self.surface_number]['expression'],
+                        footer=self.selectec_surface['expression'],
                         delimiter=",", fmt="%.20g", encoding="utf-8",
                         header="y\\x," + ",".join(map(str, X))
                     )
