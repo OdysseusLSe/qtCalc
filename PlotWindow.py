@@ -19,20 +19,20 @@
 import copy
 import csv
 import pprint
+import time
 
 import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
 from itertools import product
+from pathlib import Path
 
 from pyqtgraph.Qt import QtGui
-
 from PySide6 import QtWidgets
-
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QDoubleValidator
-from PySide6.QtWidgets import QLabel, QMainWindow, QVBoxLayout
+from PySide6.QtWidgets import QFileDialog, QInputDialog, QLabel, QMainWindow, QMessageBox, QVBoxLayout
 
 from PlotWindow_ui import Ui_PlotWindow
 from Logging import Logging
@@ -58,8 +58,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.curve_number     = -1
         self.max_curves       = 6
         self.list_of_curves   = []
+        self.list_of_c_expr   = []
         self.surface_number   = -1
         self.list_of_surfaces = []
+        self.list_of_s_expr   = []
 
         self.log.entry("__init__(expression)")
         self.log.write(f"expression={expression}")
@@ -79,7 +81,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.start_btn.clicked.connect(self.start)
 
-        self.save_btn.clicked.connect(self.save)
+        if self.curve:
+            self.save_btn.clicked.connect(self.save_curve)
+        else:
+            self.save_btn.clicked.connect(self.save_surface)
         self.save_btn.setEnabled(False)
 
         self.clear_btn.clicked.connect(self.clear)
@@ -227,6 +232,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             'Y'          : Y
         }
         self.list_of_curves.append(curve)
+        self.list_of_c_expr.append(curve['expression'])
 
         self.expression = ""
         self.done = True
@@ -275,6 +281,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             'Z'          : Z
         }
         self.list_of_surfaces.append(surface_item)
+        self.list_of_s_expr.append(surface_item['expression'])
 
         self.setWindowTitle(f"3D-Plot: {self.expression}")
 
@@ -290,20 +297,107 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     # -----------------------------------------------
     #
 
-    def save(self):
-        self.log.entry("save()")
+    def save_curve(self):
+        self.log.entry("save_curve()")
 
-        if self.curve:
+        selected_curve, ok = QInputDialog.getItem(
+            self,
+            "Select a curve",
+            "Select a curve from the list:",
+            self.list_of_c_expr,
+            current=0,
+            editable=False,
+        )
 
-            with open("qtCalc-X_Y-data.csv", "w", newline="", encoding="utf-8") as f:
-                writer = csv.writer(f)
-                writer.writerow(["X", "Y"])  # Header
-                writer.writerows(zip(
-                    self.list_of_curves[self.curve_number]['X'],
-                    self.list_of_curves[self.curve_number]['Y']
-                ))
+        if not ok:
+            self.log.exit("save_curve")
+            return
 
-        else:
+        #
+        # Select directory where to save the data of the curve
+        #
+
+        folder_path = QFileDialog.getExistingDirectory(
+            self,
+            caption="Select folder to save data of the curve",
+            dir=str(Path.home()),
+            options=QFileDialog.ShowDirsOnly
+        )
+
+        if folder_path:
+
+            dir_time = time.time()
+            csv_file_name = f"qtCalc-X_Y-data_{dir_time}.csv"
+            full_path_name = folder_path + "/" + csv_file_name
+
+            try:
+                with open(full_path_name, "w", newline="", encoding="utf-8") as f:
+                    writer = csv.writer(f)
+                    writer.writerow(["X", "Y"])  # Header
+                    writer.writerows(zip(
+                        self.list_of_curves[self.curve_number]['X'],
+                        self.list_of_curves[self.curve_number]['Y']
+                    ))
+            except FileExistsError:
+                msg = "File already exists!"
+                QMessageBox.warning(self, "Warning!", msg)
+                self.log.warning(msg)
+                self.log.exit("save_curve")
+                return
+            except PermissionError:
+                msg = "No permission to create file!"
+                QMessageBox.warning(self, "Warning!", msg)
+                self.log.warning(msg)
+                self.log.exit("save_curve")
+                return
+            except OSError as e:
+                msg = f"General file system error: {e}"
+                QMessageBox.warning(self, "Warning!", msg)
+                self.log.warning(msg)
+                self.log.exit("save_curve")
+                return
+
+            msg = f"Data file\n {csv_file_name}\n successful saved."
+            QMessageBox.information(self, "Data saved", msg)
+
+        self.log.exit("save_curve")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def save_surface(self):
+        self.log.entry("save_surface()")
+
+        selected_surface, ok = QInputDialog.getItem(
+            self,
+            "Select a surface",
+            "Select a surface from the list:",
+            self.list_of_s_expr,
+            current=0,
+            editable=False,
+        )
+
+        if not ok:
+            self.log.exit("save_surface")
+            return
+
+        #
+        # Select directory where to save the data of the curve
+        #
+
+        folder_path = QFileDialog.getExistingDirectory(
+            self,
+            caption="Select folder to save data of the curve",
+            dir=str(Path.home()),
+            options=QFileDialog.ShowDirsOnly
+        )
+
+        if folder_path:
+
+            dir_time = time.time()
+            csv_file_name = f"qtCalc-X_Y_Z-data_{dir_time}.csv"
+            full_path_name = folder_path + "/" + csv_file_name
 
             X = self.list_of_surfaces[self.surface_number]['X']
             Y = self.list_of_surfaces[self.surface_number]['Y']
@@ -312,7 +406,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             grid_with_y = np.column_stack((Y, Z))
 
             try:
-                with open("qtCalc-X_Y_Z-data.csv", "x") as f:
+                with open(full_path_name, "x") as f:
                     np.savetxt(
                         f,
                         grid_with_y,
@@ -321,9 +415,28 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                         header="y\\x," + ",".join(map(str, X))
                     )
             except FileExistsError:
-                self.log.warning("File already exists!")
+                msg = "File already exists!"
+                QMessageBox.warning(self, "Warning!", msg)
+                self.log.warning(msg)
+                self.log.exit("save_surface")
+                return
+            except PermissionError:
+                msg = "No permission to create file!"
+                QMessageBox.warning(self, "Warning!", msg)
+                self.log.warning(msg)
+                self.log.exit("save_surface")
+                return
+            except OSError as e:
+                msg = f"General file system error: {e}"
+                QMessageBox.warning(self, "Warning!", msg)
+                self.log.warning(msg)
+                self.log.exit("save_surface")
+                return
 
-        self.log.exit("save")
+            msg = f"Data file\n {csv_file_name}\n successful saved."
+            QMessageBox.information(self, "Data saved", msg)
+
+        self.log.exit("save_surface")
 
     #
     # -----------------------------------------------
