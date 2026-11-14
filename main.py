@@ -38,7 +38,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7.5"
+APP_VERSION = "0.7.6"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -778,7 +778,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.curve   = False
         self.surface = False
 
-        # Check it at least variable 'x' exists.
+        # Check if at least variable 'x' exists.
         expression  = self.expression_line.text()
         if "x" not in expression:
             self.status_lbl.setText("Missing primary variable 'x'")
@@ -805,6 +805,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             elif self.plot_3d is not None:
                 if not self.plot_3d.isVisible():
                     self.plot_3d.show()
+                else:
+                    self.plot_3d.raise_()
+                self.plot_3d.activateWindow()
                 self.plot_3d.add_plot(expression)
             else:
                 self.status_lbl.setText("Internal error: plotting not available!")
@@ -820,6 +823,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             elif self.plot_2d is not None:
                 if not self.plot_2d.isVisible():
                     self.plot_2d.show()
+                else:
+                    self.plot_2d.raise_()
+                self.plot_2d.activateWindow()
                 self.plot_2d.add_plot(expression)
             else:
                 self.status_lbl.setText("Internal error: plotting not available!")

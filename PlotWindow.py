@@ -16,7 +16,6 @@
 # If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
 #
 
-import copy
 import csv
 import pprint
 import time
@@ -25,11 +24,8 @@ import numpy as np
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
-from itertools import product
 from pathlib import Path
 
-from pyqtgraph.Qt import QtGui
-from PySide6 import QtWidgets
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QFileDialog, QInputDialog, QLabel, QMainWindow, QMessageBox, QVBoxLayout
