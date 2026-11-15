@@ -28,6 +28,9 @@
     <fontweight>DemiBold</fontweight>
    </font>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::FocusPolicy::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -46,6 +49,9 @@
           <pointsize>15</pointsize>
           <fontweight>DemiBold</fontweight>
          </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::StrongFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(214, 214, 214);
@@ -76,7 +82,7 @@ border: 3px solid;</string>
          </font>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::ClickFocus</enum>
+         <enum>Qt::FocusPolicy::StrongFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">background-color : rgb(214, 214, 214);
@@ -137,7 +143,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -163,7 +169,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -215,7 +221,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -293,7 +299,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -345,7 +351,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -371,7 +377,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: blue;
@@ -397,7 +403,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -449,7 +455,7 @@ color : white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -476,7 +482,7 @@ color: black;
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -528,7 +534,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -580,7 +586,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -632,7 +638,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -736,7 +742,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -762,7 +768,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -840,7 +846,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: blue;
@@ -866,7 +872,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: blue;
@@ -918,7 +924,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -944,7 +950,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -996,7 +1002,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1074,7 +1080,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1152,7 +1158,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1178,7 +1184,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1204,7 +1210,7 @@ color: black;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1254,6 +1260,9 @@ color: white;</string>
             <pointsize>20</pointsize>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1305,7 +1314,7 @@ color: white;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1425,6 +1434,9 @@ color : black;</string>
             <fontweight>DemiBold</fontweight>
            </font>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgb(214, 214, 214);
 color: rgb(94, 94, 94);</string>
@@ -1449,7 +1461,7 @@ color: rgb(94, 94, 94);</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1479,7 +1491,7 @@ border: 1px;</string>
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::FocusPolicy::NoFocus</enum>
+           <enum>Qt::FocusPolicy::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: lightgrey;
@@ -1505,6 +1517,9 @@ border: 1px;</string>
             <bold>true</bold>
            </font>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color : rgb(66, 66, 66);
 color : white;</string>
@@ -1528,6 +1543,9 @@ color : white;</string>
             <fontweight>DemiBold</fontweight>
            </font>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color : rgb(66, 66, 66);
 color : white;</string>
@@ -1550,6 +1568,9 @@ color : white;</string>
             <pointsize>25</pointsize>
             <fontweight>DemiBold</fontweight>
            </font>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::FocusPolicy::NoFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color : rgb(66, 66, 66);
@@ -1578,6 +1599,38 @@ color : white;</string>
   </widget>
   <widget class="QStatusBar" name="status_bar"/>
  </widget>
+ <tabstops>
+  <tabstop>btn_Mplus</tabstop>
+  <tabstop>btn_MR</tabstop>
+  <tabstop>btn_MC</tabstop>
+  <tabstop>btn_min</tabstop>
+  <tabstop>btn_max</tabstop>
+  <tabstop>btn_pi</tabstop>
+  <tabstop>btn_abs</tabstop>
+  <tabstop>btn_tanh</tabstop>
+  <tabstop>btn_cosh</tabstop>
+  <tabstop>btn_sinh</tabstop>
+  <tabstop>btn_e</tabstop>
+  <tabstop>btn_mod</tabstop>
+  <tabstop>btn_tan</tabstop>
+  <tabstop>btn_cos</tabstop>
+  <tabstop>btn_sin</tabstop>
+  <tabstop>btn_ln</tabstop>
+  <tabstop>pushButton_34</tabstop>
+  <tabstop>btn_cbrt</tabstop>
+  <tabstop>btn_sqrt</tabstop>
+  <tabstop>btn_log</tabstop>
+  <tabstop>btn_lg2</tabstop>
+  <tabstop>btn_XpowerY</tabstop>
+  <tabstop>btn_cube</tabstop>
+  <tabstop>btn_square</tabstop>
+  <tabstop>btn_10powerX</tabstop>
+  <tabstop>memory_list</tabstop>
+  <tabstop>btn_DEG</tabstop>
+  <tabstop>btn_RAD</tabstop>
+  <tabstop>expression_line</tabstop>
+  <tabstop>history_list</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

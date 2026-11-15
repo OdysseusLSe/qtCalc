@@ -38,7 +38,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7.7"
+APP_VERSION = "0.7.8"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -68,6 +68,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.history_list.scrollToBottom
         )
         self.history_list.itemDoubleClicked.connect(self.on_item_double_clicked)
+        #self.history_list.itemActivated.connect(self.on_item_double_clicked)
 
         self.history_item = 0
         self.memory_index = -1
@@ -683,7 +684,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         matched_btn_name = None
 
         if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
-            matched_btn_name = "btn_equal"
+            if self.history_list.hasFocus():
+                # Item in history list selected and triggered to include it in
+                # current expression.
+                current_item = self.history_list.currentItem()
+                self.on_item_double_clicked(current_item)
+            else:
+                matched_btn_name = "btn_equal"
         elif key_text:
             for button_name, character in self.buttons.items():
                 if key_text == character:
@@ -696,12 +703,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 button_object.click()
                 self.log.write(f"matched_btn_name={matched_btn_name}")
                 event.accept()
-                self.log.exit("keyPressEvent(event)")
+                self.log.exit("keyPressEvent")
                 return
 
         super().keyPressEvent(event)
 
-        self.log.exit("keyPressEvent(event)")
+        self.log.exit("keyPressEvent")
 
     #
     # -----------------------------------------------
