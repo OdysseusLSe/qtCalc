@@ -76,15 +76,45 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.y_end.setValidator(QDoubleValidator(-1000, 1000, 15))
 
         self.start_btn.clicked.connect(self.start)
+        self.start_btn.setStyleSheet("""
+            QPushButton:focus {
+                color: white;
+                background-color: green;
+            }
+            QPushButton:hover {
+                color: white;
+                background-color: green;
+            }
+        """)
 
         if self.curve:
             self.save_btn.clicked.connect(self.save_curve)
         else:
             self.save_btn.clicked.connect(self.save_surface)
         self.save_btn.setEnabled(False)
+        self.save_btn.setStyleSheet("""
+            QPushButton:focus {
+                color: black;
+                background-color: lightgray;
+            }
+            QPushButton:hover {
+                color: black;
+                background-color: lightgray;
+            }
+        """)
 
         self.clear_btn.clicked.connect(self.clear)
         self.clear_btn.setEnabled(False)
+        self.clear_btn.setStyleSheet("""
+            QPushButton:focus {
+                color: white;
+                background-color: red;
+            }
+            QPushButton:hover {
+                color: white;
+                background-color: red;
+            }
+        """)
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)

@@ -38,7 +38,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7.6"
+APP_VERSION = "0.7.7"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -927,7 +927,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 # -----------------------------------------------
 #
 
-parser = argparse.ArgumentParser(description="Greet a user from the command line.")
+welcome_string = f"Welcome to '{APP_NAME}-{APP_VERSION}'"
+parser = argparse.ArgumentParser(description=welcome_string)
 parser.add_argument(
     "-d", "--debug", type=int, default=0,
     help="Write debug information"
@@ -948,14 +949,10 @@ else:
     )
 
 app = QtWidgets.QApplication([])
-
 app.setStyle('Fusion')
-
-#load_stylesheet(":/ui/style.css")
 
 win = MainWindow()
 win.show()
-
 win.setFocus()
 
 sys.exit(app.exec())

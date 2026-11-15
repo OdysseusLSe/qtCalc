@@ -128,8 +128,7 @@ class Ui_PlotWindow(object):
         font.setPointSize(20)
         font.setWeight(QFont.DemiBold)
         self.start_btn.setFont(font)
-        self.start_btn.setStyleSheet(u"background-color: green;\n"
-"color: white;")
+        self.start_btn.setStyleSheet(u"")
 
         self.gridLayout_2.addWidget(self.start_btn, 0, 6, 1, 1)
 
@@ -138,8 +137,7 @@ class Ui_PlotWindow(object):
         sizePolicy1.setHeightForWidth(self.clear_btn.sizePolicy().hasHeightForWidth())
         self.clear_btn.setSizePolicy(sizePolicy1)
         self.clear_btn.setFont(font)
-        self.clear_btn.setStyleSheet(u"background-color: salmon;\n"
-"color: white;")
+        self.clear_btn.setStyleSheet(u"")
 
         self.gridLayout_2.addWidget(self.clear_btn, 2, 6, 1, 1)
 

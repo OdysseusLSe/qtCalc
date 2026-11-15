@@ -168,8 +168,7 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: green;
-color: white;</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Start</string>
@@ -191,8 +190,7 @@ color: white;</string>
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: salmon;
-color: white;</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Clear</string>
