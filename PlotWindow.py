@@ -49,6 +49,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.setupUi(self)
         self.log = Logging("PlotWindow")
 
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
         self.expression       = expression
         self.done             = False
         self.curve_number     = -1
@@ -186,6 +188,15 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.expression   = expression
         self.done         = False
 
+        self.x_start.setEnabled(True)
+        self.x_end.setEnabled(True)
+        self.x_steps.setEnabled(True)
+
+        if self.surface:
+            self.y_start.setEnabled(True)
+            self.y_end.setEnabled(True)
+            self.y_steps.setEnabled(True)
+
         self.x_start.setText("")
         self.x_end.setText("")
         self.x_steps.setValue(1)
@@ -193,6 +204,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.y_start.setText("")
         self.y_end.setText("")
         self.y_steps.setValue(1)
+
+        self.start_btn.setEnabled(True)
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
@@ -226,15 +239,63 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.X = None
         self.Y = None
         self.Z = None
+        self.start_btn.setEnabled(False)
         self.save_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
         if self.surface:
             self.setWindowTitle("3D-Plot")
 
+        self.x_start.setEnabled(False)
+        self.x_end.setEnabled(False)
+        self.x_steps.setEnabled(False)
+
+        self.y_start.setEnabled(False)
+        self.y_end.setEnabled(False)
+        self.y_steps.setEnabled(False)
+
         self.status_lbl.setText("Cleared!")
 
         self.log.exit("clear")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def keyPressEvent(self, event):
+        self.log.entry("keyPressEvent(event)")
+
+        key = event.key()
+
+        if key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            if self.start_btn.hasFocus():
+                self.start()
+                event.accept()
+                self.log.exit("keyPressEvent")
+                return
+            elif self.save_btn.hasFocus():
+                if self.curve:
+                    self.save_curve()
+                else:
+                    self.save_surface()
+                event.accept()
+                self.log.exit("keyPressEvent")
+                return
+            elif self.clear_btn.hasFocus():
+                self.clear()
+                event.accept()
+                self.log.exit("keyPressEvent")
+                return
+
+        if key == Qt.Key.Key_Escape:
+            self.close()
+            event.accept()
+            self.log.exit("keyPressEvent")
+            return
+
+        super().keyPressEvent(event)
+
+        self.log.exit("keyPressEvent")
 
     #
     # -----------------------------------------------
