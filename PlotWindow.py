@@ -26,7 +26,7 @@ import pyqtgraph.opengl as gl
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import QLocale, Qt, Signal
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QFileDialog, QInputDialog, QLabel, QMainWindow, QMessageBox, QVBoxLayout
 
@@ -71,11 +71,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_bar.addWidget(self.status_lbl, 1)
 
-        self.x_start.setValidator(QDoubleValidator(-1000, 1000, 15))
-        self.x_end.setValidator(QDoubleValidator(-1000, 1000, 15))
+        validator = QDoubleValidator(-1000.0, 1000.0, 15, self)
+        validator.setLocale(QLocale("en_US"))
 
-        self.y_start.setValidator(QDoubleValidator(-1000, 1000, 15))
-        self.y_end.setValidator(QDoubleValidator(-1000, 1000, 15))
+        self.x_start.setValidator(validator)
+        self.x_end.setValidator(validator)
+
+        self.y_start.setValidator(validator)
+        self.y_end.setValidator(validator)
 
         self.start_btn.clicked.connect(self.start)
         self.start_btn.setStyleSheet("""

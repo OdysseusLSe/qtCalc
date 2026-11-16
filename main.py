@@ -73,6 +73,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_item = 0
         self.memory_index = -1
         self.tokens = []
+        self.is_2nd = False
 
         self.RAD = True
         self.btn_RAD.setChecked(self.RAD)
@@ -138,7 +139,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'atanh' : (math.atanh, 1),
             'cos'   : (math.cos, 1),
             'cosh'  : (math.cosh, 1),
+            'erf'   : (math.erf, 1),
             'exp'   : (math.exp, 1),
+            'gamma' : (math.gamma, 1),
             'lg2'   : (math.log2, 1),
             'ln'    : (math.log, 1),
             'log'   : (math.log10, 1),
@@ -153,7 +156,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'tanh'  : (math.tanh, 1)
         }
 
-        self.trig_functions = ['cos', 'cosh', 'sin', 'sinh', 'tan', 'tanh']
+        self.trig_functions = [
+            'acosh', 'asinh', 'atanh',
+            'cos', 'cosh', 'sin',
+            'sinh', 'tan', 'tanh'
+        ]
+
         self.powers         = ['^2', '^3']
 
         # Predefined constants
@@ -201,6 +209,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_dot"           : ".",
             "btn_e"             : "e",
             "btn_equal"         : "=",
+            "btn_erf"           : "erf(",
+            "btn_gamma"         : "gamma(",
             "btn_lg2"           : "lg2(",
             "btn_ln"            : "ln(",
             "btn_log"           : "log(",
@@ -667,6 +677,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.plot_expression()
             value = True
 
+        elif button_name == "btn_2nd":
+            self.toggle_the_2nd()
+            value = True
+
         else:
             value = False
 
@@ -905,6 +919,67 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.log.exit("shunting_yard")
         return output
+
+    #
+    # -----------------------------------------------
+    #
+
+    def toggle_the_2nd(self):
+        self.log.entry("toggle_the_2nd()")
+
+        if self.is_2nd:
+
+            self.is_2nd = False
+
+            self.btn_2nd.setStyleSheet("""
+                QPushButton {
+                    color: white;
+                    background-color: rgb(66, 66, 66);
+                    }
+                """)
+
+            self.btn_cosh.setObjectName("btn_cosh")
+            self.btn_cosh.setText("cosh")
+
+            self.btn_max.setObjectName("btn_max")
+            self.btn_max.setText("max")
+
+            self.btn_min.setObjectName("btn_min")
+            self.btn_min.setText("min")
+
+            self.btn_sinh.setObjectName("btn_sinh")
+            self.btn_sinh.setText("sinh")
+
+            self.btn_tanh.setObjectName("btn_tanh")
+            self.btn_tanh.setText("tanh")
+
+        else:
+
+            self.is_2nd = True
+
+            self.btn_2nd.setStyleSheet("""
+                QPushButton {
+                    color: white;
+                    background-color: green;
+                    }
+                """)
+
+            self.btn_cosh.setObjectName("btn_acosh")
+            self.btn_cosh.setText("acosh")
+
+            self.btn_max.setObjectName("btn_gamma")
+            self.btn_max.setText("Γ")
+
+            self.btn_min.setObjectName("btn_erf")
+            self.btn_min.setText("erf")
+
+            self.btn_sinh.setObjectName("btn_asinh")
+            self.btn_sinh.setText("asinh")
+
+            self.btn_tanh.setObjectName("btn_atanh")
+            self.btn_tanh.setText("atanh")
+
+        self.log.exit("toggle_the_2nd")
 
     #
     # -----------------------------------------------
