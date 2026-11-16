@@ -293,6 +293,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         for x in X:
             y = self.evaluate_expression(expression, x=x)
+            if y is None:
+                self.log.error(f"x,y={x},{y}")
+                y = 0
             Y.append(y)
             self.log.write(f"x,y={x},{y}")
 
