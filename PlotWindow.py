@@ -304,14 +304,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     # -----------------------------------------------
     #
 
-    def plot_curve(self, X, Y):
+    def plot_curve(self, X, Y, connections):
         self.log.entry("plot_curve(X, Y)")
 
         self.curve_number += 1
 
         self.status_lbl.setText("Plotting curve")
         pen = pg.mkPen(color=self.colors[self.curve_number], width=4)
-        self.plot_widget.plot(X, Y, pen=pen, name=self.expression)
+        self.plot_widget.plot(X, Y, connect=connections, pen=pen, name=self.expression)
         self.status_lbl.setText("Finished")
 
         curve = {

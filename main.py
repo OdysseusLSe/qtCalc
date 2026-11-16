@@ -289,20 +289,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(log_str)
 
         X = np.linspace(x_start, x_end, x_steps)
-        Y = []
+        raw_Y = []
+        connections = []
 
         for x in X:
             y = self.evaluate_expression(expression, x=x)
             if y is None:
                 self.log.error(f"x,y={x},{y}")
-                y = 0
-            Y.append(y)
+                connections.append(False)
+            else:
+                connections.append(True)
+            raw_Y.append(y)
             self.log.write(f"x,y={x},{y}")
+
+        Y = np.array(raw_Y, dtype=float)
 
         self.log.write(f"X=\n{pprint.pformat(X)}")
         self.log.write(f"Y=\n{pprint.pformat(Y)}")
 
-        self.plot_2d.plot_curve(X, Y)
+        self.plot_2d.plot_curve(X, Y, connections)
 
         self.log.exit("evaluate_curve")
 
@@ -383,11 +388,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.log.write(f"expression={expression}")
 
         except ZeroDivisionError:
-            error = "Error: Division by zero!"
+            error = f"{expression} -> Error: Division by zero!"
             self.status_lbl.setText(error)
             self.log.error(f"{expression} --> {error}")
             if x is None and y is None:
-                item = QListWidgetItem(f"{expression} --> {error}")
+                item = QListWidgetItem(error)
                 item.setBackground(QBrush(QColor("red")))
                 item.setForeground(QColor("white"))
                 self.history_list.addItem(item)
@@ -395,9 +400,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.expression_line.setText("")
 
         except IndexError:
-            error = "Error: Insufficient operands or parentheses error!"
+            error = f"{expression} -> Error: Insufficient operands or parentheses error!"
             self.status_lbl.setText(error)
-            self.log.error(f"{expression} --> {error}")
+            self.log.error(error)
             if x is None and y is None:
                 item = QListWidgetItem(f"{expression} --> {error}")
                 item.setBackground(QBrush(QColor("red")))
@@ -407,9 +412,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.expression_line.setText("")
 
         except Exception as e:
-            error = f"Error: General error: {str(e)}"
+            error = f"{expression} -> Error: General error: {str(e)}"
             self.status_lbl.setText(error)
-            self.log.error(f"{expression} --> {error}")
+            self.log.error(error)
             if x is None and y is None:
                 item = QListWidgetItem(f"{expression} --> {error}")
                 item.setBackground(QBrush(QColor("red")))
