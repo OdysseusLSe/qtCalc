@@ -133,6 +133,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Functions with their corresponding implementations and # of arguments
         self.functions = {
             'abs'   : (math.fabs, 1),
+            'acosh' : (math.acosh, 1),
+            'asinh' : (math.asinh, 1),
+            'atanh' : (math.atanh, 1),
             'cos'   : (math.cos, 1),
             'cosh'  : (math.cosh, 1),
             'exp'   : (math.exp, 1),
@@ -183,6 +186,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_9"             : "9",
             "btn_10powerX"      : "10^(",
             "btn_abs"           : "abs(",
+            "btn_acosh"         : "acosh(",
+            "btn_asinh"         : "asinh(",
+            "btn_atanh"         : "atanh(",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
             "btn_cbrt"          : "sqrt3(",
