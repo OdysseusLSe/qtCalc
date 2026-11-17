@@ -38,7 +38,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.7.8"
+APP_VERSION = "0.8"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -501,16 +501,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         log_str = f"y_start,y_end,y_steps={y_start},{y_end},{y_steps}"
         self.log.write(log_str)
 
-        X = np.linspace(x_start, x_end, x_steps)
-        Y = np.linspace(y_start, y_end, y_steps)
+        x    = np.linspace(x_start, x_end, x_steps)
+        y    = np.linspace(y_start, y_end, y_steps)
+        X, Y = np.meshgrid(x, y)
 
         Z = np.zeros((len(X), len(Y)))
-        for x_val in range(len(X)):
-            for y_val in range(len(Y)):
-                x = float(X[x_val])  # NumPy float to Python float!
-                y = float(Y[y_val])  # NumPy float to Python float!
-                Z[x_val, y_val] = self.evaluate_expression(expression, x=x, y=y)
-                self.log.write(f"x,y,z={x},{y},{Z[x_val, y_val]}")
+        for ix in range(len(X)):
+            for iy in range(len(Y)):
+                x_val = float(x[ix])  # NumPy float to Python float!
+                y_val = float(y[iy])  # NumPy float to Python float!
+                Z[ix, iy] = self.evaluate_expression(expression, x=x_val, y=y_val)
+                self.log.write(f"x,y,z={x_val},{y_val},{Z[ix, iy]}")
 
         self.plot_3d.plot_surface(X, Y, Z)
 
