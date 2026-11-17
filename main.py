@@ -292,15 +292,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         raw_Y = []
         connections = []
 
-        for x in X:
+        for step, x in enumerate(X):
             y = self.evaluate_expression(expression, x=x)
             if y is None:
                 self.log.error(f"x,y={x},{y}")
+                raw_Y.append(0.0)
                 connections.append(False)
             else:
+                raw_Y.append(float(y))
                 connections.append(True)
-            raw_Y.append(y)
-            self.log.write(f"x,y={x},{y}")
+            self.log.write(f"x,y,connections[{step}]={x},{y},{connections[step]}")
 
         Y = np.array(raw_Y, dtype=float)
 

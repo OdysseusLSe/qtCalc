@@ -25,6 +25,7 @@ import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 
 from pathlib import Path
+from pyqtgraph.Qt import QtGui
 
 from PySide6.QtCore import QLocale, Qt, Signal
 from PySide6.QtGui import QDoubleValidator
@@ -60,6 +61,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.surface_number   = -1
         self.list_of_surfaces = []
         self.list_of_s_expr   = []
+        self.infinity_symbol  = "d"  # (diamond / prism)
 
         self.log.entry("__init__(expression)")
         self.log.write(f"expression={expression}")
@@ -311,7 +313,25 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.status_lbl.setText("Plotting curve")
         pen = pg.mkPen(color=self.colors[self.curve_number], width=4)
-        self.plot_widget.plot(X, Y, connect=connections, pen=pen, name=self.expression)
+        self.plot_widget.plot(X, Y, pen=pen, name=self.expression)
+
+        infinite_X = []
+        infinite_Y = []
+
+        if False in connections:
+
+            for i, _ in enumerate(connections):
+                if not connections[i]:
+                    infinite_X.append(X[i])
+                    infinite_Y.append(Y[i])
+
+            self.plot_widget.plot(
+                infinite_X, infinite_Y,
+                symbol=self.infinity_symbol,
+                symbolBrush=self.colors[self.curve_number],
+                pen=None
+            )
+
         self.status_lbl.setText("Finished")
 
         curve = {
