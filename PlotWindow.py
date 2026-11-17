@@ -17,15 +17,20 @@
 #
 
 import csv
+import matplotlib
 import pprint
 import time
 
+matplotlib.use('QtAgg')
+
 import numpy as np
-import pyqtgraph as pg
-import pyqtgraph.opengl as gl
+
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d import AxesAxes3D
 
 from pathlib import Path
-from pyqtgraph.Qt import QtGui
 
 from PySide6.QtCore import QLocale, Qt, Signal
 from PySide6.QtGui import QDoubleValidator
@@ -34,10 +39,46 @@ from PySide6.QtWidgets import QFileDialog, QInputDialog, QLabel, QMainWindow, QM
 from PlotWindow_ui import Ui_PlotWindow
 from Logging import Logging
 
+
 #
 # -----------------------------------------------
 #
 
+class MplCanvas(FigureCanvas):
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+
+        self.fig = Figure(
+            figsize=(width, height),
+            dpi=dpi,
+            facecolor="darkgray",
+            layout="constrained"
+        )
+
+        super().__init__(self.fig)
+
+        self.axes = self.fig.add_subplot()
+
+        self.axes.set_facecolor("gray")
+
+        self.setup_axes()
+
+        for spine in self.axes.spines.values():
+            spine.set_edgecolor("white")
+
+        self.axes.grid(True, color="white", linestyle="--", linewidth=0.5)
+
+    def setup_axes(self):
+
+        self.axes.tick_params(colors="white", which="both")
+        self.axes.xaxis.label.set_color("white")
+        self.axes.yaxis.label.set_color("white")
+        self.axes.title.set_color("white")
+        self.axes.grid(True)
+
+
+#
+# -----------------------------------------------
+#
 
 class PlotWindow(QMainWindow, Ui_PlotWindow):
 
@@ -128,10 +169,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.colors = ["white", "black", "red", "green", "blue", "yellow"]
 
-        pg.setConfigOption('background', 'grey')
-        pg.setConfigOption('foreground', 'white')
-
         plot_layout = QVBoxLayout()
+        plot_layout.setContentsMargins(0, 0, 0, 0)
 
         if not self.surface:
 
@@ -142,25 +181,26 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.y_end.setEnabled(False)
             self.y_steps.setEnabled(False)
 
-            self.plot_widget = pg.PlotWidget()
+            self.plot_widget = MplCanvas(self, width=6, height=4, dpi=100)
+            self.toolbar = NavigationToolbar(self.plot_widget, self)
+
+            plot_layout.addWidget(self.toolbar)
             plot_layout.addWidget(self.plot_widget)
             self.bottom.setLayout(plot_layout)
 
-            self.plot_widget.addLegend(labelTextSize='15pt')
-            self.plot_widget.setLabel("left", "y", color="white")
-            self.plot_widget.setLabel("bottom", "x", color="white")
-            self.plot_widget.showGrid(x=True, y=True)
+            self.plot_widget.axes.set_xlabel("x")
+            self.plot_widget.axes.set_ylabel("y")
 
         else:
 
             self.setWindowTitle("3D-Plot")
             self.log.write(self.expression)
 
-            self.plot_widget = gl.GLViewWidget()
+            #self.plot_widget = gl.GLViewWidget()
             plot_layout.addWidget(self.plot_widget)
             self.bottom.setLayout(plot_layout)
 
-            xgrid = gl.GLGridItem()
+            #xgrid = gl.GLGridItem()
             self.plot_widget.addItem(xgrid)
 
         status_str = "Define parameters for expression '" + expression + "'"
@@ -224,7 +264,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def clear(self):
         self.log.entry("clear()")
 
-        self.plot_widget.clear()
+        self.plot_widget.axes.clear()
+        self.plot_widget.setup_axes()
+
+        self.plot_widget.axes.set_xlabel("x")
+        self.plot_widget.axes.set_ylabel("y")
+        self.plot_widget.draw()
 
         self.expression       = ""
         self.done             = True
@@ -312,25 +357,13 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.curve_number += 1
 
         self.status_lbl.setText("Plotting curve")
-        pen = pg.mkPen(color=self.colors[self.curve_number], width=4)
-        self.plot_widget.plot(X, Y, pen=pen, name=self.expression)
-
-        infinite_X = []
-        infinite_Y = []
-
-        if False in connections:
-
-            for i, _ in enumerate(connections):
-                if not connections[i]:
-                    infinite_X.append(X[i])
-                    infinite_Y.append(Y[i])
-
-            self.plot_widget.plot(
-                infinite_X, infinite_Y,
-                symbol=self.infinity_symbol,
-                symbolBrush=self.colors[self.curve_number],
-                pen=None
-            )
+        self.plot_widget.axes.plot(
+            X, Y,
+            color=self.colors[self.curve_number],
+            label=self.expression
+        )
+        self.plot_widget.axes.legend()
+        self.plot_widget.draw()
 
         self.status_lbl.setText("Finished")
 
