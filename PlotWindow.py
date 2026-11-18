@@ -157,17 +157,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
             self.stack.setCurrentWidget(self.color_dialog)
 
-            self.line_color = "white"
-            self.colors = [
-                "white",
-                "black",
-                "red",
-                "green",
-                "blue",
-                "yellow"
-            ]
             self.curve_number     = -1
-            self.max_curves       = len(self.colors)
+            self.max_curves       = 10
             self.list_of_curves   = []
             self.list_of_c_expr   = []
 
