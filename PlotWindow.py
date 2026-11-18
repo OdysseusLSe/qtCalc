@@ -27,8 +27,8 @@ import numpy as np
 
 from pathlib import Path
 
-from PySide6.QtCore import QLocale, Qt, Signal
-from PySide6.QtGui import QDoubleValidator
+from PySide6.QtCore import QLocale, QSize, Qt, Signal
+from PySide6.QtGui import QDoubleValidator, QIcon
 from PySide6.QtWidgets import (
     QFileDialog,
     QInputDialog,
@@ -61,35 +61,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-        self.colors = [
-            "white",
-            "black",
-            "red",
-            "green",
-            "blue",
-            "yellow"
-        ]
         self.expression       = expression
         self.done             = False
-        self.curve_number     = -1
-        self.max_curves       = len(self.colors)
-        self.list_of_curves   = []
-        self.list_of_c_expr   = []
-
-        self.sequentials = [
-            "viridis",
-            "plasma",
-            "cividis",
-            "Reds",
-            "Greens",
-            "Blues",
-            "Puples",
-            "Greys"
-        ]
-        self.surface_number   = -1
-        self.max_surfaces     = len(self.sequentials)
-        self.list_of_surfaces = []
-        self.list_of_s_expr   = []
 
         self.log.entry("__init__(expression)")
         self.log.write(f"expression={expression}")
@@ -159,59 +132,72 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         if not self.surface:
 
-            self.setWindowTitle("2D-Plot")
-            self.log.write(self.expression)
+            self.setWindowTitle("Curve (2D) Plot")
+
+            self.colors = [
+                "white",
+                "black",
+                "red",
+                "green",
+                "blue",
+                "yellow"
+            ]
+            self.curve_number     = -1
+            self.max_curves       = len(self.colors)
+            self.list_of_curves   = []
+            self.list_of_c_expr   = []
 
             self.y_start.setEnabled(False)
             self.y_end.setEnabled(False)
             self.y_steps.setEnabled(False)
 
-            self.plot_widget = MplCanvas(
-                self,
-                width=6, height=4, dpi=100,
-                curve=self.curve, surface=self.surface
-            )
-            self.toolbar = CustomToolbar(self.plot_widget, self)
-            self.toolbar.setStyleSheet("""
-                QToolBar {
-                    background-color: lightgray;
-                    border: none;
-                    spacing: 4px;
-                }
-                QLabel {
-                    color: black;
-                }
-            """)
-
-            plot_layout.addWidget(self.toolbar)
-            plot_layout.addWidget(self.plot_widget)
-            self.bottom.setLayout(plot_layout)
-
         else:
 
-            self.setWindowTitle("3D-Plot")
-            self.log.write(self.expression)
+            self.setWindowTitle("Surface (3D) Plot")
 
-            self.plot_widget = MplCanvas(
-                self,
-                width=6, height=4, dpi=100,
-                curve=self.curve, surface=self.surface
-            )
-            self.toolbar = CustomToolbar(self.plot_widget, self)
-            self.toolbar.setStyleSheet("""
-                QToolBar {
-                    background-color: lightgray;
-                    border: none;
-                    spacing: 4px;
-                }
-                QLabel {
-                    color: black;
-                }
-            """)
+            self.sequentials = {
+                "viridis" : QIcon(":/ui/viridis.png"),
+                "plasma"  : QIcon(":/ui/plasma.png"),
+                "cividis" : QIcon(":/ui/cividis.png"),
+                "Reds"    : QIcon(":/ui/Reds.png"),
+                "Greens"  : QIcon(":/ui/Greens.png"),
+                "Blues"   : QIcon(":/ui/Blues.png"),
+                "Purples" : QIcon(":/ui/Purples.png"),
+                "Greys"   : QIcon(":/ui/Greys.png")
+            }
 
-            plot_layout.addWidget(self.toolbar)
-            plot_layout.addWidget(self.plot_widget)
-            self.bottom.setLayout(plot_layout)
+            self.color_box.setIconSize(QSize(425, 25))
+            for text, icon in self.sequentials.items():
+                self.color_box.addItem(icon, f"({text})")
+
+            self.surface_number   = -1
+            self.max_surfaces     = len(self.sequentials)
+            self.list_of_surfaces = []
+            self.list_of_s_expr   = []
+
+        self.log.write(self.expression)
+
+        self.plot_widget = MplCanvas(
+            self,
+            width=6, height=4, dpi=100,
+            curve=self.curve, surface=self.surface
+        )
+
+        self.toolbar = CustomToolbar(self.plot_widget, self)
+        self.toolbar.setStyleSheet("""
+            QToolBar {
+                background-color: lightgray;
+                border: none;
+                spacing: 4px;
+            }
+            QLabel {
+                color: black;
+            }
+        """)
+
+        plot_layout.addWidget(self.toolbar)
+        plot_layout.addWidget(self.plot_widget)
+        self.bottom.setLayout(plot_layout)
 
         self.plot_widget.axes.set_xlabel("x")
         self.plot_widget.axes.set_ylabel("y")
@@ -422,9 +408,11 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.status_lbl.setText("Plotting surface")
 
+        selected_color = self.color_box.currentText()
+        color_text     = selected_color.replace("(", "").replace(")", "")
         self.plot_widget.axes.plot_surface(
             X, Y, Z,
-            cmap=self.sequentials[self.surface_number], edgecolor='none',
+            cmap=color_text, edgecolor='none',
             label=self.expression
         )
         self.plot_widget.axes.legend()
@@ -435,7 +423,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         surface_item = {
             'number'     : self.surface_number,
             'expression' : self.expression,
-            'color'      : self.sequentials[self.surface_number],
+            'color'      : color_text,
             'X'          : X,
             'Y'          : Y,
             'Z'          : Z

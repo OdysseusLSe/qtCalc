@@ -15,22 +15,22 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QLabel,
-    QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QStatusBar,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
+    QLabel, QLineEdit, QMainWindow, QMenuBar,
+    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
+    QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_PlotWindow(object):
     def setupUi(self, PlotWindow):
         if not PlotWindow.objectName():
             PlotWindow.setObjectName(u"PlotWindow")
-        PlotWindow.resize(600, 600)
+        PlotWindow.resize(600, 650)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(PlotWindow.sizePolicy().hasHeightForWidth())
         PlotWindow.setSizePolicy(sizePolicy)
-        PlotWindow.setMinimumSize(QSize(600, 600))
+        PlotWindow.setMinimumSize(QSize(600, 650))
         self.centralwidget = QWidget(PlotWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
@@ -39,40 +39,10 @@ class Ui_PlotWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.label_6 = QLabel(self.centralwidget)
+        self.label_6.setObjectName(u"label_6")
 
-        self.gridLayout_2.addItem(self.horizontalSpacer_2, 1, 5, 1, 1)
-
-        self.label_4 = QLabel(self.centralwidget)
-        self.label_4.setObjectName(u"label_4")
-
-        self.gridLayout_2.addWidget(self.label_4, 0, 3, 1, 1)
-
-        self.y_end = QLineEdit(self.centralwidget)
-        self.y_end.setObjectName(u"y_end")
-        self.y_end.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.y_end, 1, 4, 1, 1)
-
-        self.label_5 = QLabel(self.centralwidget)
-        self.label_5.setObjectName(u"label_5")
-
-        self.gridLayout_2.addWidget(self.label_5, 2, 3, 1, 1)
-
-        self.x_start = QLineEdit(self.centralwidget)
-        self.x_start.setObjectName(u"x_start")
-        self.x_start.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_2.addWidget(self.x_start, 0, 1, 1, 1)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_2.addItem(self.horizontalSpacer, 1, 2, 1, 1)
-
-        self.label_2 = QLabel(self.centralwidget)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout_2.addWidget(self.label_2, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_6, 2, 0, 1, 1)
 
         self.x_end = QLineEdit(self.centralwidget)
         self.x_end.setObjectName(u"x_end")
@@ -80,34 +50,32 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.x_end, 1, 1, 1, 1)
 
+        self.y_end = QLineEdit(self.centralwidget)
+        self.y_end.setObjectName(u"y_end")
+        self.y_end.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.y_end, 1, 4, 1, 1)
+
         self.y_start = QLineEdit(self.centralwidget)
         self.y_start.setObjectName(u"y_start")
         self.y_start.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout_2.addWidget(self.y_start, 0, 4, 1, 1)
 
-        self.label_6 = QLabel(self.centralwidget)
-        self.label_6.setObjectName(u"label_6")
-
-        self.gridLayout_2.addWidget(self.label_6, 2, 0, 1, 1)
-
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
 
         self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
 
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
+
+        self.gridLayout_2.addWidget(self.label_2, 1, 0, 1, 1)
+
         self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
 
         self.gridLayout_2.addWidget(self.label_3, 1, 3, 1, 1)
-
-        self.x_steps = QSpinBox(self.centralwidget)
-        self.x_steps.setObjectName(u"x_steps")
-        self.x_steps.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.x_steps.setMinimum(1)
-        self.x_steps.setMaximum(10000)
-
-        self.gridLayout_2.addWidget(self.x_steps, 2, 1, 1, 1)
 
         self.y_steps = QSpinBox(self.centralwidget)
         self.y_steps.setObjectName(u"y_steps")
@@ -117,29 +85,61 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.y_steps, 2, 4, 1, 1)
 
-        self.start_btn = QPushButton(self.centralwidget)
-        self.start_btn.setObjectName(u"start_btn")
+        self.clear_btn = QPushButton(self.centralwidget)
+        self.clear_btn.setObjectName(u"clear_btn")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.start_btn.sizePolicy().hasHeightForWidth())
-        self.start_btn.setSizePolicy(sizePolicy1)
+        sizePolicy1.setHeightForWidth(self.clear_btn.sizePolicy().hasHeightForWidth())
+        self.clear_btn.setSizePolicy(sizePolicy1)
         font = QFont()
         font.setPointSize(20)
         font.setWeight(QFont.DemiBold)
+        self.clear_btn.setFont(font)
+        self.clear_btn.setStyleSheet(u"")
+
+        self.gridLayout_2.addWidget(self.clear_btn, 2, 6, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 1, 2, 1, 1)
+
+        self.x_start = QLineEdit(self.centralwidget)
+        self.x_start.setObjectName(u"x_start")
+        self.x_start.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_2.addWidget(self.x_start, 0, 1, 1, 1)
+
+        self.label_4 = QLabel(self.centralwidget)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout_2.addWidget(self.label_4, 0, 3, 1, 1)
+
+        self.start_btn = QPushButton(self.centralwidget)
+        self.start_btn.setObjectName(u"start_btn")
+        sizePolicy1.setHeightForWidth(self.start_btn.sizePolicy().hasHeightForWidth())
+        self.start_btn.setSizePolicy(sizePolicy1)
         self.start_btn.setFont(font)
         self.start_btn.setStyleSheet(u"")
 
         self.gridLayout_2.addWidget(self.start_btn, 0, 6, 1, 1)
 
-        self.clear_btn = QPushButton(self.centralwidget)
-        self.clear_btn.setObjectName(u"clear_btn")
-        sizePolicy1.setHeightForWidth(self.clear_btn.sizePolicy().hasHeightForWidth())
-        self.clear_btn.setSizePolicy(sizePolicy1)
-        self.clear_btn.setFont(font)
-        self.clear_btn.setStyleSheet(u"")
+        self.x_steps = QSpinBox(self.centralwidget)
+        self.x_steps.setObjectName(u"x_steps")
+        self.x_steps.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.x_steps.setMinimum(1)
+        self.x_steps.setMaximum(10000)
 
-        self.gridLayout_2.addWidget(self.clear_btn, 2, 6, 1, 1)
+        self.gridLayout_2.addWidget(self.x_steps, 2, 1, 1, 1)
+
+        self.label_5 = QLabel(self.centralwidget)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout_2.addWidget(self.label_5, 2, 3, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer_2, 1, 5, 1, 1)
 
         self.export_btn = QPushButton(self.centralwidget)
         self.export_btn.setObjectName(u"export_btn")
@@ -149,10 +149,19 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.export_btn, 1, 6, 1, 1)
 
+        self.color_box = QComboBox(self.centralwidget)
+        self.color_box.setObjectName(u"color_box")
+        sizePolicy1.setHeightForWidth(self.color_box.sizePolicy().hasHeightForWidth())
+        self.color_box.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_2.addWidget(self.color_box, 3, 1, 1, 6)
+
+        self.label_7 = QLabel(self.centralwidget)
+        self.label_7.setObjectName(u"label_7")
+
+        self.gridLayout_2.addWidget(self.label_7, 3, 0, 1, 1)
+
         self.gridLayout_2.setRowStretch(0, 1)
-        self.gridLayout_2.setRowStretch(1, 1)
-        self.gridLayout_2.setRowStretch(2, 1)
-        self.gridLayout_2.setColumnStretch(5, 1)
 
         self.verticalLayout.addLayout(self.gridLayout_2)
 
@@ -200,14 +209,15 @@ class Ui_PlotWindow(object):
 
     def retranslateUi(self, PlotWindow):
         PlotWindow.setWindowTitle(QCoreApplication.translate("PlotWindow", u"MainWindow", None))
-        self.label_4.setText(QCoreApplication.translate("PlotWindow", u"y-Start:", None))
-        self.label_5.setText(QCoreApplication.translate("PlotWindow", u"y-Steps:", None))
-        self.label_2.setText(QCoreApplication.translate("PlotWindow", u"x-End:", None))
         self.label_6.setText(QCoreApplication.translate("PlotWindow", u"x-Steps:", None))
         self.label.setText(QCoreApplication.translate("PlotWindow", u"x-Start:", None))
+        self.label_2.setText(QCoreApplication.translate("PlotWindow", u"x-End:", None))
         self.label_3.setText(QCoreApplication.translate("PlotWindow", u"y-End:", None))
-        self.start_btn.setText(QCoreApplication.translate("PlotWindow", u"Start", None))
         self.clear_btn.setText(QCoreApplication.translate("PlotWindow", u"Clear", None))
+        self.label_4.setText(QCoreApplication.translate("PlotWindow", u"y-Start:", None))
+        self.start_btn.setText(QCoreApplication.translate("PlotWindow", u"Start", None))
+        self.label_5.setText(QCoreApplication.translate("PlotWindow", u"y-Steps:", None))
         self.export_btn.setText(QCoreApplication.translate("PlotWindow", u"Export", None))
+        self.label_7.setText(QCoreApplication.translate("PlotWindow", u"Color:", None))
     # retranslateUi
 

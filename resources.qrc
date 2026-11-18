@@ -6,6 +6,14 @@
     <file>ui/delete_black.png</file>
     <file>ui/delete_white.png</file>
     <!-- Color palettes -->
+    <file>ui/cividis.png</file>
+    <file>ui/plasma.png</file>
+    <file>ui/viridis.png</file>
+    <file>ui/Reds.png</file>
+    <file>ui/Greens.png</file>
+    <file>ui/Blues.png</file>
+    <file>ui/Purples.png</file>
+    <file>ui/Greys.png</file>
     <!-- Documentation -->
     <file>README.md</file>
 </qresource>
