@@ -618,6 +618,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
     def select_line_color(self):
         new_bg_color = QColorDialog.getColor(
+            self.line_color,
             parent=self,
             title="Select curve color"
         )
