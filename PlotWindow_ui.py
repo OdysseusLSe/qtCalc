@@ -141,13 +141,13 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.clear_btn, 2, 6, 1, 1)
 
-        self.save_btn = QPushButton(self.centralwidget)
-        self.save_btn.setObjectName(u"save_btn")
-        sizePolicy1.setHeightForWidth(self.save_btn.sizePolicy().hasHeightForWidth())
-        self.save_btn.setSizePolicy(sizePolicy1)
-        self.save_btn.setFont(font)
+        self.export_btn = QPushButton(self.centralwidget)
+        self.export_btn.setObjectName(u"export_btn")
+        sizePolicy1.setHeightForWidth(self.export_btn.sizePolicy().hasHeightForWidth())
+        self.export_btn.setSizePolicy(sizePolicy1)
+        self.export_btn.setFont(font)
 
-        self.gridLayout_2.addWidget(self.save_btn, 1, 6, 1, 1)
+        self.gridLayout_2.addWidget(self.export_btn, 1, 6, 1, 1)
 
         self.gridLayout_2.setRowStretch(0, 1)
         self.gridLayout_2.setRowStretch(1, 1)
@@ -190,8 +190,8 @@ class Ui_PlotWindow(object):
         QWidget.setTabOrder(self.y_start, self.y_end)
         QWidget.setTabOrder(self.y_end, self.y_steps)
         QWidget.setTabOrder(self.y_steps, self.start_btn)
-        QWidget.setTabOrder(self.start_btn, self.save_btn)
-        QWidget.setTabOrder(self.save_btn, self.clear_btn)
+        QWidget.setTabOrder(self.start_btn, self.export_btn)
+        QWidget.setTabOrder(self.export_btn, self.clear_btn)
 
         self.retranslateUi(PlotWindow)
 
@@ -208,6 +208,6 @@ class Ui_PlotWindow(object):
         self.label_3.setText(QCoreApplication.translate("PlotWindow", u"y-End:", None))
         self.start_btn.setText(QCoreApplication.translate("PlotWindow", u"Start", None))
         self.clear_btn.setText(QCoreApplication.translate("PlotWindow", u"Clear", None))
-        self.save_btn.setText(QCoreApplication.translate("PlotWindow", u"Save", None))
+        self.export_btn.setText(QCoreApplication.translate("PlotWindow", u"Export", None))
     # retranslateUi
 

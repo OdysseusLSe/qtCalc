@@ -29,8 +29,14 @@ from pathlib import Path
 
 from PySide6.QtCore import QLocale, Qt, Signal
 from PySide6.QtGui import QDoubleValidator
-from PySide6.QtWidgets import QFileDialog, QInputDialog, QLabel, QMainWindow, QMessageBox, QVBoxLayout
-
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QInputDialog,
+    QLabel,
+    QMainWindow,
+    QMessageBox,
+    QVBoxLayout
+)
 from MiscHelpers import CustomToolbar, MplCanvas
 from PlotWindow_ui import Ui_PlotWindow
 from Logging import Logging
@@ -117,11 +123,11 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         """)
 
         if self.curve:
-            self.save_btn.clicked.connect(self.save_curve)
+            self.export_btn.clicked.connect(self.save_curve)
         else:
-            self.save_btn.clicked.connect(self.save_surface)
-        self.save_btn.setEnabled(False)
-        self.save_btn.setStyleSheet("""
+            self.export_btn.clicked.connect(self.save_surface)
+        self.export_btn.setEnabled(False)
+        self.export_btn.setStyleSheet("""
             QPushButton:focus {
                 color: black;
                 background-color: lightgray;
@@ -310,7 +316,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.Y = None
         self.Z = None
         self.start_btn.setEnabled(False)
-        self.save_btn.setEnabled(False)
+        self.export_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
         if self.surface:
@@ -343,7 +349,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                 event.accept()
                 self.log.exit("keyPressEvent")
                 return
-            elif self.save_btn.hasFocus():
+            elif self.export_btn.hasFocus():
                 if self.curve:
                     self.save_curve()
                 else:
@@ -400,7 +406,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.expression = ""
         self.done = True
 
-        self.save_btn.setEnabled(True)
+        self.export_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
 
         self.log.exit("plot_curve")
@@ -442,7 +448,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.expression = ""
         self.done = True
 
-        self.save_btn.setEnabled(True)
+        self.export_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
 
         self.log.exit("plot_surface")
@@ -470,7 +476,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         # Choose selected item from list of curves
         for element in self.list_of_curves:
             if selected_expression == element['expression']:
-                self.selectec_curve = element
+                self.selected_curve = element
                 break
 
         #
@@ -493,10 +499,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             try:
                 with open(full_path_name, "w", newline="", encoding="utf-8") as f:
                     writer = csv.writer(f)
-                    writer.writerow(["X", self.selectec_curve['expression']])  # Header
+                    writer.writerow(["X", self.selected_curve['expression']])  # Header
                     writer.writerows(zip(
-                        self.selectec_curve['X'],
-                        self.selectec_curve['Y']
+                        self.selected_curve['X'],
+                        self.selected_curve['Y']
                     ))
             except FileExistsError:
                 msg = "File already exists!"
@@ -517,7 +523,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                 self.log.exit("save_curve")
                 return
 
-            msg = f"Data file\n {csv_file_name}\n successful saved."
+            msg = f"Curve data file\n {csv_file_name}\n successful saved."
             QMessageBox.information(self, "Data saved", msg)
 
         self.log.exit("save_curve")
@@ -545,7 +551,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         # Choose selected item from list of surfaces
         for element in self.list_of_surfaces:
             if selected_expression == element['expression']:
-                self.selectec_surface = element
+                self.selected_surface = element
                 break
 
         #
@@ -565,9 +571,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             csv_file_name = f"qtCalc-X_Y_Z-data_{dir_time}.csv"
             full_path_name = folder_path + "/" + csv_file_name
 
-            X = self.selectec_surface['X']
-            Y = self.selectec_surface['Y']
-            Z = self.selectec_surface['Z']
+            X = self.selected_surface['X']
+            Y = self.selected_surface['Y']
+            Z = self.selected_surface['Z']
 
             grid_with_y = np.column_stack((Y, Z))
 
@@ -576,7 +582,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                     np.savetxt(
                         f,
                         grid_with_y,
-                        footer=self.selectec_surface['expression'],
+                        footer=self.selected_surface['expression'],
                         delimiter=",", fmt="%.20g", encoding="utf-8",
                         header="y\\x," + ",".join(map(str, X))
                     )
@@ -599,7 +605,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                 self.log.exit("save_surface")
                 return
 
-            msg = f"Data file\n {csv_file_name}\n successful saved."
+            msg = f"Surface data file\n {csv_file_name}\n successful saved."
             QMessageBox.information(self, "Data saved", msg)
 
         self.log.exit("save_surface")
