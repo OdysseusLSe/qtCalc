@@ -28,7 +28,7 @@ import numpy as np
 from pathlib import Path
 
 from PySide6.QtCore import QLocale, QSize, Qt, Signal
-from PySide6.QtGui import QDoubleValidator, QIcon
+from PySide6.QtGui import QColor, QDoubleValidator, QIcon
 from PySide6.QtWidgets import (
     QColorDialog,
     QComboBox,
@@ -157,6 +157,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
             self.stack.setCurrentWidget(self.color_dialog)
 
+            self.line_color = QColor("white")
+
             self.curve_number     = -1
             self.max_curves       = 10
             self.list_of_curves   = []
@@ -194,13 +196,13 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.log.write(self.expression)
 
-        self.plot_widget = MplCanvas(
+        self.canvas = MplCanvas(
             self,
             width=6, height=4, dpi=100,
             curve=self.curve, surface=self.surface
         )
 
-        self.toolbar = CustomToolbar(self.plot_widget, self)
+        self.toolbar = CustomToolbar(self.canvas, self)
         self.toolbar.setStyleSheet("""
             QToolBar {
                 background-color: lightgray;
@@ -213,13 +215,13 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         """)
 
         plot_layout.addWidget(self.toolbar)
-        plot_layout.addWidget(self.plot_widget)
+        plot_layout.addWidget(self.canvas)
         self.bottom.setLayout(plot_layout)
 
-        self.plot_widget.axes.set_xlabel("x")
-        self.plot_widget.axes.set_ylabel("y")
+        self.canvas.axes.set_xlabel("x")
+        self.canvas.axes.set_ylabel("y")
         if self.surface:
-            self.plot_widget.axes.set_zlabel("z")
+            self.canvas.axes.set_zlabel("z")
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
@@ -291,14 +293,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     def clear(self):
         self.log.entry("clear()")
 
-        self.plot_widget.axes.clear()
-        self.plot_widget.setup_axes()
+        self.canvas.axes.clear()
+        self.canvas.setup_axes()
 
-        self.plot_widget.axes.set_xlabel("x")
-        self.plot_widget.axes.set_ylabel("y")
+        self.canvas.axes.set_xlabel("x")
+        self.canvas.axes.set_ylabel("y")
         if self.surface:
-            self.plot_widget.axes.set_zlabel("z")
-        self.plot_widget.draw()
+            self.canvas.axes.set_zlabel("z")
+        self.canvas.draw()
 
         self.expression       = ""
         self.done             = True
@@ -383,13 +385,13 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.curve_number += 1
 
         self.status_lbl.setText("Plotting curve")
-        self.plot_widget.axes.plot(
+        self.canvas.axes.plot(
             X, Y,
             color=self.line_color.name(),
             label=self.expression
         )
-        self.plot_widget.axes.legend()
-        self.plot_widget.draw()
+        self.canvas.axes.legend()
+        self.canvas.draw()
 
         self.status_lbl.setText("Finished")
 
@@ -424,13 +426,13 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         selected_color = self.color_box.currentText()
         color_text     = selected_color.replace("(", "").replace(")", "")
-        self.plot_widget.axes.plot_surface(
+        self.canvas.axes.plot_surface(
             X, Y, Z,
             cmap=color_text, edgecolor='none',
             label=self.expression
         )
-        self.plot_widget.axes.legend()
-        self.plot_widget.draw()
+        self.canvas.axes.legend()
+        self.canvas.draw()
 
         self.status_lbl.setText("Finished")
 
