@@ -25,58 +25,15 @@ matplotlib.use('QtAgg')
 
 import numpy as np
 
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
-from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d import Axes3D
-
 from pathlib import Path
 
 from PySide6.QtCore import QLocale, Qt, Signal
 from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import QFileDialog, QInputDialog, QLabel, QMainWindow, QMessageBox, QVBoxLayout
 
+from MiscHelpers import CustomToolbar, MplCanvas
 from PlotWindow_ui import Ui_PlotWindow
 from Logging import Logging
-
-
-#
-# -----------------------------------------------
-#
-
-class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100, curve=False, surface=False):
-
-        self.fig = Figure(
-            figsize=(width, height),
-            dpi=dpi,
-            facecolor="darkgray",
-            layout="constrained"
-        )
-
-        super().__init__(self.fig)
-
-        if curve:
-            self.axes = self.fig.add_subplot()
-        else:
-            self.axes = self.fig.add_subplot(projection='3d')
-
-        self.axes.set_facecolor("gray")
-
-        self.setup_axes()
-
-        for spine in self.axes.spines.values():
-            spine.set_edgecolor("white")
-
-        self.axes.grid(True, color="white", linestyle="--", linewidth=0.5)
-
-    def setup_axes(self):
-
-        self.axes.tick_params(colors="white", which="both")
-        self.axes.xaxis.label.set_color("white")
-        self.axes.yaxis.label.set_color("white")
-        self.axes.title.set_color("white")
-        self.axes.grid(True)
 
 
 #
@@ -96,16 +53,35 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
+        self.colors = [
+            "white",
+            "black",
+            "red",
+            "green",
+            "blue",
+            "yellow"
+        ]
         self.expression       = expression
         self.done             = False
         self.curve_number     = -1
-        self.max_curves       = 6
+        self.max_curves       = len(self.colors)
         self.list_of_curves   = []
         self.list_of_c_expr   = []
+
+        self.sequentials = [
+            "viridis",
+            "plasma",
+            "cividis",
+            "Reds",
+            "Greens",
+            "Blues",
+            "Puples",
+            "Greys"
+        ]
         self.surface_number   = -1
+        self.max_surfaces     = len(self.sequentials)
         self.list_of_surfaces = []
         self.list_of_s_expr   = []
-        self.infinity_symbol  = "d"  # (diamond / prism)
 
         self.log.entry("__init__(expression)")
         self.log.write(f"expression={expression}")
@@ -170,8 +146,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
 
-        self.colors = ["white", "black", "red", "green", "blue", "yellow"]
-
         plot_layout = QVBoxLayout()
         plot_layout.setContentsMargins(0, 0, 0, 0)
 
@@ -184,8 +158,22 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.y_end.setEnabled(False)
             self.y_steps.setEnabled(False)
 
-            self.plot_widget = MplCanvas(self, width=6, height=4, dpi=100, curve=self.curve, surface=self.surface)
-            self.toolbar = NavigationToolbar(self.plot_widget, self)
+            self.plot_widget = MplCanvas(
+                self,
+                width=6, height=4, dpi=100,
+                curve=self.curve, surface=self.surface
+            )
+            self.toolbar = CustomToolbar(self.plot_widget, self)
+            self.toolbar.setStyleSheet("""
+                QToolBar {
+                    background-color: lightgray;
+                    border: none;
+                    spacing: 4px;
+                }
+                QLabel {
+                    color: black;
+                }
+            """)
 
             plot_layout.addWidget(self.toolbar)
             plot_layout.addWidget(self.plot_widget)
@@ -199,14 +187,30 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.setWindowTitle("3D-Plot")
             self.log.write(self.expression)
 
-            self.plot_widget = MplCanvas(self, width=6, height=4, dpi=100, curve=self.curve, surface=self.surface)
-            #self.toolbar = NavigationToolbar(self.plot_widget, self)
+            self.plot_widget = MplCanvas(
+                self,
+                width=6, height=4, dpi=100,
+                curve=self.curve, surface=self.surface
+            )
+            self.toolbar = CustomToolbar(self.plot_widget, self)
+            self.toolbar.setStyleSheet("""
+                QToolBar {
+                    background-color: lightgray;
+                    border: none;
+                    spacing: 4px;
+                }
+                QLabel {
+                    color: black;
+                }
+            """)
 
-            #plot_layout.addWidget(self.toolbar)
+            plot_layout.addWidget(self.toolbar)
             plot_layout.addWidget(self.plot_widget)
             self.bottom.setLayout(plot_layout)
 
-            #self.plot_widget.addItem(xgrid)
+            self.plot_widget.axes.set_xlabel("x")
+            self.plot_widget.axes.set_ylabel("y")
+            self.plot_widget.axes.set_zlabel("z")
 
         status_str = "Define parameters for expression '" + expression + "'"
         self.status_lbl.setText(status_str)
@@ -233,6 +237,11 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         if self.curve and self.curve_number == (self.max_curves - 1):
             self.status_lbl.setText("Limit of curves reached!")
             self.log.warning("Limit of curves reached!")
+            return
+
+        if self.surface and self.surface_number == (self.max_surfaces - 1):
+            self.status_lbl.setText("Limit of surfaces reached!")
+            self.log.warning("Limit of surfaces reached!")
             return
 
         self.expression   = expression
@@ -401,38 +410,20 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.status_lbl.setText("Plotting surface")
 
-        surface = self.plot_widget.axes.plot_surface(X, Y, Z, cmap='viridis', edgecolor='none')
-        self.plot_widget.draw()
-
-        # Farbbalken und Beschriftungen hinzufügen
-        #fig.colorbar(surface, shrink=0.5, aspect=10)
-
-        """
-        surface = gl.GLSurfacePlotItem(
-            x=X, y=Y, z=Z,
-            shader='heightColor',
-            showGrid=True,
-            computeNormals=False,
-            smooth=True
+        self.plot_widget.axes.plot_surface(
+            X, Y, Z,
+            cmap=self.sequentials[self.surface_number], edgecolor='none',
+            label=self.expression
         )
-
-        # Map Z values to RGB channels:
-        # [
-        #  red_scale, red_offset,
-        #  green_scale, green_offset,
-        #  blue_scale, blue_offset
-        # ]
-        #surface.shader()['colorMap'] = np.array([0.2, 2.0, 0.5, 2.0, 1.0, 2.0])
-
-        self.plot_widget.addItem(surface)
-        """
+        self.plot_widget.axes.legend()
+        self.plot_widget.draw()
 
         self.status_lbl.setText("Finished")
 
         surface_item = {
             'number'     : self.surface_number,
             'expression' : self.expression,
-            'color'      : self.colors[self.curve_number],
+            'color'      : self.sequentials[self.surface_number],
             'X'          : X,
             'Y'          : Y,
             'Z'          : Z
