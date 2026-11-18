@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
-    QLabel, QLineEdit, QMainWindow, QMenuBar,
-    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
+from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QLabel,
+    QLineEdit, QMainWindow, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QSpinBox, QStackedWidget,
     QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_PlotWindow(object):
@@ -149,17 +149,23 @@ class Ui_PlotWindow(object):
 
         self.gridLayout_2.addWidget(self.export_btn, 1, 6, 1, 1)
 
-        self.color_box = QComboBox(self.centralwidget)
-        self.color_box.setObjectName(u"color_box")
-        sizePolicy1.setHeightForWidth(self.color_box.sizePolicy().hasHeightForWidth())
-        self.color_box.setSizePolicy(sizePolicy1)
-
-        self.gridLayout_2.addWidget(self.color_box, 3, 1, 1, 6)
-
         self.label_7 = QLabel(self.centralwidget)
         self.label_7.setObjectName(u"label_7")
 
         self.gridLayout_2.addWidget(self.label_7, 3, 0, 1, 1)
+
+        self.stack = QStackedWidget(self.centralwidget)
+        self.stack.setObjectName(u"stack")
+        sizePolicy1.setHeightForWidth(self.stack.sizePolicy().hasHeightForWidth())
+        self.stack.setSizePolicy(sizePolicy1)
+        self.color_dialog = QWidget()
+        self.color_dialog.setObjectName(u"color_dialog")
+        self.stack.addWidget(self.color_dialog)
+        self.color_box = QWidget()
+        self.color_box.setObjectName(u"color_box")
+        self.stack.addWidget(self.color_box)
+
+        self.gridLayout_2.addWidget(self.stack, 3, 1, 1, 6)
 
         self.gridLayout_2.setRowStretch(0, 1)
 
@@ -203,6 +209,9 @@ class Ui_PlotWindow(object):
         QWidget.setTabOrder(self.export_btn, self.clear_btn)
 
         self.retranslateUi(PlotWindow)
+
+        self.stack.setCurrentIndex(0)
+
 
         QMetaObject.connectSlotsByName(PlotWindow)
     # setupUi

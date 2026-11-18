@@ -30,11 +30,14 @@ from pathlib import Path
 from PySide6.QtCore import QLocale, QSize, Qt, Signal
 from PySide6.QtGui import QDoubleValidator, QIcon
 from PySide6.QtWidgets import (
+    QColorDialog,
+    QComboBox,
     QFileDialog,
     QInputDialog,
     QLabel,
     QMainWindow,
     QMessageBox,
+    QPushButton,
     QVBoxLayout
 )
 from MiscHelpers import CustomToolbar, MplCanvas
@@ -130,10 +133,31 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         plot_layout = QVBoxLayout()
         plot_layout.setContentsMargins(0, 0, 0, 0)
 
+        while self.stack.count() > 0:
+            widget = self.stack.widget(0)
+            self.stack.removeWidget(widget)
+            widget.deleteLater()
+
+        self.color_dialog = QPushButton("Select color")
+        self.stack.addWidget(self.color_dialog)
+        self.color_dialog.clicked.connect(self.select_line_color)
+
+        self.color_box = QComboBox()
+        self.stack.addWidget(self.color_box)
+
+        #from PySide6.QtWidgets import QSizePolicy
+        #self.stack.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        #self.stack.setMinimumHeight(30)
+
+        self.stack.setCurrentIndex(0)
+
         if not self.surface:
 
             self.setWindowTitle("Curve (2D) Plot")
 
+            self.stack.setCurrentWidget(self.color_dialog)
+
+            self.line_color = "white"
             self.colors = [
                 "white",
                 "black",
@@ -154,6 +178,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         else:
 
             self.setWindowTitle("Surface (3D) Plot")
+
+            self.stack.setCurrentWidget(self.color_box)
 
             self.sequentials = {
                 "viridis" : QIcon(":/ui/viridis.png"),
@@ -305,9 +331,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.export_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
-        if self.surface:
-            self.setWindowTitle("3D-Plot")
-
         self.x_start.setEnabled(False)
         self.x_end.setEnabled(False)
         self.x_steps.setEnabled(False)
@@ -371,7 +394,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.status_lbl.setText("Plotting curve")
         self.plot_widget.axes.plot(
             X, Y,
-            color=self.colors[self.curve_number],
+            color=self.line_color.name(),
             label=self.expression
         )
         self.plot_widget.axes.legend()
@@ -382,7 +405,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         curve = {
             'number'     : self.curve_number,
             'expression' : self.expression,
-            'color'      : self.colors[self.curve_number],
+            'color'      : self.line_color,
             'X'          : X,
             'Y'          : Y
         }
@@ -430,8 +453,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         }
         self.list_of_surfaces.append(surface_item)
         self.list_of_s_expr.append(surface_item['expression'])
-
-        self.setWindowTitle(f"3D-Plot: {self.expression}")
 
         self.expression = ""
         self.done = True
@@ -597,6 +618,18 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             QMessageBox.information(self, "Data saved", msg)
 
         self.log.exit("save_surface")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def select_line_color(self):
+        new_bg_color = QColorDialog.getColor(
+            parent=self,
+            title="Select curve color"
+        )
+        if new_bg_color.isValid():
+            self.line_color = new_bg_color
 
     #
     # -----------------------------------------------
