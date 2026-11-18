@@ -33,6 +33,9 @@ class MplCanvas(FigureCanvas):
             width=5, height=4, dpi=100,
             curve=False, surface=False
         ):
+        self.log = Logging("MplCanvas")
+        log_string = "__init__(parent=None, width, height, dpi, curve, surface)"
+        self.log.entry(log_string)
 
         self.fig = Figure(
             figsize=(width, height),
@@ -60,11 +63,14 @@ class MplCanvas(FigureCanvas):
 
         self.axes.grid(True, color="white", linestyle="--", linewidth=0.5)
 
+        self.log.exit("__init__")
+
     #
     # -----------------------------------------------
     #
 
     def setup_axes(self):
+        self.log.entry("setup_axes()")
 
         self.axes.tick_params(colors="white", which="both")
         self.axes.xaxis.label.set_color("white")
@@ -73,6 +79,8 @@ class MplCanvas(FigureCanvas):
             self.axes.zaxis.label.set_color("white")
         self.axes.title.set_color("white")
         self.axes.grid(True)
+
+        self.log.exit("setup_axes")
 
 
 #

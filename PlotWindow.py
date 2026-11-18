@@ -50,6 +50,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         super().__init__()
         self.setupUi(self)
         self.log = Logging("PlotWindow")
+        self.log.entry(f"__init__(expression, {curve}, {surface})")
+        self.log.write(f"expression='{expression}'")
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
@@ -179,9 +181,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             plot_layout.addWidget(self.plot_widget)
             self.bottom.setLayout(plot_layout)
 
-            self.plot_widget.axes.set_xlabel("x")
-            self.plot_widget.axes.set_ylabel("y")
-
         else:
 
             self.setWindowTitle("3D-Plot")
@@ -208,8 +207,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             plot_layout.addWidget(self.plot_widget)
             self.bottom.setLayout(plot_layout)
 
-            self.plot_widget.axes.set_xlabel("x")
-            self.plot_widget.axes.set_ylabel("y")
+        self.plot_widget.axes.set_xlabel("x")
+        self.plot_widget.axes.set_ylabel("y")
+        if self.surface:
             self.plot_widget.axes.set_zlabel("z")
 
         status_str = "Define parameters for expression '" + expression + "'"
@@ -227,21 +227,25 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         if "y" in expression and self.surface is False:
             self.status_lbl.setText("3D plot not available in 2D plot!")
             self.log.warning("3D plot not available in 2D plot!")
+            self.log.exit("add_plot")
             return
 
         if not self.done:
             self.status_lbl.setText("Previous plot not finished!")
             self.log.warning("Previous plot not finished!")
+            self.log.exit("add_plot")
             return
 
         if self.curve and self.curve_number == (self.max_curves - 1):
             self.status_lbl.setText("Limit of curves reached!")
             self.log.warning("Limit of curves reached!")
+            self.log.exit("add_plot")
             return
 
         if self.surface and self.surface_number == (self.max_surfaces - 1):
             self.status_lbl.setText("Limit of surfaces reached!")
             self.log.warning("Limit of surfaces reached!")
+            self.log.exit("add_plot")
             return
 
         self.expression   = expression
@@ -283,6 +287,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.plot_widget.axes.set_xlabel("x")
         self.plot_widget.axes.set_ylabel("y")
+        if self.surface:
+            self.plot_widget.axes.set_zlabel("z")
         self.plot_widget.draw()
 
         self.expression       = ""
