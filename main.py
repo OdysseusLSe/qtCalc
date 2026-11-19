@@ -124,7 +124,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.entry("advanced_operator()")
 
         # Operators with their precedence and associativity
-        self.operators = {
+        self.infix_operators = {
             '+': (1, True),
             '-': (1, True),
             '*': (2, True),
@@ -381,7 +381,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Implement unary minus
             processed_tokens = []
             for i, tok in enumerate(tokens):
-                if tok == '-' and (i == 0 or tokens[i-1] in self.operators or tokens[i-1] in ('(', ',')):
+                if tok == '-' and (i == 0 or tokens[i-1] in self.infix_operators or tokens[i-1] in ('(', ',')):
                     processed_tokens.append('0')
                 processed_tokens.append(tok)
 
@@ -448,7 +448,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 elif token == '!':
                     stack.append(self.fac(a))
 
-            elif token in self.operators:
+            elif token in self.infix_operators:
 
                 # '+', '-', '*', '/', '^'
 
@@ -625,7 +625,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         expression = self.expression_line.text()
 
         last_char = expression[-1] if expression else ""
-        operators_list = list(self.operators.keys())
+        operators_list = list(self.infix_operators.keys())
 
         def reject(reason):
             msg = f"Validation is blocking: {reason}"
@@ -963,11 +963,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 while operator and operator[-1] != '(':
                     output.append(operator.pop())
 
-            elif token in self.operators:
+            elif token in self.infix_operators:
                 # Token is an operator
-                p1, a1 = self.operators[token]
-                while operator and operator[-1] in self.operators:
-                    p2, _ = self.operators[operator[-1]]
+                p1, a1 = self.infix_operators[token]
+                while operator and operator[-1] in self.infix_operators:
+                    p2, _ = self.infix_operators[operator[-1]]
                     if (a1 and p1 <= p2) or (not a1 and p1 < p2):
                         output.append(operator.pop())
                     else:
