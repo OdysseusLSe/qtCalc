@@ -27,6 +27,26 @@ from Logging import Logging
 # -----------------------------------------------
 #
 
+class CustomToolbar(NavigationToolbar):
+
+    # (name, tooltip, icon name, method)
+    toolitems = [
+        ("Home", "Reset original view", "home", "home"),
+        ("Back", "Back to previous view", "back", "back"),
+        ("Forward", "Forward to next view", "forward", "forward"),
+        (None, None, None, None),
+        ("Pan", "Pan / Scale", "move", "pan"),
+        ("Zoom", "Zoom", "zoom_to_rect", "zoom"),
+        # ("Subplots", "Configure axes", "subplots", "configure_subplots"),
+        # (None, None, None, None),
+        ("Save", "Save plot as image", "filesave", "save_figure"),
+    ]
+
+
+#
+# -----------------------------------------------
+#
+
 class MplCanvas(FigureCanvas):
     def __init__(
             self, parent=None,
@@ -87,17 +107,6 @@ class MplCanvas(FigureCanvas):
 # -----------------------------------------------
 #
 
-class CustomToolbar(NavigationToolbar):
-
-    # (name, tooltip, icon name, method)
-    toolitems = [
-        ("Home", "Reset original view", "home", "home"),
-        ("Back", "Back to previous view", "back", "back"),
-        ("Forward", "Forward to next view", "forward", "forward"),
-        (None, None, None, None),
-        ("Pan", "Pan / Scale", "move", "pan"),
-        ("Zoom", "Zoom", "zoom_to_rect", "zoom"),
-        # ("Subplots", "Configure axes", "subplots", "configure_subplots"),
-        # (None, None, None, None),
-        ("Save", "Save plot as image", "filesave", "save_figure"),
-    ]
+class Percent:
+    def __init__(self, value):
+        self.value = value

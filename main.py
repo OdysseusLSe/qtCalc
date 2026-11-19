@@ -33,13 +33,15 @@ from PySide6.QtWidgets import QLabel, QListWidgetItem, QMainWindow, QPushButton
 
 from MainWindow_ui import Ui_MainWindow
 
+
+from MiscHelpers import Percent
 from PlotWindow import PlotWindow
 from Logging import Logging
 
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.8"
+APP_VERSION = "0.8.1"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -63,7 +65,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_mapping()
 
         self.expression_line.setFocus()
-        self.expression_history = ""
 
         self.history_list.model().rowsInserted.connect(
             self.history_list.scrollToBottom
@@ -132,11 +133,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             '^': (3, False)
         }
 
+        self.postfix_operators = {'%', '!'}
+
         # Functions with their corresponding implementations and # of arguments
         self.functions = {
             'abs'   : (math.fabs, 1),
+            'acos'  : (math.acos, 1),
             'acosh' : (math.acosh, 1),
+            'asin'  : (math.asin, 1),
             'asinh' : (math.asinh, 1),
+            'atan'  : (math.atan, 1),
             'atanh' : (math.atanh, 1),
             'cos'   : (math.cos, 1),
             'cosh'  : (math.cosh, 1),
@@ -158,9 +164,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self.trig_functions = [
-            'acosh', 'asinh', 'atanh',
-            'cos', 'cosh', 'sin',
-            'sinh', 'tan', 'tanh'
+            'acos',
+            'acosh',
+            'asin',
+            'asinh',
+            'atan',
+            'atanh',
+            'cos',
+            'cosh',
+            'sin',
+            'sinh',
+            'tan',
+            'tanh'
         ]
 
         self.powers         = ['^2', '^3']
@@ -195,8 +210,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_9"             : "9",
             "btn_10powerX"      : "10^(",
             "btn_abs"           : "abs(",
+            "btn_acos"          : "acos(",
             "btn_acosh"         : "acosh(",
+            "btn_asin"          : "asin(",
             "btn_asinh"         : "asinh(",
+            "btn_atan"          : "atan(",
             "btn_atanh"         : "atanh(",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
@@ -220,6 +238,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_minus"         : "-",
             "btn_mod"           : "mod(",
             "btn_multiply"      : "*",
+            "btn_fac"           : "!",
+            "btn_percent"       : "%",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
             "btn_unary_minus"   : "-",
@@ -332,7 +352,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         try:
 
-            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
+            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\!\%\(\),]'
             raw_tokens = re.findall(token_spec, expression)
             self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}")
 
@@ -381,7 +401,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             if x is None and y is None:
 
-                self.expression_to_history("=")
+                self.expression_to_history(expression, "=")
 
                 # Show result of expression
                 expression = f"{self.result}"
@@ -390,40 +410,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.log.write(f"expression={expression}")
 
         except ZeroDivisionError:
-            error = f"{expression} -> Error: Division by zero!"
-            self.status_lbl.setText(error)
-            self.log.error(f"{expression} --> {error}")
-            if x is None and y is None:
-                item = QListWidgetItem(error)
-                item.setBackground(QBrush(QColor("red")))
-                item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
-                self.expression_line.setText("")
+            error_log = f"{expression} -> Error: Division by zero!"
+            self.expression_to_history(error_log, "Error")
 
         except IndexError:
-            error = f"{expression} -> Error: Insufficient operands or parentheses error!"
-            self.status_lbl.setText(error)
-            self.log.error(error)
-            if x is None and y is None:
-                item = QListWidgetItem(f"{expression} --> {error}")
-                item.setBackground(QBrush(QColor("red")))
-                item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
-                self.expression_line.setText("")
+            error_log = f"{expression} -> Error: Insufficient operands or parentheses!"
+            self.expression_to_history(error_log, "Error")
 
         except Exception as e:
-            error = f"{expression} -> Error: General error: {str(e)}"
-            self.status_lbl.setText(error)
-            self.log.error(error)
-            if x is None and y is None:
-                item = QListWidgetItem(f"{expression} --> {error}")
-                item.setBackground(QBrush(QColor("red")))
-                item.setForeground(QColor("white"))
-                self.history_list.addItem(item)
-                self.history_item += 1
-                self.expression_line.setText("")
+            error_log = f"{expression} -> Error: {str(e)}"
+            self.expression_to_history(error_log, "Error")
 
         self.log.exit("evaluate_expression")
         return self.result
@@ -442,22 +438,56 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                 stack.append(token)
 
+            elif token in self.postfix_operators:
+
+                # '%', '!'
+                if len(stack) < 1:
+                    raise IndexError("To few operands for operator!")
+                a = stack.pop()
+                if token == '%':
+                    stack.append(Percent(a))
+                elif token == '!':
+                    stack.append(self.fac(a))
+
             elif token in self.operators:
+
+                # '+', '-', '*', '/', '^'
 
                 if len(stack) < 2:
                     raise IndexError("To few operands for operator!")
+
                 b = stack.pop()
                 a = stack.pop()
-                if token == '+':
-                    stack.append(a + b)
-                elif token == '-':
-                    stack.append(a - b)
-                elif token == '*':
-                    stack.append(a * b)
-                elif token == '/':
-                    stack.append(a / b)
-                elif token == '^':
-                    stack.append(a ** b)
+
+                if isinstance(a, Percent):
+                    a = a.value / 100.0
+
+                if isinstance(b, Percent):
+                    if token == '+':
+                        # 100 + 10% -> 100 + (100 * 0.10) = 110
+                        stack.append(a + (a * (b.value / 100.0)))
+                    elif token == '-':
+                        # 100 - 10% -> 100 - (100 * 0.10) = 90
+                        stack.append(a - (a * (b.value / 100.0)))
+                    elif token == '*':
+                        # 100 * 10% -> 100 * 0.10 = 10
+                        stack.append(a * (b.value / 100.0))
+                    elif token == '/':
+                        # 100 / 10% -> 100 / 0.10 = 1000
+                        stack.append(a / (b.value / 100.0))
+
+                else:
+
+                    if token == '+':
+                        stack.append(a + b)
+                    elif token == '-':
+                        stack.append(a - b)
+                    elif token == '*':
+                        stack.append(a * b)
+                    elif token == '/':
+                        stack.append(a / b)
+                    elif token == '^':
+                        stack.append(a ** b)
 
             elif token in self.functions:
 
@@ -479,8 +509,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     a = stack.pop()
                     stack.append(func(a, b))
 
+        # Check for lonesome percentage value at the beginning
+        result = stack[0]
         self.log.exit("evaluate_rpn")
-        return stack[0]
+        return result.value / 100.0 if isinstance(result, Percent) else result
 
     #
     # -----------------------------------------------
@@ -524,19 +556,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
-    def expression_to_history(self, appendix):
+    def expression_to_history(self, history_text, appendix):
         self.log.entry("expression_to_history(appendix)")
         self.log.write(f"appendix={appendix}")
 
-        expression  = self.expression_line.text()
+        if appendix == "Error":
+            self.status_lbl.setText(history_text)
+            self.log.error(history_text)
+            if self.variables['x'] == 'x' or self.variables['y'] == 'y':
+                item = QListWidgetItem(history_text)
+                item.setBackground(QBrush(QColor("red")))
+                item.setForeground(QColor("white"))
+                self.history_list.addItem(item)
+                self.history_item += 1
+                self.expression_line.setText("")
+            self.log.exit("expression_to_history")
+            return
 
         if appendix == "=":
-            expression = f"{expression}={self.result}"
+            history_text += f"={self.result}"
         else:
-            expression = f"{expression}=Plot"
-        self.expression_history = re.sub(r'(.{78})', r'\1' + '\n', expression)
-        item = QListWidgetItem(self.expression_history)
-        self.log.write(f"self.expression_history={self.expression_history}")
+            history_text += "=Plot"
+        final_history_text = re.sub(r'(.{78})', r'\1' + '\n', history_text)
+        item = QListWidgetItem(final_history_text)
+        self.log.write(f"final_history_text={final_history_text}")
 
         if self.history_item % 2 == 0:
             item.setBackground(QColor("white"))
@@ -548,6 +591,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.history_item += 1
 
         self.log.exit("expression_to_history")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def fac(self, number):
+        self.log.entry(f"fac({number})")
+
+        if number < 0:
+            self.log.exit("fac")
+            raise ValueError("Factorial is not defined for negative numbers!")
+
+        fractional, integer = math.modf(number)
+
+        if fractional == 0.0:
+            self.log.exit(f"fac")
+            return math.integer.factorial(int(integer))
+
+        self.log.exit(f"fac")
+        raise ValueError("Factorial requires an integer, got a float!")
 
     #
     # -----------------------------------------------
@@ -869,7 +932,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.status_lbl.setText("Internal error: plotting not available!")
                 self.log.error("Internal error: plotting not available!")
 
-        self.expression_to_history("Plot")
+        self.expression_to_history(expression, "Plot")
 
         self.log.exit("plot_expression")
 
@@ -912,6 +975,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         break
                 operator.append(token)
 
+            elif token in self.postfix_operators:
+                output.append(token)
+
             elif token == '(':
                 # Token is an opening parenthesis
                 operator.append(token)
@@ -949,8 +1015,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     }
                 """)
 
+            self.btn_10powerX.setObjectName("btn_10powerX")
+            self.btn_10powerX.setText("10ˣ")
+
+            self.btn_cos.setObjectName("btn_cos")
+            self.btn_cos.setText("cos")
+
             self.btn_cosh.setObjectName("btn_cosh")
             self.btn_cosh.setText("cosh")
+
+            self.btn_log.setObjectName("btn_log")
+            self.btn_log.setText("log")
 
             self.btn_max.setObjectName("btn_max")
             self.btn_max.setText("max")
@@ -958,8 +1033,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_min.setObjectName("btn_min")
             self.btn_min.setText("min")
 
+            self.btn_sin.setObjectName("btn_sin")
+            self.btn_sin.setText("sin")
+
             self.btn_sinh.setObjectName("btn_sinh")
             self.btn_sinh.setText("sinh")
+
+            self.btn_tan.setObjectName("btn_tan")
+            self.btn_tan.setText("tan")
 
             self.btn_tanh.setObjectName("btn_tanh")
             self.btn_tanh.setText("tanh")
@@ -975,8 +1056,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     }
                 """)
 
+            self.btn_10powerX.setObjectName("btn_percent")
+            self.btn_10powerX.setText("%")
+
+            self.btn_cos.setObjectName("btn_acos")
+            self.btn_cos.setText("acos")
+
             self.btn_cosh.setObjectName("btn_acosh")
             self.btn_cosh.setText("acosh")
+
+            self.btn_log.setObjectName("btn_fac")
+            self.btn_log.setText("n!")
 
             self.btn_max.setObjectName("btn_gamma")
             self.btn_max.setText("Γ")
@@ -984,8 +1074,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_min.setObjectName("btn_erf")
             self.btn_min.setText("erf")
 
+            self.btn_sin.setObjectName("btn_asin")
+            self.btn_sin.setText("asin")
+
             self.btn_sinh.setObjectName("btn_asinh")
             self.btn_sinh.setText("asinh")
+
+            self.btn_tan.setObjectName("btn_atan")
+            self.btn_tan.setText("atan")
 
             self.btn_tanh.setObjectName("btn_atanh")
             self.btn_tanh.setText("atanh")
