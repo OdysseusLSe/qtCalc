@@ -130,6 +130,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             '^': (3, False)
         }
 
+        self.postfix_operators = {'%', '!'}
+
         # Functions with their corresponding implementations and # of arguments
         self.functions = {
             'abs'   : (math.fabs, 1),
@@ -143,7 +145,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'cosh'  : (math.cosh, 1),
             'erf'   : (math.erf, 1),
             'exp'   : (math.exp, 1),
-            'fac'   : (self.fac, 1),
             'gamma' : (math.gamma, 1),
             'lg2'   : (math.log2, 1),
             'ln'    : (math.log, 1),
@@ -234,7 +235,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_minus"         : "-",
             "btn_mod"           : "mod(",
             "btn_multiply"      : "*",
-            "btn_fac"           : "fac(",
+            "btn_fac"           : "!",
             "btn_percent"       : "%",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
@@ -348,7 +349,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         try:
 
-            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\(\),]'
+            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\!\%\(\),]'
             raw_tokens = re.findall(token_spec, expression)
             self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}")
 
@@ -433,6 +434,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if isinstance(token, (int, float)):
 
                 stack.append(token)
+
+            elif token in self.postfix_operators:
+
+                if len(stack) < 1:
+                    raise IndexError("To few operands for operator!")
+                a = stack.pop()
+                if token == '%':
+                    stack.append(a / 100.0)
+                elif token == '!':
+                    stack.append(self.fac(a))
 
             elif token in self.operators:
 
@@ -935,6 +946,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         break
                 operator.append(token)
 
+            elif token in self.postfix_operators:
+                output.append(token)
+
             elif token == '(':
                 # Token is an opening parenthesis
                 operator.append(token)
@@ -971,6 +985,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     background-color: rgb(66, 66, 66);
                     }
                 """)
+
+            self.btn_10powerX.setObjectName("btn_10powerX")
+            self.btn_10powerX.setText("10ˣ")
 
             self.btn_cos.setObjectName("btn_cos")
             self.btn_cos.setText("cos")
@@ -1009,6 +1026,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     background-color: green;
                     }
                 """)
+
+            self.btn_10powerX.setObjectName("btn_percent")
+            self.btn_10powerX.setText("%")
 
             self.btn_cos.setObjectName("btn_acos")
             self.btn_cos.setText("acos")
