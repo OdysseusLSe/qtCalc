@@ -439,6 +439,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             elif token in self.postfix_operators:
 
+                # '%', '!'
                 if len(stack) < 1:
                     raise IndexError("To few operands for operator!")
                 a = stack.pop()
@@ -448,6 +449,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     stack.append(self.fac(a))
 
             elif token in self.operators:
+
+                # '+', '-', '*', '/', '^'
 
                 if len(stack) < 2:
                     raise IndexError("To few operands for operator!")
