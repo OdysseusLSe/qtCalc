@@ -32,6 +32,8 @@ from PySide6.QtWidgets import QLabel, QListWidgetItem, QMainWindow, QPushButton
 
 from MainWindow_ui import Ui_MainWindow
 
+
+from MiscHelpers import Percent
 from PlotWindow import PlotWindow
 from Logging import Logging
 
@@ -441,7 +443,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     raise IndexError("To few operands for operator!")
                 a = stack.pop()
                 if token == '%':
-                    stack.append(a / 100.0)
+                    stack.append(Percent(a))
                 elif token == '!':
                     stack.append(self.fac(a))
 
@@ -449,18 +451,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                 if len(stack) < 2:
                     raise IndexError("To few operands for operator!")
+
                 b = stack.pop()
                 a = stack.pop()
-                if token == '+':
-                    stack.append(a + b)
-                elif token == '-':
-                    stack.append(a - b)
-                elif token == '*':
-                    stack.append(a * b)
-                elif token == '/':
-                    stack.append(a / b)
-                elif token == '^':
-                    stack.append(a ** b)
+
+                if isinstance(a, Percent):
+                    a = a.value / 100.0
+
+                if isinstance(b, Percent):
+                    if token == '+':
+                        # 100 + 10% -> 100 + (100 * 0.10) = 110
+                        stack.append(a + (a * (b.value / 100.0)))
+                    elif token == '-':
+                        # 100 - 10% -> 100 - (100 * 0.10) = 90
+                        stack.append(a - (a * (b.value / 100.0)))
+                    elif token == '*':
+                        # 100 * 10% -> 100 * 0.10 = 10
+                        stack.append(a * (b.value / 100.0))
+                    elif token == '/':
+                        # 100 / 10% -> 100 / 0.10 = 1000
+                        stack.append(a / (b.value / 100.0))
+
+                else:
+
+                    if token == '+':
+                        stack.append(a + b)
+                    elif token == '-':
+                        stack.append(a - b)
+                    elif token == '*':
+                        stack.append(a * b)
+                    elif token == '/':
+                        stack.append(a / b)
+                    elif token == '^':
+                        stack.append(a ** b)
 
             elif token in self.functions:
 
@@ -482,8 +505,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     a = stack.pop()
                     stack.append(func(a, b))
 
+        # Check for lonesome percentage value at the beginning
+        result = stack[0]
         self.log.exit("evaluate_rpn")
-        return stack[0]
+        return result.value / 100.0 if isinstance(result, Percent) else result
 
     #
     # -----------------------------------------------
