@@ -59,7 +59,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         all_buttons = self.findChildren(QPushButton)
         for button in all_buttons:
-            button.clicked.connect(self.on_button_clicked)
+            if button != self.btn_RAD and button != self.btn_DEG:
+                button.clicked.connect(self.on_button_clicked)
 
         self.advanced_operator()
         self.button_mapping()
@@ -78,24 +79,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.is_2nd = False
 
         self.RAD = True
-        self.btn_RAD.setChecked(self.RAD)
         self.btn_RAD.setStyleSheet("""
             background-color: lightgrey;
             color: green;
             border: 1 solid;
             padding: 3;
             """)
-        self.btn_RAD.toggled.connect(self.deg_rad_toggle)
+        self.btn_RAD.clicked.connect(self.toggle_deg_rad)
 
         self.DEG = False
-        self.btn_DEG.setChecked(self.DEG)
         self.btn_DEG.setStyleSheet("""
             background-color: lightgrey;
             color: salmon;
             border: 1 solid;
             padding: 3;
             """)
-        self.btn_DEG.toggled.connect(self.deg_rad_toggle)
+        self.btn_DEG.clicked.connect(self.toggle_deg_rad)
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -256,47 +255,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self.log.entry("button_mapping()")
-
-    #
-    # -----------------------------------------------
-    #
-
-    def deg_rad_toggle(self, checked):
-        self.log.entry("deg_rad_toggle(checked)")
-
-        if self.btn_DEG.isChecked():
-            self.DEG = True
-            self.btn_DEG.setStyleSheet("""
-                background-color: lightgrey;
-                color: green;
-                border: 1 solid;
-                padding: 3;
-                """)
-            self.RAD = False
-            self.btn_RAD.setStyleSheet("""
-                background-color: lightgrey;
-                color: salmon;
-                border: 1 solid;
-                padding: 3;
-                """)
-        else:
-            self.DEG = False
-            self.btn_DEG.setStyleSheet("""
-                background-color: lightgrey;
-                color: salmon;
-                border: 1 solid;
-                padding: 3;
-                """)
-            self.RAD = True
-            self.btn_RAD.setStyleSheet("""
-                background-color: lightgrey;
-                color: green;
-                border: 1 solid;
-                padding: 3;
-                """)
-
-        self.expression_line.setFocus()
-        self.log.exit("deg_rad_toggle")
 
     #
     # -----------------------------------------------
@@ -623,10 +581,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"new_char={new_char}")
 
         self.status_lbl.setText("Validating input")
-        expression = self.expression_line.text()
 
+        expression = self.expression_line.text()
         last_char = expression[-1] if expression else ""
-        operators_list = list(self.infix_operators.keys())
+
+        infix_list = list(self.infix_operators.keys())
+        postfix_list = list(self.postfix_operators)
 
         def reject(reason):
             msg = f"Validation is blocking: {reason}"
@@ -639,7 +599,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             if not expression:
                 return reject("Empty expression!")
-            if last_char in operators_list or last_char in ("(", ","):
+            if last_char in infix_list or last_char in ("(", ","):
                 return reject(f"Expression cannot end with '{last_char}'!")
             if expression.count("(") != expression.count(")"):
                 return reject("Unclosed parentheses!")
@@ -647,32 +607,64 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
 
             if not expression:
-                if new_char in self.powers or new_char in (",", ")"):
+                if (
+                    new_char in self.powers
+                    or new_char in postfix_list
+                    or new_char in (")", ",")
+                ):
                     return reject(f"Invalid start token: {new_char}!")
-                if new_char in operators_list and new_char != "-":
+                if new_char in infix_list and new_char != "-":
                     return reject(f"Operator at start: {new_char}!")
 
-            elif last_char in operators_list:
-                if new_char in operators_list or new_char in self.powers:
-                    return reject(f"Double operator: {last_char}{new_char}!")
+            elif last_char in infix_list:
+                if (
+                    new_char in infix_list
+                    or new_char in self.powers
+                    or new_char in postfix_list
+                ):
+                    return reject(f"Invalid operator sequence: {last_char}{new_char}!")
                 if new_char in (")", ","):
                     return reject(f"'{new_char}' after operator: {last_char}!")
 
             elif last_char in ("(", ","):
-                if new_char in self.powers or new_char in (")", ","):
+                if (
+                    new_char in self.powers
+                    or new_char in postfix_list
+                    or new_char in (")", ",")
+                ):
                     return reject(f"Invalid token '{new_char}' after '{last_char}'!")
-                if new_char in operators_list and new_char != "-":
+                if new_char in infix_list and new_char != "-":
                     return reject(f"Operator after '{last_char}': {new_char}!")
+
+            elif last_char == ".":
+                if (
+                    new_char in postfix_list
+                    or new_char in infix_list
+                    or new_char in self.powers
+                ):
+                    return reject(f"Invalid token '{new_char}' after decimal point!")
+
+            elif last_char in postfix_list:
+                if new_char in postfix_list:
+                    return reject(f"Double postfix operator: {last_char}{new_char}!")
+                if (
+                    new_char.isdigit()
+                    or new_char in (".", "(")
+                    or new_char in self.variables
+                ):
+                    return reject(f"Missing operator between '{last_char}' and '{new_char}'!")
 
             if new_char == ")":
                 if expression.count(")") >= expression.count("("):
                     return reject("Too many closing parentheses!")
 
             if new_char == ".":
-                if last_char == ")" or expression.endswith(tuple(self.variables.keys())):
+                if (
+                    last_char == ")"
+                    or expression.endswith(tuple(self.variables.keys()))
+                ):
                     return reject("Decimal point cannot follow a constant or closing parenthesis!")
-
-                current_number = re.search(r'[\d.]+$', expression)
+                current_number = re.search(r"[\d.]+$", expression)
                 if current_number and "." in current_number.group():
                     return reject("Multiple decimal points in one number!")
 
@@ -898,7 +890,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if "x" in expression and "y" in expression:
             self.surface = True
             if not hasattr(self, 'plot_3d'):
-                # Start new window to draw the expression
+                # Start new window to draw the expression: 3D
                 self.plot_3d = PlotWindow(expression, self.curve, self.surface)
                 self.plot_3d.eval_curve.connect(self.evaluate_curve)
                 self.plot_3d.eval_surface.connect(self.evaluate_surface)
@@ -916,7 +908,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.curve = True
             if not hasattr(self, 'plot_2d'):
-                # Start new window to draw the expression
+                # Start new window to draw the expression: 2D
                 self.plot_2d = PlotWindow(expression, self.curve, self.surface)
                 self.plot_2d.eval_curve.connect(self.evaluate_curve)
                 self.plot_2d.eval_surface.connect(self.evaluate_surface)
@@ -996,6 +988,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.log.exit("shunting_yard")
         return output
+
+    #
+    # -----------------------------------------------
+    #
+
+    def toggle_deg_rad(self):
+        self.log.entry("deg_rad_toggle(checked)")
+
+        button = self.sender()
+        button_name = button.objectName()
+
+        if button_name == "btn_DEG" and not self.DEG:
+            self.DEG = True
+            self.btn_DEG.setStyleSheet("""
+                background-color: lightgrey;
+                color: green;
+                border: 1 solid;
+                padding: 3;
+                """)
+            self.RAD = False
+            self.btn_RAD.setStyleSheet("""
+                background-color: lightgrey;
+                color: salmon;
+                border: 1 solid;
+                padding: 3;
+                """)
+
+        if button_name == "btn_RAD" and not self.RAD:
+            self.RAD = True
+            self.btn_RAD.setStyleSheet("""
+                background-color: lightgrey;
+                color: green;
+                border: 1 solid;
+                padding: 3;
+                """)
+            self.DEG = False
+            self.btn_DEG.setStyleSheet("""
+                background-color: lightgrey;
+                color: salmon;
+                border: 1 solid;
+                padding: 3;
+                """)
+
+        self.expression_line.setFocus()
+        self.log.exit("deg_rad_toggle")
 
     #
     # -----------------------------------------------
