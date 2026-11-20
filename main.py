@@ -21,12 +21,13 @@ import math
 import pprint
 import re
 import sys
+import os
 
 import logging as pylog
 import numpy as np
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QBrush, QColor
+from PySide6.QtGui import QBrush, QColor, QIcon
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLabel, QListWidgetItem, QMainWindow, QPushButton
 
@@ -1144,6 +1145,14 @@ else:
 
 app = QtWidgets.QApplication([])
 app.setStyle('Fusion')
+#set application icon in the app
+if getattr(sys, 'frozen', False):
+    # Running as a PyInstaller bundle
+    basedir = sys._MEIPASS
+else:
+    # Running as a normal script
+    basedir = os.path.dirname(__file__)
+app.setWindowIcon(QIcon(os.path.join(basedir, "./icons/icon.ico")))
 
 win = MainWindow()
 win.show()
