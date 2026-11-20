@@ -41,7 +41,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.8.1"
+APP_VERSION = "0.8.2"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -1182,14 +1182,9 @@ else:
 
 app = QtWidgets.QApplication([])
 app.setStyle('Fusion')
-#set application icon in the app
-if getattr(sys, 'frozen', False):
-    # Running as a PyInstaller bundle
-    basedir = sys._MEIPASS
-else:
-    # Running as a normal script
-    basedir = os.path.dirname(__file__)
-app.setWindowIcon(QIcon(os.path.join(basedir, "./icons/icon.ico")))
+app.setApplicationName(APP_NAME)
+
+
 
 win = MainWindow()
 win.show()

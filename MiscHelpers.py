@@ -57,31 +57,33 @@ class MplCanvas(FigureCanvas):
         log_string = "__init__(parent=None, width, height, dpi, curve, surface)"
         self.log.entry(log_string)
 
-        self.fig = Figure(
-            figsize=(width, height),
-            dpi=dpi,
-            facecolor="darkgray",
-            layout="constrained"
-        )
+        if curve ^ surface:
 
-        super().__init__(self.fig)
+            self.fig = Figure(
+                figsize=(width, height),
+                dpi=dpi,
+                facecolor="darkgray",
+                layout="constrained"
+            )
 
-        self.curve   = curve
-        self.surface = surface
+            super().__init__(self.fig)
 
-        if curve:
-            self.axes = self.fig.add_subplot()
-        else:
-            self.axes = self.fig.add_subplot(projection='3d')
+            self.curve   = curve
+            self.surface = surface
 
-        self.axes.set_facecolor("gray")
+            if curve:
+                self.axes = self.fig.add_subplot()
+            else:
+                self.axes = self.fig.add_subplot(projection='3d')
 
-        self.setup_axes()
+            self.axes.set_facecolor("gray")
 
-        for spine in self.axes.spines.values():
-            spine.set_edgecolor("white")
+            self.setup_axes()
 
-        self.axes.grid(True, color="white", linestyle="--", linewidth=0.5)
+            for spine in self.axes.spines.values():
+                spine.set_edgecolor("white")
+
+            self.axes.grid(True, color="white", linestyle="--", linewidth=0.5)
 
         self.log.exit("__init__")
 

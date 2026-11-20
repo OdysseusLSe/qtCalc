@@ -145,10 +145,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.color_box = QComboBox()
         self.stack.addWidget(self.color_box)
 
-        #from PySide6.QtWidgets import QSizePolicy
-        #self.stack.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        #self.stack.setMinimumHeight(30)
-
         self.stack.setCurrentIndex(0)
 
         if not self.surface:
