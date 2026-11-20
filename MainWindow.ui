@@ -697,7 +697,7 @@ color: white;</string>
 color: black;</string>
           </property>
           <property name="text">
-           <string>✖️</string>
+           <string>×</string>
           </property>
          </widget>
         </item>
@@ -801,7 +801,7 @@ color: black;</string>
 color: black;</string>
           </property>
           <property name="text">
-           <string>✚</string>
+           <string>+</string>
           </property>
          </widget>
         </item>
@@ -902,10 +902,10 @@ color: white;</string>
           </property>
           <property name="styleSheet">
            <string notr="true">background-color: orange;
-color: white;</string>
+color: black;</string>
           </property>
           <property name="text">
-           <string>➖</string>
+           <string>−</string>
           </property>
          </widget>
         </item>

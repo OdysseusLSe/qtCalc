@@ -434,7 +434,7 @@ class Ui_MainWindow(object):
         self.btn_minus.setFont(font3)
         self.btn_minus.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.btn_minus.setStyleSheet(u"background-color: orange;\n"
-"color: white;")
+"color: black;")
 
         self.gridLayout_3.addWidget(self.btn_minus, 4, 9, 1, 1)
 
@@ -814,15 +814,15 @@ class Ui_MainWindow(object):
         self.btn_unary_minus.setText(QCoreApplication.translate("MainWindow", u"\u00b1", None))
         self.btn_tanh.setText(QCoreApplication.translate("MainWindow", u"tanh", None))
         self.btn_5.setText(QCoreApplication.translate("MainWindow", u"5", None))
-        self.btn_multiply.setText(QCoreApplication.translate("MainWindow", u"\u2716\ufe0f", None))
+        self.btn_multiply.setText(QCoreApplication.translate("MainWindow", u"\u00d7", None))
         self.btn_clear.setText(QCoreApplication.translate("MainWindow", u"C", None))
         self.btn_mod.setText(QCoreApplication.translate("MainWindow", u"mod", None))
         self.btn_XpowerY.setText(QCoreApplication.translate("MainWindow", u"x\u02b8", None))
-        self.btn_plus.setText(QCoreApplication.translate("MainWindow", u"\u271a", None))
+        self.btn_plus.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.btn_7.setText(QCoreApplication.translate("MainWindow", u"7", None))
         self.btn_MR.setText(QCoreApplication.translate("MainWindow", u"MR", None))
         self.btn_Mplus.setText(QCoreApplication.translate("MainWindow", u"M+", None))
-        self.btn_minus.setText(QCoreApplication.translate("MainWindow", u"\u2796", None))
+        self.btn_minus.setText(QCoreApplication.translate("MainWindow", u"\u2212", None))
         self.btn_e.setText(QCoreApplication.translate("MainWindow", u"e", None))
         self.btn_sin.setText(QCoreApplication.translate("MainWindow", u"sin", None))
         self.btn_9.setText(QCoreApplication.translate("MainWindow", u"9", None))
