@@ -38,7 +38,7 @@ In the next step you have to change in the directory where "main.py" is and
 execute the following line in a terminal:
 
 macOS:\
-`pyinstaller --noconsole --onefile --icon=ui/Calculator.icns main.py`
+`pyinstaller --windowed --icon=ui/icon.icns --name=qtCalc main.py`
 
 Windows 11:\
 `pyinstaller --noconsole --onefile --icon=ui/Calculator.ico main.py`

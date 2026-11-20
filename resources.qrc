@@ -5,6 +5,7 @@
     <!-- Icons -->
     <file>ui/delete_black.png</file>
     <file>ui/delete_white.png</file>
+    <file>ui/icon.icns</file>
     <!-- Color palettes -->
     <file>ui/cividis.png</file>
     <file>ui/plasma.png</file>

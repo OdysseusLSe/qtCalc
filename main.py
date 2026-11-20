@@ -55,6 +55,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
         self.log.entry("__init__()")
 
+        self.status_lbl = QLabel("Ready")
+        self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.status_bar.addWidget(self.status_lbl, 1)
+
+        try:
+            self.setWindowIcon(QIcon("ui/icon_1.png"))
+        except Exception:
+            self.status_lbl.setText("Cannot load window icon!")
+            self.log.warning("Cannot load window icon!")
+
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         all_buttons = self.findChildren(QPushButton)
@@ -95,10 +105,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             padding: 3;
             """)
         self.btn_DEG.clicked.connect(self.toggle_deg_rad)
-
-        self.status_lbl = QLabel("Ready")
-        self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.status_bar.addWidget(self.status_lbl, 1)
 
         self.setStyleSheet("""
             QMainWindow#MainWindow {
@@ -1181,10 +1187,14 @@ else:
     )
 
 app = QtWidgets.QApplication([])
+
 app.setStyle('Fusion')
 app.setApplicationName(APP_NAME)
 
-
+try:
+    app.setWindowIcon(QIcon("ui/icon_1.png"))
+except Exception:
+    print("Cannot load application icon!")
 
 win = MainWindow()
 win.show()
