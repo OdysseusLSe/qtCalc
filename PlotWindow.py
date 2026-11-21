@@ -613,6 +613,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     #
 
     def select_line_color(self):
+        self.log.entry("select_line_color()")
+
         new_bg_color = QColorDialog.getColor(
             self.line_color,
             parent=self,
@@ -620,6 +622,20 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         )
         if new_bg_color.isValid():
             self.line_color = new_bg_color
+
+            nbc = new_bg_color
+            luminance = (0.299 * nbc.red() + 0.587 * nbc.green() + 0.114 * nbc.blue())
+            text_color = "#000000" if luminance > 128 else "#ffffff"
+
+            self.color_dialog.setStyleSheet(
+                f"background-color: {nbc.name()}; "
+                f"color: {text_color}; "
+                f"border: 1px solid #555555; "
+                f"padding: 6px 12px;"
+            )
+            self.color_dialog.setText(nbc.name())
+
+        self.log.exit("select_line_color")
 
     #
     # -----------------------------------------------
