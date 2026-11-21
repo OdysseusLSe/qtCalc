@@ -209,16 +209,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def bitwise_and(self, a, b):
-        return (a & b)
+        return (int(a) & int(b))
 
     def bitwise_not(self, a):
         return (~a)
 
     def bitwise_or(self, a, b):
-        return (a | b)
+        return (int(a) | int(b))
 
     def bitwise_xor(self, a, b):
-        return (a ^ b)
+        return (int(a) ^ int(b))
 
     #
     # -----------------------------------------------
@@ -1099,6 +1099,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_cosh.setObjectName("btn_cosh")
             self.btn_cosh.setText("cosh")
 
+            self.btn_cube.setObjectName("btn_cube")
+            self.btn_cube.setText("x³")
+
             self.btn_log.setObjectName("btn_log")
             self.btn_log.setText("log")
 
@@ -1120,11 +1123,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_sqrtXY.setObjectName("btn_sqrtXY")
             self.btn_sqrtXY.setText("ʸ√x")
 
+            self.btn_square.setObjectName("btn_square")
+            self.btn_square.setText("x²")
+
             self.btn_tan.setObjectName("btn_tan")
             self.btn_tan.setText("tan")
 
             self.btn_tanh.setObjectName("btn_tanh")
             self.btn_tanh.setText("tanh")
+
+            self.btn_XpowerY.setObjectName("btn_XpowerY")
+            self.btn_XpowerY.setText("xʸ")
 
         else:
 
@@ -1149,6 +1158,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_cosh.setObjectName("btn_acosh")
             self.btn_cosh.setText("acosh")
 
+            self.btn_cube.setObjectName("btn_LShift")
+            self.btn_cube.setText("«")
+
             self.btn_log.setObjectName("btn_fac")
             self.btn_log.setText("n!")
 
@@ -1170,11 +1182,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_sqrtXY.setObjectName("btn_XOR")
             self.btn_sqrtXY.setText("XOR")
 
+            self.btn_square.setObjectName("btn_NOT")
+            self.btn_square.setText("NOT")
+
             self.btn_tan.setObjectName("btn_atan")
             self.btn_tan.setText("atan")
 
             self.btn_tanh.setObjectName("btn_atanh")
             self.btn_tanh.setText("atanh")
+
+            self.btn_XpowerY.setObjectName("btn_RShift")
+            self.btn_XpowerY.setText("»")
 
         self.log.exit("toggle_the_2nd")
 
