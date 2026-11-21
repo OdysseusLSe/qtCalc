@@ -41,7 +41,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.8.3"
+APP_VERSION = "0.8.4"
 APP_M_ICON  = ":/ui/icon.icns"
 
 

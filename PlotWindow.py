@@ -133,15 +133,19 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         plot_layout = QVBoxLayout()
         plot_layout.setContentsMargins(0, 0, 0, 0)
 
+        # Fill stack widget with color selection
+
         while self.stack.count() > 0:
             widget = self.stack.widget(0)
             self.stack.removeWidget(widget)
             widget.deleteLater()
 
+        # Color selection für lines
         self.color_dialog = QPushButton("Select color")
         self.stack.addWidget(self.color_dialog)
         self.color_dialog.clicked.connect(self.select_line_color)
 
+        # Color selection for surfaces
         self.color_box = QComboBox()
         self.stack.addWidget(self.color_box)
 
@@ -630,10 +634,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.color_dialog.setStyleSheet(
                 f"background-color: {nbc.name()}; "
                 f"color: {text_color}; "
-                f"border: 1px solid #555555; "
-                f"padding: 6px 12px;"
+                f"border: 1px solid #555555;"
             )
-            self.color_dialog.setText(nbc.name())
+            self.color_dialog.setText("Select color")
 
         self.log.exit("select_line_color")
 
