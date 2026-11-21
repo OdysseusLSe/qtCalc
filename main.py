@@ -60,7 +60,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.status_bar.addWidget(self.status_lbl, 1)
 
         try:
-            self.setWindowIcon(QIcon("ui/icon_1.png"))
+            self.setWindowIcon(QIcon(":/ui/icon.icns"))
         except Exception:
             self.status_lbl.setText("Cannot load window icon!")
             self.log.warning("Cannot load window icon!")
@@ -1165,39 +1165,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 # -----------------------------------------------
 #
 
-welcome_string = f"Welcome to '{APP_NAME}-{APP_VERSION}'"
-parser = argparse.ArgumentParser(description=welcome_string)
-parser.add_argument(
-    "-d", "--debug", type=int, default=0,
-    help="Write debug information"
-)
-args = parser.parse_args()
+if __name__ == "__main__":
 
-if args.debug == 0:
-    print("No debug information!")
-    pylog.basicConfig(level=pylog.ERROR)
-else:
-    print(f"Debug information is written in '{APP_NAME}-{APP_VERSION}.log'")
-    pylog.basicConfig(
-        filename=f"{APP_NAME}-{APP_VERSION}.log",
-        filemode="w",
-        level=pylog.DEBUG,
-        style="{",
-        format="{asctime} [{levelname:8}] {message}"
+    welcome_string = f"Welcome to '{APP_NAME}-{APP_VERSION}'"
+    parser = argparse.ArgumentParser(description=welcome_string)
+    parser.add_argument(
+        "-d", "--debug", type=int, default=0,
+        help="Write debug information"
     )
+    args = parser.parse_args()
 
-app = QtWidgets.QApplication([])
+    if args.debug == 0:
+        print("No debug information!")
+        pylog.basicConfig(level=pylog.ERROR)
+    else:
+        print(f"Debug information is written in '{APP_NAME}-{APP_VERSION}.log'")
+        pylog.basicConfig(
+            filename=f"{APP_NAME}-{APP_VERSION}.log",
+            filemode="w",
+            level=pylog.DEBUG,
+            style="{",
+            format="{asctime} [{levelname:8}] {message}"
+        )
 
-app.setStyle('Fusion')
-app.setApplicationName(APP_NAME)
+    app = QtWidgets.QApplication([])
 
-try:
-    app.setWindowIcon(QIcon("ui/icon_1.png"))
-except Exception:
-    print("Cannot load application icon!")
+    app.setStyle('Fusion')
+    app.setApplicationName(APP_NAME)
 
-win = MainWindow()
-win.show()
-win.setFocus()
+    try:
+        app.setWindowIcon(QIcon(":/ui/icon.icns"))
+    except Exception:
+        print("Cannot load application icon!")
+
+    win = MainWindow()
+    win.show()
+    win.setFocus()
 
 sys.exit(app.exec())
