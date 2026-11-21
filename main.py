@@ -18,6 +18,7 @@
 
 import argparse
 import math
+import platform
 import pprint
 import re
 import sys
@@ -41,12 +42,16 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.8.4"
+APP_VERSION = "0.8.5"
+APP_L_ICON  = ""
 APP_M_ICON  = ":/ui/icon.icns"
+APP_W_ICON  = ":/ui/icon.ico"
+APP_L_ICON  = ""
+OS_NAME     = platform.system()
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self, path_2_icon):
         super().__init__()
         self.setupUi(self)
         self.log = Logging("MainWindow")
@@ -54,14 +59,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle(f"{APP_NAME} {APP_VERSION}")
 
         self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
-        self.log.entry("__init__()")
+        self.log.entry(f"__init__({path_2_icon})")
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.status_bar.addWidget(self.status_lbl, 1)
 
         try:
-            self.setWindowIcon(QIcon(APP_M_ICON))
+            self.setWindowIcon(QIcon(path_2_icon))
         except Exception:
             self.status_lbl.setText("Cannot load window icon!")
             self.log.warning("Cannot load window icon!")
@@ -82,7 +87,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.history_list.scrollToBottom
         )
         self.history_list.itemDoubleClicked.connect(self.on_item_double_clicked)
-        #self.history_list.itemActivated.connect(self.on_item_double_clicked)
 
         self.history_item = 0
         self.memory_index = -1
@@ -1194,12 +1198,19 @@ if __name__ == "__main__":
     app.setStyle('Fusion')
     app.setApplicationName(APP_NAME)
 
+    if OS_NAME == "Darwin":
+        path_2_icon = APP_M_ICON
+    elif OS_NAME == "Windows":
+        path_2_icon = APP_W_ICON
+    elif OS_NAME == "Linux":
+        path_2_icon = APP_L_ICON
+
     try:
-        app.setWindowIcon(QIcon(APP_M_ICON))
+        app.setWindowIcon(QIcon(path_2_icon))
     except Exception:
         print("Cannot load application icon!")
 
-    win = MainWindow()
+    win = MainWindow(path_2_icon)
     win.show()
     win.setFocus()
 
