@@ -136,11 +136,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Operators with their precedence and associativity
         self.infix_operators = {
-            '+': (1, True),
-            '-': (1, True),
-            '*': (2, True),
-            '/': (2, True),
-            '^': (3, False)
+            '+'  : (1, True),
+            '-'  : (1, True),
+            '*'  : (2, True),
+            '/'  : (2, True),
+            '^'  : (3, False)
         }
 
         self.postfix_operators = {'%', '!'}
@@ -150,6 +150,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'abs'   : (math.fabs, 1),
             'acos'  : (math.acos, 1),
             'acosh' : (math.acosh, 1),
+            'AND'   : (self.bitwise_and, 2),
             'asin'  : (math.asin, 1),
             'asinh' : (math.asinh, 1),
             'atan'  : (math.atan, 1),
@@ -165,12 +166,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'max'   : (math.fmax, 2),
             'min'   : (math.fmin, 2),
             'mod'   : (math.fmod, 2),
+            'NOT'   : (self.bitwise_not, 1),
+            'OR'    : (self.bitwise_or, 2),
             'sin'   : (math.sin, 1),
             'sinh'  : (math.sinh, 1),
             'sqrt'  : (math.sqrt, 1),
             'sqrt3' : (math.cbrt, 1),
             'tan'   : (math.tan, 1),
-            'tanh'  : (math.tanh, 1)
+            'tanh'  : (math.tanh, 1),
+            'XOR'   : (self.bitwise_xor, 2)
         }
 
         self.trig_functions = [
@@ -204,6 +208,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
     #
 
+    def bitwise_and(self, a, b):
+        return (a & b)
+
+    def bitwise_not(self, a):
+        return (~a)
+
+    def bitwise_or(self, a, b):
+        return (a | b)
+
+    def bitwise_xor(self, a, b):
+        return (a ^ b)
+
+    #
+    # -----------------------------------------------
+    #
+
     def button_mapping(self):
         self.log.entry("button_mapping()")
 
@@ -222,6 +242,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_abs"           : "abs(",
             "btn_acos"          : "acos(",
             "btn_acosh"         : "acosh(",
+            "btn_AND"           : "AND(",
             "btn_asin"          : "asin(",
             "btn_asinh"         : "asinh(",
             "btn_atan"          : "atan(",
@@ -239,6 +260,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_e"             : "e",
             "btn_equal"         : "=",
             "btn_erf"           : "erf(",
+            "btn_fac"           : "!",
             "btn_gamma"         : "gamma(",
             "btn_lg2"           : "lg2(",
             "btn_ln"            : "ln(",
@@ -248,7 +270,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_minus"         : "-",
             "btn_mod"           : "mod(",
             "btn_multiply"      : "*",
-            "btn_fac"           : "!",
+            "btn_NOT"           : "NOT(",
+            "btn_OR"            : "OR(",
             "btn_percent"       : "%",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
@@ -261,6 +284,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_tanh"          : "tanh(",
             "btn_unary_minus"   : "-",
             "btn_x"             : "x",
+            "btn_XOR"           : "XOR(",
             "btn_XpowerY"       : "^",
             "btn_y"             : "y"
         }
@@ -1066,6 +1090,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_10powerX.setObjectName("btn_10powerX")
             self.btn_10powerX.setText("10ˣ")
 
+            self.btn_cbrt.setObjectName("btn_cbrt")
+            self.btn_cbrt.setText("∛")
+
             self.btn_cos.setObjectName("btn_cos")
             self.btn_cos.setText("cos")
 
@@ -1087,6 +1114,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_sinh.setObjectName("btn_sinh")
             self.btn_sinh.setText("sinh")
 
+            self.btn_sqrt.setObjectName("btn_sqrt")
+            self.btn_sqrt.setText("√")
+
+            self.btn_sqrtXY.setObjectName("btn_sqrtXY")
+            self.btn_sqrtXY.setText("ʸ√x")
+
             self.btn_tan.setObjectName("btn_tan")
             self.btn_tan.setText("tan")
 
@@ -1106,6 +1139,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.btn_10powerX.setObjectName("btn_percent")
             self.btn_10powerX.setText("%")
+
+            self.btn_cbrt.setObjectName("btn_OR")
+            self.btn_cbrt.setText("OR")
 
             self.btn_cos.setObjectName("btn_acos")
             self.btn_cos.setText("acos")
@@ -1127,6 +1163,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.btn_sinh.setObjectName("btn_asinh")
             self.btn_sinh.setText("asinh")
+
+            self.btn_sqrt.setObjectName("btn_AND")
+            self.btn_sqrt.setText("AND")
+
+            self.btn_sqrtXY.setObjectName("btn_XOR")
+            self.btn_sqrtXY.setText("XOR")
 
             self.btn_tan.setObjectName("btn_atan")
             self.btn_tan.setText("atan")

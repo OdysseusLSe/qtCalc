@@ -1309,7 +1309,7 @@ color : white;</string>
          </widget>
         </item>
         <item row="2" column="3">
-         <widget class="QPushButton" name="pushButton_34">
+         <widget class="QPushButton" name="btn_sqrtXY">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
             <horstretch>0</horstretch>
@@ -1596,7 +1596,7 @@ border: 1px;</string>
   <tabstop>btn_cos</tabstop>
   <tabstop>btn_sin</tabstop>
   <tabstop>btn_ln</tabstop>
-  <tabstop>pushButton_34</tabstop>
+  <tabstop>btn_sqrtXY</tabstop>
   <tabstop>btn_cbrt</tabstop>
   <tabstop>btn_sqrt</tabstop>
   <tabstop>btn_log</tabstop>
