@@ -41,7 +41,8 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.8.2"
+APP_VERSION = "0.8.3"
+APP_M_ICON  = ":/ui/icon.icns"
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -60,7 +61,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.status_bar.addWidget(self.status_lbl, 1)
 
         try:
-            self.setWindowIcon(QIcon(":/ui/icon.icns"))
+            self.setWindowIcon(QIcon(APP_M_ICON))
         except Exception:
             self.status_lbl.setText("Cannot load window icon!")
             self.log.warning("Cannot load window icon!")
@@ -1194,7 +1195,7 @@ if __name__ == "__main__":
     app.setApplicationName(APP_NAME)
 
     try:
-        app.setWindowIcon(QIcon(":/ui/icon.icns"))
+        app.setWindowIcon(QIcon(APP_M_ICON))
     except Exception:
         print("Cannot load application icon!")
 
