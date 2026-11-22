@@ -134,8 +134,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def advanced_operator(self):
         self.log.entry("advanced_operator()")
 
-        #self.prefix_operators = {'b', 'h'}
-
         # Operators with their precedence and associativity
         self.infix_operators = {
             '+'  : (1, True),
