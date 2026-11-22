@@ -42,7 +42,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "0.9"
+APP_VERSION = "1.0"
 APP_L_ICON  = ""
 APP_M_ICON  = ":/ui/icon.icns"
 APP_W_ICON  = ":/ui/icon.ico"
@@ -134,6 +134,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def advanced_operator(self):
         self.log.entry("advanced_operator()")
 
+        #self.prefix_operators = {'b', 'h'}
+
         # Operators with their precedence and associativity
         self.infix_operators = {
             '+'  : (1, True),
@@ -143,7 +145,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             '^'  : (3, False)
         }
 
-        self.postfix_operators = {'%', '!'}
+        self.postfix_operators = {'%', '!', 'b', 'h'}
 
         # Functions with their corresponding implementations and # of arguments
         self.functions = {
@@ -155,6 +157,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'asinh' : (math.asinh, 1),
             'atan'  : (math.atan, 1),
             'atanh' : (math.atanh, 1),
+            'bin'   : (self.dec_2_bin, 1),
             'cos'   : (math.cos, 1),
             'cosh'  : (math.cosh, 1),
             'erf'   : (math.erf, 1),
@@ -344,6 +347,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_asinh"         : "asinh(",
             "btn_atan"          : "atan(",
             "btn_atanh"         : "atanh(",
+            "btn_bin"           : "bin(",
             "btn_bracket_left"  : "(",
             "btn_bracket_right" : ")",
             "btn_cbrt"          : "sqrt3(",
@@ -359,6 +363,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_erf"           : "erf(",
             "btn_fac"           : "!",
             "btn_gamma"         : "gamma(",
+            "btn_hex"           : "hex(",
+            "btn_is_bin"        : "b",
             "btn_lg2"           : "lg2(",
             "btn_ln"            : "ln(",
             "btn_log"           : "log(",
@@ -389,6 +395,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
         self.log.entry("button_mapping()")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def dec_2_bin(self, value):
+        self.log.entry(f"dec_2_bin({value})")
+
+        int_value = int(value)
+        raw_binary_string = str(bin(int_value))
+        pos = raw_binary_string.lower().find("b") + 1
+        binary_string = raw_binary_string[pos:] + "b"
+
+        self.log.exit("dec_2_bin")
+        return binary_string
 
     #
     # -----------------------------------------------
@@ -444,7 +465,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         try:
 
-            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\!\%\(\),]'
+            token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\!\%\(\)bh,]'
             raw_tokens = re.findall(token_spec, expression)
             self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}")
 
@@ -483,11 +504,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             raw_result = self.evaluate_rpn(shunting_yard_output)
 
-            cleaned = float(f"{raw_result:.16g}")
-            if cleaned.is_integer() and abs(cleaned) < 1e15:
-                self.result = int(cleaned)
+            if isinstance(raw_result, str):
+                if 'b' in raw_result:
+                    self.result = raw_result
             else:
-                self.result = cleaned
+                cleaned = float(f"{raw_result:.16g}")
+                if cleaned.is_integer() and abs(cleaned) < 1e15:
+                    self.result = int(cleaned)
+                else:
+                    self.result = cleaned
 
             self.log.write(f"self.result={self.result}")
 
@@ -532,7 +557,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             elif token in self.postfix_operators:
 
-                # '%', '!'
+                # '%', '!', 'b', 'h'
                 if len(stack) < 1:
                     raise IndexError("To few operands for operator!")
                 a = stack.pop()
@@ -540,6 +565,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     stack.append(Percent(a))
                 elif token == '!':
                     stack.append(self.fac(a))
+                elif token == 'b':
+                    a_string = str(int(a))
+                    stack.append(int(a_string, 2))
 
             elif token in self.infix_operators:
 
@@ -719,7 +747,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         expression = self.expression_line.text()
         last_char = expression[-1] if expression else ""
 
-        infix_list = list(self.infix_operators.keys())
+        infix_list   = list(self.infix_operators.keys())
         postfix_list = list(self.postfix_operators)
 
         def reject(reason):
@@ -1201,6 +1229,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_cube.setObjectName("btn_cube")
             self.btn_cube.setText("x³")
 
+            self.btn_lg2.setObjectName("btn_lg2")
+            self.btn_lg2.setText("lg2")
+
+            self.btn_ln.setObjectName("btn_ln")
+            self.btn_ln.setText("ln")
+
             self.btn_log.setObjectName("btn_log")
             self.btn_log.setText("log")
 
@@ -1259,6 +1293,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.btn_cube.setObjectName("btn_LShift")
             self.btn_cube.setText("<<")
+
+            self.btn_lg2.setObjectName("btn_bin")
+            self.btn_lg2.setText("bin")
+
+            self.btn_ln.setObjectName("btn_is_bin")
+            self.btn_ln.setText("is bin")
 
             self.btn_log.setObjectName("btn_fac")
             self.btn_log.setText("n!")
