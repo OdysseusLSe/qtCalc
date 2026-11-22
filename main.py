@@ -163,11 +163,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'lg2'   : (math.log2, 1),
             'ln'    : (math.log, 1),
             'log'   : (math.log10, 1),
+            'LShift': (self.bitwise_lshift, 2),
             'max'   : (math.fmax, 2),
             'min'   : (math.fmin, 2),
             'mod'   : (math.fmod, 2),
             'NOT'   : (self.bitwise_not, 1),
             'OR'    : (self.bitwise_or, 2),
+            'RShift': (self.bitwise_rshift, 2),
             'sin'   : (math.sin, 1),
             'sinh'  : (math.sinh, 1),
             'sqrt'  : (math.sqrt, 1),
@@ -209,16 +211,111 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def bitwise_and(self, a, b):
-        return (int(a) & int(b))
+        self.log.entry(f"bitwise_and({a},{b})")
+
+        a_fractional, a_integer = math.modf(a)
+        b_fractional, b_integer = math.modf(b)
+
+        if a_fractional == 0.0 and b_fractional == 0.00:
+            self.log.exit("bitwise_and")
+            return (int(a_integer) & int(b_integer))
+
+        self.log.exit("bitwise_and")
+        raise ValueError("Bitwise AND requires integers, got float(s)!")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def bitwise_lshift(self, a, b):
+        self.log.entry(f"bitwise_LShift({a},{b})")
+
+        a_fractional, a_integer = math.modf(a)
+        b_fractional, b_integer = math.modf(b)
+
+        if a_fractional != 0.0 or b_fractional != 0.00:
+            self.log.exit("bitwise_lshift")
+            raise ValueError("Bitwise '<<' requires integers, got float(s)!")
+
+        if b_fractional <= 0:
+            self.log.exit("bitwise_lshift")
+            raise_str = "Bitwise '<<' requires positive value as 2nd argument!"
+            raise ValueError(raise_str)
+
+        self.log.exit("bitwise_lshift")
+        return (int(a_integer)<< int(b_integer))
+
+    #
+    # -----------------------------------------------
+    #
 
     def bitwise_not(self, a):
-        return (~a)
+        self.log.entry(f"bitwise_not({a})")
+
+        fractional, integer = math.modf(a)
+
+        if fractional == 0.0:
+            self.log.exit("bitwise_not")
+            return (~int(integer))
+
+        self.log.exit("bitwise_not")
+        raise ValueError("Bitwise NOT requires an integer, got a float!")
+
+    #
+    # -----------------------------------------------
+    #
 
     def bitwise_or(self, a, b):
-        return (int(a) | int(b))
+        self.log.entry(f"bitwise_or({a},{b})")
+
+        a_fractional, a_integer = math.modf(a)
+        b_fractional, b_integer = math.modf(b)
+
+        if a_fractional == 0.0 and b_fractional == 0.00:
+            self.log.exit("bitwise_or")
+            return (int(a_integer) | int(b_integer))
+
+        self.log.exit("bitwise_or")
+        raise ValueError("Bitwise OR requires integers, got float(s)!")
+
+    #
+    # -----------------------------------------------
+    #
+
+    def bitwise_rshift(self, a, b):
+        self.log.entry(f"bitwise_LShift({a},{b})")
+
+        a_fractional, a_integer = math.modf(a)
+        b_fractional, b_integer = math.modf(b)
+
+        if a_fractional != 0.0 or b_fractional != 0.00:
+            self.log.exit("bitwise_rshift")
+            raise ValueError("Bitwise '>>' requires integers, got float(s)!")
+
+        if b_fractional <= 0:
+            self.log.exit("bitwise_rshift")
+            raise_str = "Bitwise '>>' requires positive value as 2nd argument!"
+            raise ValueError(raise_str)
+
+        self.log.exit("bitwise_rshift")
+        return (int(a_integer) >> int(b_integer))
+
+    #
+    # -----------------------------------------------
+    #
 
     def bitwise_xor(self, a, b):
-        return (int(a) ^ int(b))
+        self.log.entry(f"bitwise_xor({a},{b})")
+
+        a_fractional, a_integer = math.modf(a)
+        b_fractional, b_integer = math.modf(b)
+
+        if a_fractional == 0.0 and b_fractional == 0.00:
+            self.log.exit("bitwise_or")
+            return (int(a_integer) ^ int(b_integer))
+
+        self.log.exit("bitwise_xor")
+        raise ValueError("Bitwise XOR requires integers, got float(s)!")
 
     #
     # -----------------------------------------------
@@ -265,6 +362,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_lg2"           : "lg2(",
             "btn_ln"            : "ln(",
             "btn_log"           : "log(",
+            "btn_LShift"        : "LShift(",
             "btn_max"           : "max(",
             "btn_min"           : "min(",
             "btn_minus"         : "-",
@@ -275,6 +373,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_percent"       : "%",
             "btn_pi"            : "pi",
             "btn_plus"          : "+",
+            "btn_RShift"        : "RShift(",
             "btn_unary_minus"   : "-",
             "btn_sin"           : "sin(",
             "btn_sinh"          : "sinh(",
@@ -599,10 +698,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         fractional, integer = math.modf(number)
 
         if fractional == 0.0:
-            self.log.exit(f"fac")
+            self.log.exit("fac")
             return math.integer.factorial(int(integer))
 
-        self.log.exit(f"fac")
+        self.log.exit("fac")
         raise ValueError("Factorial requires an integer, got a float!")
 
     #
@@ -1159,7 +1258,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_cosh.setText("acosh")
 
             self.btn_cube.setObjectName("btn_LShift")
-            self.btn_cube.setText("«")
+            self.btn_cube.setText("<<")
 
             self.btn_log.setObjectName("btn_fac")
             self.btn_log.setText("n!")
@@ -1192,7 +1291,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_tanh.setText("atanh")
 
             self.btn_XpowerY.setObjectName("btn_RShift")
-            self.btn_XpowerY.setText("»")
+            self.btn_XpowerY.setText(">>")
 
         self.log.exit("toggle_the_2nd")
 
