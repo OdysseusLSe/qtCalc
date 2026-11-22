@@ -90,8 +90,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.history_item = 0
         self.memory_index = -1
-        self.tokens = []
-        self.is_2nd = False
+        self.tokens       = []
+        self.is_2nd       = False
+        self.result       = None
 
         self.RAD = True
         self.btn_RAD.setStyleSheet("""
@@ -537,6 +538,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.expression_to_history(error_log, "Error")
 
         self.log.exit("evaluate_expression")
+        if self.result is None:
+            return
         return self.result
 
     #
@@ -846,7 +849,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Clear the current expression and reset the display
             self.expression_line.setText("")
             self.log.write("clear")
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_del":
@@ -855,7 +858,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             new_text   = old_text[:cursor_pos-1] + old_text[cursor_pos:]
             self.expression_line.setText(new_text)
             self.expression_line.setCursorPosition(cursor_pos-1)
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_Mplus":
@@ -864,14 +867,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.memory_list.addItem(f"{self.result}")
                 self.memory_index += 1
                 self.memory_list.setCurrentIndex(self.memory_index)
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_MC":
             # Clear the memory
             self.memory_list.clear()
             self.memory_index = -1
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_MR":
@@ -884,19 +887,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 new_text = old_text[:cursor_pos] + mem_value + old_text[cursor_pos:]
                 self.expression_line.setText(new_text)
                 self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
-                self.expression_line.setFocus()
+                #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_left":
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             self.expression_line.cursorBackward(False)
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_right":
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             self.expression_line.cursorForward(False)
-            self.expression_line.setFocus()
+            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_plot":
@@ -920,7 +923,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def keyPressEvent(self, event):
-        self.log.entry("keyPressEvent(event)")
+        self.log.entry("keyPressEvent({event})")
 
         key_text = event.text()
         self.log.write(f"event.text()='{event.text()}'")
@@ -929,20 +932,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         matched_btn_name = None
 
-        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter, Qt.Key.Key_Equal):
+
+            self.log.write(f"Qt.Key={event.key()}")
+
             if self.history_list.hasFocus():
+
                 # Item in history list selected and triggered to include it in
                 # current expression.
                 current_item = self.history_list.currentItem()
+                self.log.write(f"current_item={current_item}")
                 self.on_item_double_clicked(current_item)
+                self.log.exit("keyPressEvent")
+                return
+
             else:
+
                 matched_btn_name = "btn_equal"
+                self.log.write(f"(Qt.Key)matched_btn_name={matched_btn_name}")
+
+                expression = self.expression_line.text()
+                if "x" in expression:
+                    # At least one unknown variable --> 2D/3D-plot
+                    self.plot_expression()
+                else:
+                    self.evaluate_expression(expression)
+                self.log.exit("keyPressEvent")
+                return
+
         elif key_text:
             for button_name, character in self.buttons.items():
                 if key_text == character:
                     matched_btn_name = button_name
                     break
 
+        self.log.write(f"matched_btn_name={matched_btn_name}")
         if matched_btn_name:
             button_object = getattr(self, matched_btn_name, None)
             if button_object:
@@ -963,7 +987,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_button_clicked(self):
         self.log.entry("on_button_clicked()")
 
-        self.expression_line.setFocus()
+        #self.expression_line.setFocus()
 
         button = self.sender()
         button_name = button.objectName()
@@ -1017,7 +1041,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.expression_line.setCursorPosition(cursor_pos + len(insert_text))
         self.log.write(f"new_text={new_text}")
 
-        self.expression_line.setFocus()
+        #self.expression_line.setFocus()
 
         self.log.exit("on_item_double_clicked")
 
@@ -1191,7 +1215,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 padding: 3;
                 """)
 
-        self.expression_line.setFocus()
+        #self.expression_line.setFocus()
         self.log.exit("deg_rad_toggle")
 
     #
