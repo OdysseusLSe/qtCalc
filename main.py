@@ -216,7 +216,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         a_fractional, a_integer = math.modf(a)
         b_fractional, b_integer = math.modf(b)
 
-        if a_fractional == 0.0 and b_fractional == 0.00:
+        if a_fractional == 0.0 and b_fractional == 0.0:
             self.log.exit("bitwise_and")
             return (int(a_integer) & int(b_integer))
 
@@ -233,11 +233,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         a_fractional, a_integer = math.modf(a)
         b_fractional, b_integer = math.modf(b)
 
-        if a_fractional != 0.0 or b_fractional != 0.00:
+        if a_fractional != 0.0 or b_fractional != 0.0:
             self.log.exit("bitwise_lshift")
             raise ValueError("Bitwise '<<' requires integers, got float(s)!")
 
-        if b_fractional <= 0:
+        if b_integer <= 0.0:
             self.log.exit("bitwise_lshift")
             raise_str = "Bitwise '<<' requires positive value as 2nd argument!"
             raise ValueError(raise_str)
@@ -271,7 +271,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         a_fractional, a_integer = math.modf(a)
         b_fractional, b_integer = math.modf(b)
 
-        if a_fractional == 0.0 and b_fractional == 0.00:
+        if a_fractional == 0.0 and b_fractional == 0.0:
             self.log.exit("bitwise_or")
             return (int(a_integer) | int(b_integer))
 
@@ -288,11 +288,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         a_fractional, a_integer = math.modf(a)
         b_fractional, b_integer = math.modf(b)
 
-        if a_fractional != 0.0 or b_fractional != 0.00:
+        if a_fractional != 0.0 or b_fractional != 0.0:
             self.log.exit("bitwise_rshift")
             raise ValueError("Bitwise '>>' requires integers, got float(s)!")
 
-        if b_fractional <= 0:
+        if b_integer <= 0.0:
             self.log.exit("bitwise_rshift")
             raise_str = "Bitwise '>>' requires positive value as 2nd argument!"
             raise ValueError(raise_str)
@@ -310,7 +310,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         a_fractional, a_integer = math.modf(a)
         b_fractional, b_integer = math.modf(b)
 
-        if a_fractional == 0.0 and b_fractional == 0.00:
+        if a_fractional == 0.0 and b_fractional == 0.0:
             self.log.exit("bitwise_or")
             return (int(a_integer) ^ int(b_integer))
 
