@@ -42,7 +42,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "1.0"
+APP_VERSION = "1.1"
 APP_L_ICON  = ""
 APP_M_ICON  = ":/ui/icon.icns"
 APP_W_ICON  = ":/ui/icon.ico"
@@ -415,15 +415,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_curve(self, expression, x_start, x_end, x_steps):
-        log_str = "evaluate_curve(expression, x_start, x_end, x_steps)"
+        log_str = f"evaluate_curve(expression,{x_start},{x_end},{x_steps})"
         self.log.entry(log_str)
         self.log.write(f"expression={expression}")
-        log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
-        self.log.write(log_str)
 
         X = np.linspace(x_start, x_end, x_steps)
         raw_Y = []
         connections = []
+
+        self.log.write(f"X=\n{pprint.pformat(X)}")
 
         for step, x in enumerate(X):
             y = self.evaluate_expression(expression, x=x)
@@ -435,10 +435,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 raw_Y.append(float(y))
                 connections.append(True)
             self.log.write(f"x,y,connections[{step}]={x},{y},{connections[step]}")
+        self.log.write(f"raw_Y=\n{pprint.pformat(raw_Y)}")
 
         Y = np.array(raw_Y, dtype=float)
-
-        self.log.write(f"X=\n{pprint.pformat(X)}")
         self.log.write(f"Y=\n{pprint.pformat(Y)}")
 
         self.plot_2d.plot_curve(X, Y, connections)
@@ -452,8 +451,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_expression(self, expression, x=None, y=None):
-        self.log.entry("evaluate_expression(x, y)")
-        self.log.write(f"expression,x,y={expression},{x},{y}")
+        self.log.entry(f"evaluate_expression({expression},{x},{y})")
 
         if x is not None:
             self.variables['x'] = x
@@ -466,7 +464,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             token_spec = r'\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[a-zA-Z_]\w*|[\+\-\*\/\^\!\%\(\)bh,]'
             raw_tokens = re.findall(token_spec, expression)
-            self.log.write(f"raw_tokens=\n{pprint.pformat(raw_tokens)}")
+            self.log.write(f"raw_tokens={pprint.pformat(raw_tokens)}")
 
             #
             # Implement implicit multiplication
@@ -490,6 +488,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if i > 0 and is_value_end(raw_tokens[i - 1]) and is_value_start(tok):
                     tokens.append('*')
                 tokens.append(tok)
+            self.log.write(f"tokens={pprint.pformat(tokens)}")
 
             # Implement unary minus
             processed_tokens = []
@@ -497,22 +496,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if tok == '-' and (i == 0 or tokens[i-1] in self.infix_operators or tokens[i-1] in ('(', ',')):
                     processed_tokens.append('0')
                 processed_tokens.append(tok)
+            self.log.write(f"processed_tokens={pprint.pformat(processed_tokens)}")
 
             shunting_yard_output = self.shunting_yard(processed_tokens)
-            self.log.write(f"shunting_yard_output={shunting_yard_output}")
+            self.log.write(f"shunting_yard_output={pprint.pformat(shunting_yard_output)}")
 
             raw_result = self.evaluate_rpn(shunting_yard_output)
+            self.log.write(f"raw_result={raw_result}")
 
             if isinstance(raw_result, str):
                 if 'b' in raw_result:
                     self.result = raw_result
+                    self.log.write("Result is a binary number.")
             else:
                 cleaned = float(f"{raw_result:.16g}")
                 if cleaned.is_integer() and abs(cleaned) < 1e15:
                     self.result = int(cleaned)
                 else:
                     self.result = cleaned
-
             self.log.write(f"self.result={self.result}")
 
             if x is None and y is None:
@@ -547,11 +548,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_rpn(self, postfix_tokens):
-        self.log.entry("evaluate_rpn(postfix_tokens)")
+        self.log.entry(f"evaluate_rpn({pprint.pformat(postfix_tokens)})")
 
         stack = []
 
         for token in postfix_tokens:
+
             if isinstance(token, (int, float)):
 
                 stack.append(token)
@@ -630,6 +632,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     a = stack.pop()
                     stack.append(func(a, b))
 
+            self.log.write(f"stack={pprint.pformat(stack)})")
+
         # Check for lonesome percentage value at the beginning
         result = stack[0]
         self.log.exit("evaluate_rpn")
@@ -678,8 +682,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def expression_to_history(self, history_text, appendix):
-        self.log.entry("expression_to_history(appendix)")
-        self.log.write(f"appendix={appendix}")
+        self.log.entry(f"expression_to_history({history_text},{appendix})")
 
         if appendix == "Error":
             self.status_lbl.setText(history_text)
