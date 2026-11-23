@@ -178,7 +178,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'sqrt3' : (math.cbrt, 1),
             'tan'   : (math.tan, 1),
             'tanh'  : (math.tanh, 1),
-            'XOR'   : (self.bitwise_xor, 2)
+            'XOR'   : (self.bitwise_xor, 2),
+            'YrootX': (self.yth_root_of_x, 2)
         }
 
         self.trig_functions = [
@@ -390,7 +391,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_x"             : "x",
             "btn_XOR"           : "XOR(",
             "btn_XpowerY"       : "^",
-            "btn_y"             : "y"
+            "btn_y"             : "y",
+            "btn_YrootX"        : "YrootX("
         }
 
         self.log.entry("button_mapping()")
@@ -649,19 +651,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             x_start, x_end, x_steps,
             y_start, y_end, y_steps
         ):
-        log_str = "evaluate_surface(expressiob, x_start, x_end, x_steps,"
-        log_str += "y_start, y_end, y_steps)"
+        log_str = f"evaluate_surface({expression},"
+        log_str += f"{x_start},{x_end},{x_steps},"
+        log_str += f"{y_start},{y_end},{y_steps})"
         self.log.entry(log_str)
 
-        self.log.write(f"expression={expression}")
-        log_str = f"x_start,x_end,x_steps={x_start},{x_end},{x_steps}"
-        self.log.write(log_str)
-        log_str = f"y_start,y_end,y_steps={y_start},{y_end},{y_steps}"
-        self.log.write(log_str)
+        x = np.linspace(x_start, x_end, x_steps)
+        self.log.write(f"x=\n{pprint.pformat(x)}")
 
-        x    = np.linspace(x_start, x_end, x_steps)
-        y    = np.linspace(y_start, y_end, y_steps)
+        y = np.linspace(y_start, y_end, y_steps)
+        self.log.write(f"y=\n{pprint.pformat(y)}")
+
         X, Y = np.meshgrid(x, y)
+        self.log.write(f"X=\n{pprint.pformat(X)}")
+        self.log.write(f"Y=\n{pprint.pformat(Y)}")
 
         Z = np.zeros((len(X), len(Y)))
         for ix in range(len(X)):
@@ -670,6 +673,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 y_val = float(y[iy])  # NumPy float to Python float!
                 Z[ix, iy] = self.evaluate_expression(expression, x=x_val, y=y_val)
                 self.log.write(f"x,y,z={x_val},{y_val},{Z[ix, iy]}")
+        self.log.write(f"Z=\n{pprint.pformat(Z)}")
 
         self.plot_3d.plot_surface(X, Y, Z)
 
@@ -694,13 +698,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.history_list.addItem(item)
                 self.history_item += 1
                 self.expression_line.setText("")
+                self.log.write("Errorneous expression stored in history.")
             self.log.exit("expression_to_history")
             return
 
         if appendix == "=":
             history_text += f"={self.result}"
+            self.log.write("Expression and result stored in history.")
         else:
             history_text += "=Plot"
+            self.log.write("Expression and plot hint stored in history.")
         final_history_text = re.sub(r'(.{78})', r'\1' + '\n', history_text)
         item = QListWidgetItem(final_history_text)
         self.log.write(f"final_history_text={final_history_text}")
@@ -708,9 +715,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.history_item % 2 == 0:
             item.setBackground(QColor("white"))
             item.setForeground(QColor(94, 94, 94))
+            self.log.write("Color of history line = 'white'.")
         else:
             item.setBackground(QColor(94, 94, 94))
             item.setForeground(QColor("white"))
+            self.log.write("Color of history line = '94,94,94'.")
         self.history_list.addItem(item)
         self.history_item += 1
 
@@ -743,10 +752,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def is_input_valid(self, new_char):
-        self.log.entry("is_input_valid(new_char)")
-        self.log.write(f"new_char={new_char}")
+        self.log.entry(f"is_input_valid({new_char})")
 
-        self.status_lbl.setText("Validating input")
+        self.status_lbl.setText(f"Validating input '{new_char}'")
 
         expression = self.expression_line.text()
         last_char = expression[-1] if expression else ""
@@ -1278,8 +1286,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_sqrt.setObjectName("btn_sqrt")
             self.btn_sqrt.setText("√")
 
-            self.btn_sqrtXY.setObjectName("btn_sqrtXY")
-            self.btn_sqrtXY.setText("ʸ√x")
+            self.btn_YrootX.setObjectName("btn_YrootX")
+            self.btn_YrootX.setText("ʸ√x")
 
             self.btn_square.setObjectName("btn_square")
             self.btn_square.setText("x²")
@@ -1343,8 +1351,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.btn_sqrt.setObjectName("btn_AND")
             self.btn_sqrt.setText("AND")
 
-            self.btn_sqrtXY.setObjectName("btn_XOR")
-            self.btn_sqrtXY.setText("XOR")
+            self.btn_YrootX.setObjectName("btn_XOR")
+            self.btn_YrootX.setText("XOR")
 
             self.btn_square.setObjectName("btn_NOT")
             self.btn_square.setText("NOT")
@@ -1362,13 +1370,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #
     # -----------------------------------------------
-    # If the input is valid, update the expression and display it
+    # If new input is valid, update the expression and display it
     # -----------------------------------------------
     #
 
     def update_expression(self, new_char):
-        self.log.entry("update_expression(new_char)")
-        self.log.write(f"new_char={new_char}")
+        self.log.entry(f"update_expression({new_char})")
 
         cursor_pos = self.expression_line.cursorPosition()
         self.log.write(f"cursor_pos={cursor_pos}")
@@ -1378,14 +1385,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             new_text = old_text[:cursor_pos] + new_char + old_text[cursor_pos:]
             self.expression_line.setText(new_text)
             self.expression_line.setCursorPosition(cursor_pos + len(new_char))
+            self.log.write(f"old_text={old_text}")
+            self.log.write(f"new_text={new_text}")
 
         expression = self.expression_line.text()
         cursor_pos = self.expression_line.cursorPosition()
         self.log.write(f"cursor_pos={cursor_pos}")
         self.log.write(f"expression={expression}")
-        self.log.write(f"new_char={new_char}")
 
         self.log.exit("update_expression")
+
+#
+# -----------------------------------------------
+#
+
+    def yth_root_of_x(self, x, y):
+        self.log.entry(f"yth_root_of_x({x},{y})")
+
+        if x < 0 and y % 2 != 0:
+            self.log.exit("yth_root_of_x")
+            return (math.pow((-x), (1 / y)) * -1.0)
+        self.log.exit("yth_root_of_x")
+        return math.pow(x, (1 / y))
 
 
 #

@@ -613,16 +613,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_unary_minus, 5, 7, 1, 1)
 
-        self.btn_sqrtXY = QPushButton(self.centralwidget)
-        self.btn_sqrtXY.setObjectName(u"btn_sqrtXY")
-        sizePolicy.setHeightForWidth(self.btn_sqrtXY.sizePolicy().hasHeightForWidth())
-        self.btn_sqrtXY.setSizePolicy(sizePolicy)
-        self.btn_sqrtXY.setFont(font5)
-        self.btn_sqrtXY.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        self.btn_sqrtXY.setStyleSheet(u"background-color: lightgrey;\n"
+        self.btn_YrootX = QPushButton(self.centralwidget)
+        self.btn_YrootX.setObjectName(u"btn_YrootX")
+        sizePolicy.setHeightForWidth(self.btn_YrootX.sizePolicy().hasHeightForWidth())
+        self.btn_YrootX.setSizePolicy(sizePolicy)
+        self.btn_YrootX.setFont(font5)
+        self.btn_YrootX.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.btn_YrootX.setStyleSheet(u"background-color: lightgrey;\n"
 "color: black;")
 
-        self.gridLayout_3.addWidget(self.btn_sqrtXY, 2, 3, 1, 1)
+        self.gridLayout_3.addWidget(self.btn_YrootX, 2, 3, 1, 1)
 
         self.btn_plot = QPushButton(self.centralwidget)
         self.btn_plot.setObjectName(u"btn_plot")
@@ -767,8 +767,8 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.btn_tan, self.btn_cos)
         QWidget.setTabOrder(self.btn_cos, self.btn_sin)
         QWidget.setTabOrder(self.btn_sin, self.btn_ln)
-        QWidget.setTabOrder(self.btn_ln, self.btn_sqrtXY)
-        QWidget.setTabOrder(self.btn_sqrtXY, self.btn_cbrt)
+        QWidget.setTabOrder(self.btn_ln, self.btn_YrootX)
+        QWidget.setTabOrder(self.btn_YrootX, self.btn_cbrt)
         QWidget.setTabOrder(self.btn_cbrt, self.btn_sqrt)
         QWidget.setTabOrder(self.btn_sqrt, self.btn_log)
         QWidget.setTabOrder(self.btn_log, self.btn_lg2)
@@ -832,7 +832,7 @@ class Ui_MainWindow(object):
         self.btn_9.setText(QCoreApplication.translate("MainWindow", u"9", None))
         self.btn_dot.setText(QCoreApplication.translate("MainWindow", u".", None))
         self.btn_unary_minus.setText(QCoreApplication.translate("MainWindow", u"\u00b1", None))
-        self.btn_sqrtXY.setText(QCoreApplication.translate("MainWindow", u"\u02b8\u221ax", None))
+        self.btn_YrootX.setText(QCoreApplication.translate("MainWindow", u"\u02b8\u221ax", None))
         self.btn_plot.setText(QCoreApplication.translate("MainWindow", u"Plot", None))
         self.btn_log.setText(QCoreApplication.translate("MainWindow", u"log", None))
         self.btn_minus.setText(QCoreApplication.translate("MainWindow", u"\u2212", None))
