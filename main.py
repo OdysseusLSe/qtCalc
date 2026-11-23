@@ -418,7 +418,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_curve(self, expression, x_start, x_end, x_steps):
-        log_str = f"evaluate_curve(expression='{expression}',"
+        log_str = f"evaluate_curve('{expression}',"
         log_str += f"x_start={x_start},x_end={x_end},x_steps={x_steps})"
         self.log.entry(log_str)
 
@@ -652,9 +652,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             x_start, x_end, x_steps,
             y_start, y_end, y_steps
         ):
-        log_str = f"evaluate_surface({expression},"
-        log_str += f"{x_start},{x_end},{x_steps},"
-        log_str += f"{y_start},{y_end},{y_steps})"
+        log_str = f"evaluate_surface('{expression}',"
+        log_str += f"x_start={x_start},x_end={x_end},x_steps={x_steps},"
+        log_str += f"y_start={y_start},y_end={y_end},y_steps={y_steps})"
         self.log.entry(log_str)
 
         x = np.linspace(x_start, x_end, x_steps)
