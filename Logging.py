@@ -28,7 +28,7 @@ class Logging():
     def __init__(self, class_name):
         self.class_name     = class_name
         self.output_string  = ""
-        self.n              = 16  # minimum space
+        self.n              = 11  # minimum space
 
     def build_output(self):
         self.output_string = f"{self.class_name}: "

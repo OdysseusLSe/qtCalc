@@ -26,6 +26,7 @@ import os
 
 import logging as pylog
 import numpy as np
+np.set_printoptions(precision=16)
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QBrush, QColor, QIcon
@@ -417,9 +418,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_curve(self, expression, x_start, x_end, x_steps):
-        log_str = f"evaluate_curve(expression,{x_start},{x_end},{x_steps})"
+        log_str = f"evaluate_curve(expression='{expression}',"
+        log_str += f"x_start={x_start},x_end={x_end},x_steps={x_steps})"
         self.log.entry(log_str)
-        self.log.write(f"expression={expression}")
 
         X = np.linspace(x_start, x_end, x_steps)
         raw_Y = []
@@ -453,7 +454,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def evaluate_expression(self, expression, x=None, y=None):
-        self.log.entry(f"evaluate_expression({expression},{x},{y})")
+        self.log.entry(f"evaluate_expression('{expression}',x={x},y={y})")
 
         if x is not None:
             self.variables['x'] = x
@@ -752,7 +753,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def is_input_valid(self, new_char):
-        self.log.entry(f"is_input_valid({new_char})")
+        self.log.entry(f"is_input_valid('{new_char}')")
 
         self.status_lbl.setText(f"Validating input '{new_char}'")
 
@@ -851,16 +852,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     # -----------------------------------------------
 
     def is_special_button(self, button_name):
-        self.log.entry("is_special_button(button_name)")
-        self.log.write(f"button_name={button_name}")
+        self.log.entry(f"is_special_button(button_name='{button_name}')")
 
         self.status_lbl.setText("Checking for special button")
 
         if button_name == "btn_clear":
-            # Clear the current expression and reset the display
+            self.log.write("Clear current expression and reset the display.")
             self.expression_line.setText("")
-            self.log.write("clear")
-            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_del":
@@ -869,28 +867,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             new_text   = old_text[:cursor_pos-1] + old_text[cursor_pos:]
             self.expression_line.setText(new_text)
             self.expression_line.setCursorPosition(cursor_pos-1)
-            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_Mplus":
-            # Add the current result to memory
+            self.log.write("Add current result to memory.")
             if hasattr(self, 'result') and self.result is not None:
                 self.memory_list.addItem(f"{self.result}")
                 self.memory_index += 1
                 self.memory_list.setCurrentIndex(self.memory_index)
-            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_MC":
-            # Clear the memory
+            self.log.write("Clear the memory.")
             self.memory_list.clear()
             self.memory_index = -1
-            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_MR":
-            # Recall the value from memory and
-            # append it to the current expression
+            # Recall value from memory and
+            # build it into the current expression
+            self.log.write("Recall value from memory.")
             if self.memory_list.currentText() != "":
                 mem_value = self.memory_list.currentText()
                 cursor_pos = self.expression_line.cursorPosition()
@@ -898,19 +894,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 new_text = old_text[:cursor_pos] + mem_value + old_text[cursor_pos:]
                 self.expression_line.setText(new_text)
                 self.expression_line.setCursorPosition(cursor_pos + len(mem_value))
-                #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_left":
-            #self.expression_line.setFocus()
             self.expression_line.cursorBackward(False)
-            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_right":
-            #self.expression_line.setFocus()
             self.expression_line.cursorForward(False)
-            #self.expression_line.setFocus()
             value = True
 
         elif button_name == "btn_plot":
@@ -998,31 +989,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_button_clicked(self):
         self.log.entry("on_button_clicked()")
 
-        #self.expression_line.setFocus()
-
         button = self.sender()
         button_name = button.objectName()
+        self.log.write(f"button_name='{button_name}'")
         if self.is_special_button(button_name):
             self.log.write(f"is_special_button({button_name})=True")
             self.log.exit("on_button_clicked")
             return
 
         new_char = self.buttons[button_name]
+        self.log.write(f"new_char='{new_char}'")
         if not self.is_input_valid(new_char):
-            self.log.write(f"is_input_valid({new_char})=False")
+            self.log.warning(f"is_input_valid({new_char})=False")
             self.log.exit("on_button_clicked")
             return
-
-        self.result = None
 
         self.update_expression(new_char)
 
         if new_char == "=":
+            self.result = None
             expression = self.expression_line.text()
             if "x" in expression:
-                # At least one unknown variable --> 2D/3D-plot
+                self.log.write("At least one unknown variable --> 2D/3D-plot")
                 self.plot_expression()
             else:
+                self.log.write("Trigger evaluation of expression.")
                 self.evaluate_expression(expression)
 
         self.log.exit("on_button_clicked")
@@ -1032,27 +1023,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def on_item_double_clicked(self, item):
-        self.log.entry("on_item_double_clicked(self, item)")
+        self.log.entry("on_item_double_clicked(item)")
         self.log.write(f"item.text()={item.text()}")
 
         if "=" in item.text():
             # Copy text just before "=" and attach it to the current expression.
             insert_text = item.text().split("=", 1)[0]
+            self.log.write(f"insert_text={insert_text}")
         else:
             # Errorneous expression will be ignored.
             self.status_lbl.setText("Errorneous expression ignored!")
+            self.log.write("Errorneous expression ignored!")
             self.log.exit("on_item_double_clicked")
             return
 
         cursor_pos = self.expression_line.cursorPosition()
         old_text   = self.expression_line.text()
         new_text   = old_text[:cursor_pos] + insert_text + old_text[cursor_pos:]
+        self.log.write(f"cursor_pos={cursor_pos}")
+        self.log.write(f"old_text={old_text}")
+        self.log.write(f"new_text={new_text}")
 
         self.expression_line.setText(new_text)
         self.expression_line.setCursorPosition(cursor_pos + len(insert_text))
-        self.log.write(f"new_text={new_text}")
-
-        #self.expression_line.setFocus()
 
         self.log.exit("on_item_double_clicked")
 
@@ -1084,8 +1077,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if "x" in expression and "y" in expression:
             self.surface = True
+            self.log.write(f"self.surface={self.surface}")
             if not hasattr(self, 'plot_3d'):
                 # Start new window to draw the expression: 3D
+                self.log.write("Start new window to draw the expression: 3D")
                 self.plot_3d = PlotWindow(expression, self.curve, self.surface)
                 self.plot_3d.eval_curve.connect(self.evaluate_curve)
                 self.plot_3d.eval_surface.connect(self.evaluate_surface)
@@ -1102,8 +1097,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.log.error("Internal error: plotting not available!")
         else:
             self.curve = True
+            self.log.write(f"self.curve={self.curve}")
             if not hasattr(self, 'plot_2d'):
                 # Start new window to draw the expression: 2D
+                self.log.write("Start new window to draw the expression: 2D")
                 self.plot_2d = PlotWindow(expression, self.curve, self.surface)
                 self.plot_2d.eval_curve.connect(self.evaluate_curve)
                 self.plot_2d.eval_surface.connect(self.evaluate_surface)
@@ -1128,7 +1125,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def shunting_yard(self, tokens):
-        self.log.entry("shunting_yard(self, tokens)")
+        self.log.entry(f"shunting_yard(tokens={pprint.pformat(tokens)})")
 
         output = []
         operator = []
@@ -1174,12 +1171,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 while operator and operator[-1] != '(':
                     output.append(operator.pop())
                 if operator and operator[-1] == '(':
-                    operator.pop()  # Entferne '('
+                    operator.pop()
                 if operator and operator[-1] in self.functions:
                     output.append(operator.pop())
 
+            self.log.write(f"operator={pprint.pformat(operator)})")
+            self.log.write(f"output={pprint.pformat(output)})")
+
         while operator:
             output.append(operator.pop())
+            self.log.write(f"output={pprint.pformat(output)})")
 
         self.log.exit("shunting_yard")
         return output
@@ -1189,12 +1190,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def toggle_deg_rad(self):
-        self.log.entry("deg_rad_toggle(checked)")
+        self.log.entry("deg_rad_toggle")
 
         button = self.sender()
         button_name = button.objectName()
 
         if button_name == "btn_DEG" and not self.DEG:
+            self.log.write("Switch to degree.")
             self.DEG = True
             self.btn_DEG.setStyleSheet("""
                 background-color: lightgrey;
@@ -1211,6 +1213,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 """)
 
         if button_name == "btn_RAD" and not self.RAD:
+            self.log.write("Switch to radiant.")
             self.RAD = True
             self.btn_RAD.setStyleSheet("""
                 background-color: lightgrey;
@@ -1226,7 +1229,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 padding: 3;
                 """)
 
-        #self.expression_line.setFocus()
         self.log.exit("deg_rad_toggle")
 
     #
@@ -1375,7 +1377,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #
 
     def update_expression(self, new_char):
-        self.log.entry(f"update_expression({new_char})")
+        self.log.entry(f"update_expression(new_char'{new_char}')")
 
         cursor_pos = self.expression_line.cursorPosition()
         self.log.write(f"cursor_pos={cursor_pos}")
@@ -1400,7 +1402,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 #
 
     def yth_root_of_x(self, x, y):
-        self.log.entry(f"yth_root_of_x({x},{y})")
+        self.log.entry(f"yth_root_of_x(x={x},y={y})")
 
         if x < 0 and y % 2 != 0:
             self.log.exit("yth_root_of_x")
