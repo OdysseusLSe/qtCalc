@@ -17,5 +17,6 @@
     <file>ui/Greys.png</file>
     <!-- Documentation -->
     <file>README.md</file>
+    <file>README.html</file>
 </qresource>
 </RCC>

@@ -47,11 +47,15 @@ APP_VERSION = "1.1"
 APP_L_ICON  = ""
 APP_M_ICON  = ":/ui/icon.icns"
 APP_W_ICON  = ":/ui/icon.ico"
-APP_L_ICON  = ""
 OS_NAME     = platform.system()
+
+#
+# -----------------------------------------------
+#
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+
     def __init__(self, path_2_icon):
         super().__init__()
         self.setupUi(self)
@@ -60,7 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle(f"{APP_NAME} {APP_VERSION}")
 
         self.log.write(f"--- {APP_NAME} {APP_VERSION} ---")
-        self.log.entry(f"__init__({path_2_icon})")
+        self.log.entry(f"__init__('{path_2_icon}')")
 
         self.status_lbl = QLabel("Ready")
         self.status_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
