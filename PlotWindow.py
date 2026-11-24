@@ -52,7 +52,7 @@ from Logging import Logging
 
 class PlotWindow(QMainWindow, Ui_PlotWindow):
 
-    # Signal to start evaluation of expression
+    # Signals to start evaluation of expression
     eval_curve   = Signal(str, float, float, int)
     eval_surface = Signal(str, float, float, int, float, float, int)
 
@@ -60,16 +60,12 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         super().__init__()
         self.setupUi(self)
         self.log = Logging("PlotWindow")
-        self.log.entry(f"__init__(expression, {curve}, {surface})")
-        self.log.write(f"expression='{expression}'")
+        self.log.entry(f"__init__('{expression}',{curve},{surface})")
 
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.expression       = expression
         self.done             = False
-
-        self.log.entry("__init__(expression)")
-        self.log.write(f"expression={expression}")
 
         self.curve   = curve
         self.surface = surface
@@ -128,9 +124,6 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             }
         """)
 
-        status_str = "Define parameters for expression '" + expression + "'"
-        self.status_lbl.setText(status_str)
-
         plot_layout = QVBoxLayout()
         plot_layout.setContentsMargins(0, 0, 0, 0)
 
@@ -154,6 +147,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         if not self.surface:
 
+            self.log.write("Create window for 2D plots.")
+
             self.setWindowTitle("Curve (2D) Plot")
 
             self.stack.setCurrentWidget(self.color_dialog)
@@ -170,6 +165,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.y_steps.setEnabled(False)
 
         else:
+
+            self.log.write("Create window for 3D plots.")
 
             self.setWindowTitle("Surface (3D) Plot")
 
@@ -203,6 +200,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             curve=self.curve, surface=self.surface
         )
 
+        # Provide selected features of MatPlotLib's toolbar
         self.toolbar = CustomToolbar(self.canvas, self)
         self.toolbar.setStyleSheet("""
             QToolBar {
@@ -224,7 +222,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         if self.surface:
             self.canvas.axes.set_zlabel("z")
 
-        status_str = "Define parameters for expression '" + expression + "'"
+        status_str = f"Define parameters for '{expression}'."
         self.status_lbl.setText(status_str)
 
         self.log.exit("__init__")
@@ -234,9 +232,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     #
 
     def add_plot(self, expression):
-        self.log.entry("add_plot(self, expression)")
+        self.log.entry(f"add_plot(expression='{expression}')")
 
-        if "y" in expression and self.surface is False:
+        if "y" in expression and not self.surface:
             self.status_lbl.setText("3D plot not available in 2D plot!")
             self.log.warning("3D plot not available in 2D plot!")
             self.log.exit("add_plot")
@@ -263,6 +261,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.expression   = expression
         self.done         = False
 
+        # Enable lineedits for new curve (and surface)
+
         self.x_start.setEnabled(True)
         self.x_end.setEnabled(True)
         self.x_steps.setEnabled(True)
@@ -282,7 +282,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
         self.start_btn.setEnabled(True)
 
-        status_str = "Define parameters for expression '" + expression + "'"
+        status_str = f"Define parameters for '{expression}'."
         self.status_lbl.setText(status_str)
 
         self.log.exit("add_plot")
@@ -347,12 +347,15 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         key = event.key()
 
         if key in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            self.log.write("'Qt.Key.Key_Return' or 'Qt.Key.Key_Enter' pressed.")
             if self.start_btn.hasFocus():
+                self.log.write("Focus on 'Start' button.")
                 self.start()
                 event.accept()
                 self.log.exit("keyPressEvent")
                 return
             elif self.export_btn.hasFocus():
+                self.log.write("Focus on 'Export' button.")
                 if self.curve:
                     self.save_curve()
                 else:
@@ -361,12 +364,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                 self.log.exit("keyPressEvent")
                 return
             elif self.clear_btn.hasFocus():
+                self.log.write("Focus on 'Clear' button.")
                 self.clear()
                 event.accept()
                 self.log.exit("keyPressEvent")
                 return
 
         if key == Qt.Key.Key_Escape:
+            self.log.write("'ESC' key pressed.")
             self.close()
             event.accept()
             self.log.exit("keyPressEvent")
@@ -380,8 +385,10 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
     # -----------------------------------------------
     #
 
-    def plot_curve(self, X, Y, connections):
+    def plot_curve(self, X, Y):
         self.log.entry("plot_curve(X, Y)")
+        self.log.write(f"X=\n{pprint.pformat(X)}")
+        self.log.write(f"Y=\n{pprint.pformat(Y)}")
 
         self.curve_number += 1
 
@@ -390,12 +397,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             X, Y,
             color=self.line_color.name(),
             label=self.expression,
-            linewidth=5.0
+            linewidth=2.0
         )
         self.canvas.axes.legend()
         self.canvas.draw()
 
         self.status_lbl.setText("Finished")
+
+        # Add current expression to history (for export).
 
         curve = {
             'number'     : self.curve_number,
@@ -421,6 +430,9 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
 
     def plot_surface(self, X, Y, Z):
         self.log.entry("plot_surface(X, Y, Z)")
+        self.log.write(f"X=\n{pprint.pformat(X)}")
+        self.log.write(f"Y=\n{pprint.pformat(Y)}")
+        self.log.write(f"Z=\n{pprint.pformat(Z)}")
 
         self.surface_number += 1
 
@@ -437,6 +449,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.canvas.draw()
 
         self.status_lbl.setText("Finished")
+
+        # Add current expression to history (for export).
 
         surface_item = {
             'number'     : self.surface_number,
@@ -477,14 +491,14 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             self.log.exit("save_curve")
             return
 
-        # Choose selected item from list of curves
+        # Choose selected item from list of curves.
         for element in self.list_of_curves:
             if selected_expression == element['expression']:
                 self.selected_curve = element
                 break
 
         #
-        # Select directory where to save the data of the curve
+        # Select directory where to save the data of the curve.
         #
 
         folder_path = QFileDialog.getExistingDirectory(
@@ -559,7 +573,7 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
                 break
 
         #
-        # Select directory where to save the data of the curve
+        # Select directory where to save the data of the surface
         #
 
         folder_path = QFileDialog.getExistingDirectory(
@@ -626,15 +640,21 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             parent=self,
             title="Select curve color"
         )
-        if new_bg_color.isValid():
-            self.line_color = new_bg_color
 
+        if new_bg_color.isValid():
+
+            self.line_color = new_bg_color
             nbc = new_bg_color
+            nbc_name = nbc.name()
+
+            self.log.write(f"nbc.name()='{nbc_name}'")
+            self.status_lbl.setText(f"Selected color: '{nbc_name}'")
+
             luminance = (0.299 * nbc.red() + 0.587 * nbc.green() + 0.114 * nbc.blue())
             text_color = "#000000" if luminance > 128 else "#ffffff"
 
             self.color_dialog.setStyleSheet(
-                f"background-color: {nbc.name()}; "
+                f"background-color: {nbc_name}; "
                 f"color: {text_color}; "
                 f"border: 1px solid #555555;"
             )
@@ -658,6 +678,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             return
 
         if self.curve:
+            self.log.write("Trigger curve plotting.")
+            self.status_lbl.setText("Trigger curve plotting.")
             self.eval_curve.emit(self.expression, x_start, x_end, x_steps)
             self.log.exit("start")
             return
@@ -666,13 +688,16 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
             y_start = float(self.y_start.text())
             y_end   = float(self.y_end.text())
             y_steps = float(self.y_steps.text())
-            self.eval_surface.emit(
-                self.expression,
-                x_start, x_end, x_steps,
-                y_start, y_end, y_steps
-            )
         except (ValueError, TypeError):
             self.status_lbl.setText("No valid y values")
             return
+
+        self.log.write("Trigger curve plotting.")
+        self.status_lbl.setText("Trigger surface plotting.")
+        self.eval_surface.emit(
+            self.expression,
+            x_start, x_end, x_steps,
+            y_start, y_end, y_steps
+        )
 
         self.log.exit("start")

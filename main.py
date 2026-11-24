@@ -424,26 +424,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         X = np.linspace(x_start, x_end, x_steps)
         raw_Y = []
-        connections = []
 
         self.log.write(f"X=\n{pprint.pformat(X)}")
 
-        for step, x in enumerate(X):
+        for x in X:
             y = self.evaluate_expression(expression, x=x)
             if y is None:
                 self.log.error(f"x,y={x},{y}")
                 raw_Y.append(0.0)
-                connections.append(False)
             else:
                 raw_Y.append(float(y))
-                connections.append(True)
-            self.log.write(f"x,y,connections[{step}]={x},{y},{connections[step]}")
         self.log.write(f"raw_Y=\n{pprint.pformat(raw_Y)}")
 
         Y = np.array(raw_Y, dtype=float)
         self.log.write(f"Y=\n{pprint.pformat(Y)}")
 
-        self.plot_2d.plot_curve(X, Y, connections)
+        self.plot_2d.plot_curve(X, Y)
 
         self.log.exit("evaluate_curve")
 
