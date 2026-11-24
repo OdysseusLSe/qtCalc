@@ -389,7 +389,8 @@ class PlotWindow(QMainWindow, Ui_PlotWindow):
         self.canvas.axes.plot(
             X, Y,
             color=self.line_color.name(),
-            label=self.expression
+            label=self.expression,
+            linewidth=5.0
         )
         self.canvas.axes.legend()
         self.canvas.draw()
