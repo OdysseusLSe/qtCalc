@@ -1,3 +1,4 @@
 NumPy
 MatPlotLib
+platformdirs
 PySide6

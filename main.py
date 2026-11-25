@@ -22,11 +22,12 @@ import platform
 import pprint
 import re
 import sys
-import os
 
 import logging as pylog
 import numpy as np
 np.set_printoptions(precision=16)
+
+from platformdirs import user_log_path
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QBrush, QColor, QIcon
@@ -43,7 +44,7 @@ from Logging import Logging
 import resources_rc
 
 APP_NAME    = "qtCalc"
-APP_VERSION = "1.1"
+APP_VERSION = "1.1.1"
 APP_L_ICON  = ""
 APP_M_ICON  = ":/ui/icon.icns"
 APP_W_ICON  = ":/ui/icon.ico"
@@ -400,7 +401,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "btn_YrootX"        : "YrootX("
         }
 
-        self.log.entry("button_mapping()")
+        self.log.exit("button_mapping()")
 
     #
     # -----------------------------------------------
@@ -1428,16 +1429,30 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.debug == 0:
+
         print("No debug information!")
         pylog.basicConfig(level=pylog.ERROR)
+
     else:
-        print(f"Debug information is written in '{APP_NAME}-{APP_VERSION}.log'")
+
+        log_dir = user_log_path(APP_NAME, "OdysseusLSe")
+        print(f"Directory for log: {log_dir}")
+
+        try:
+            log_dir.mkdir(exist_ok=True, parents=True)
+        except BaseException as error:
+            print(f"Directory for log: ({error})!")
+
+        log_file = f"{APP_NAME}-{APP_VERSION}.log"
+        log_full_path = log_dir.joinpath(log_file)
+
+        print(f"Debug information is written in '{log_file}'")
         pylog.basicConfig(
-            filename=f"{APP_NAME}-{APP_VERSION}.log",
+            filename=log_full_path,
             filemode="w",
             level=pylog.DEBUG,
             style="{",
-            format="{asctime} [{levelname:8}] {message}"
+            format="{asctime} [{levelname:5}] {message}"
         )
 
     app = QtWidgets.QApplication([])
