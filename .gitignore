@@ -226,3 +226,4 @@ Temp/*
 .DS_Store
 *.csv
 qtCalc.exe
+pip-commands.txt
